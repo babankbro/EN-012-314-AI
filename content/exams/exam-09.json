@@ -1,0 +1,492 @@
+{
+  "moduleId": "09",
+  "title": "Reinforcement Learning & Game Playing",
+  "titleTh": "Reinforcement Learning และ Game Playing",
+  "timeMinutes": 30,
+  "questions": [
+    {
+      "id": 1,
+      "question": "ข้อใดอธิบายความแตกต่างระหว่าง Reinforcement Learning กับ Supervised Learning ได้ถูกต้องที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "RL ไม่ต้องใช้ข้อมูลใด ๆ เลย ส่วน supervised learning ต้องใช้ข้อมูลจำนวนมาก"
+        },
+        {
+          "key": "ข",
+          "text": "RL เรียนจาก reward ที่บอกว่าผลลัพธ์ดีแค่ไหน แต่ไม่บอกว่า action ที่ถูกต้องคืออะไร ส่วน supervised learning มี label คำตอบที่ถูกต้องของทุกตัวอย่าง"
+        },
+        {
+          "key": "ค",
+          "text": "RL ใช้ได้กับปัญหา classification เท่านั้น ส่วน supervised learning ใช้กับการเล่นเกม"
+        },
+        {
+          "key": "ง",
+          "text": "RL ถือว่าตัวอย่างแต่ละตัวเป็นอิสระต่อกัน (i.i.d.) เหมือน supervised learning ทุกประการ"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "RL ได้สัญญาณเป็น reward ซึ่งประเมินผล แต่ไม่ได้บอกคำตอบที่ถูกต้อง และ reward มักมาช้า (credit assignment) ข้อ ก ผิดเพราะ RL ใช้ประสบการณ์ (s, a, r, s') ที่ agent สร้างขึ้น ข้อ ค สลับกัน ข้อ ง ผิดเพราะข้อมูลใน RL ต่อเนื่องตามเวลาและ action มีผลต่อ state ถัดไป"
+    },
+    {
+      "id": 2,
+      "question": "ใน Reinforcement Learning คำว่า Policy (π) หมายถึงอะไร",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "กฎหรือกลยุทธ์ที่ agent ใช้เลือก action เมื่ออยู่ใน state หนึ่ง ๆ"
+        },
+        {
+          "key": "ข",
+          "text": "ผลรวมของ reward ทั้งหมดใน episode"
+        },
+        {
+          "key": "ค",
+          "text": "ความน่าจะเป็นที่ environment จะเปลี่ยนจาก state s ไป s'"
+        },
+        {
+          "key": "ง",
+          "text": "ตัวเลขที่ environment ส่งกลับมาหลังจาก agent ทำ action"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "Policy π(a|s) คือการจับคู่จาก state ไปยัง action (หรือความน่าจะเป็นของ action) ข้อ ข คือ return ข้อ ค คือ transition probability ของ MDP ข้อ ง คือ reward"
+    },
+    {
+      "id": 3,
+      "question": "Markov property ใน MDP มีความหมายตรงกับข้อใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "reward ของทุก state ต้องมีค่าเท่ากัน"
+        },
+        {
+          "key": "ข",
+          "text": "agent ต้องจำประวัติทั้งหมดตั้งแต่ต้น episode จึงจะตัดสินใจได้"
+        },
+        {
+          "key": "ค",
+          "text": "state ถัดไปขึ้นกับ state และ action ปัจจุบันเท่านั้น ไม่ขึ้นกับเส้นทางในอดีต"
+        },
+        {
+          "key": "ง",
+          "text": "environment ต้องเป็นแบบ deterministic เสมอ"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "P(sₜ₊₁ | sₜ, aₜ, sₜ₋₁, ...) = P(sₜ₊₁ | sₜ, aₜ) ข้อ ข ตรงข้ามกับ Markov property ข้อ ง ผิดเพราะ MDP เป็นแบบ stochastic ได้ (เช่น FrozenLake ที่พื้นลื่น) ข้อ ก ไม่เกี่ยวข้อง"
+    },
+    {
+      "id": 4,
+      "question": "ถ้าตั้ง discount factor γ = 0 agent จะมีพฤติกรรมอย่างไร",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ให้ความสำคัญกับ reward ในอนาคตไกลเท่ากับ reward ปัจจุบัน"
+        },
+        {
+          "key": "ข",
+          "text": "สุ่ม action ทุกครั้งโดยไม่สนใจค่า Q"
+        },
+        {
+          "key": "ค",
+          "text": "ไม่อัปเดตค่า Q เลย"
+        },
+        {
+          "key": "ง",
+          "text": "สนใจเฉพาะ reward ที่ได้ทันทีในก้าวถัดไป (สายตาสั้น)"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "เมื่อ γ = 0 จะได้ Gₜ = rₜ₊₁ เท่านั้น agent จึงไม่สนใจผลระยะยาว ข้อ ก คือกรณี γ = 1 ข้อ ข เป็นผลของ ε = 1 ไม่ใช่ γ ข้อ ค เป็นผลของ α = 0"
+    },
+    {
+      "id": 5,
+      "question": "agent ได้ reward ตามลำดับ r₁ = 1, r₂ = 0, r₃ = 2 แล้วเกมจบ ถ้า γ = 0.5 discounted return G₀ เท่ากับเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "3.0"
+        },
+        {
+          "key": "ข",
+          "text": "1.5"
+        },
+        {
+          "key": "ค",
+          "text": "2.0"
+        },
+        {
+          "key": "ง",
+          "text": "1.25"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "G₀ = 1 + 0.5(0) + 0.5²(2) = 1 + 0 + 0.5 = 1.5 ข้อ ก คือผลรวมแบบไม่คิดส่วนลด (γ = 1) ข้อ ค เกิดจากใช้ γ แทน γ² กับ r₃ (1 + 0.5 × 2) ข้อ ง เกิดจากใช้ γ³ กับ reward ตัวสุดท้าย"
+    },
+    {
+      "id": 6,
+      "question": "กำหนด Q(s,a) = 0.4, reward r = 1, max Q(s',a') = 0.6, α = 0.5, γ = 0.9 (s' ไม่ใช่ terminal) หลังอัปเดตด้วย Q-Learning ค่า Q(s,a) ใหม่เท่ากับเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.97"
+        },
+        {
+          "key": "ข",
+          "text": "1.54"
+        },
+        {
+          "key": "ค",
+          "text": "0.57"
+        },
+        {
+          "key": "ง",
+          "text": "1.14"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "TD target = 1 + 0.9 × 0.6 = 1.54, TD error = 1.54 − 0.4 = 1.14, Q ใหม่ = 0.4 + 0.5 × 1.14 = 0.97 ข้อ ข คือ TD target ข้อ ง คือ TD error ข้อ ค คือ α × TD error ที่ลืมบวก Q เดิม"
+    },
+    {
+      "id": 7,
+      "question": "กำหนด Q(s,a) = 2.0, reward r = −1, α = 0.1, γ = 0.9 และ Q(s', ·) มีค่าสูงสุด 3.0 แต่ s' เป็น terminal state (เกมจบ) ค่า Q(s,a) ใหม่เท่ากับเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "1.97"
+        },
+        {
+          "key": "ข",
+          "text": "2.00"
+        },
+        {
+          "key": "ค",
+          "text": "1.70"
+        },
+        {
+          "key": "ง",
+          "text": "1.80"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "เมื่อ s' เป็น terminal ไม่มีอนาคต TD target = r = −1 ดังนั้น Q ใหม่ = 2 + 0.1 × (−1 − 2) = 1.70 ข้อ ก (1.97) เกิดจากนำ 0.9 × 3.0 มาบวกทั้งที่เกมจบแล้ว ข้อ ข คือไม่อัปเดตเลย ข้อ ง คำนวณ TD error ผิดเป็น −2"
+    },
+    {
+      "id": 8,
+      "question": "agent ใช้ ε-greedy โดย ε = 0.2 และมี action ให้เลือก 4 ตัว (การสุ่มเลือกแต่ละ action เท่า ๆ กัน) ความน่าจะเป็นที่จะเลือก action ที่ Q สูงสุดคือเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.80"
+        },
+        {
+          "key": "ข",
+          "text": "0.20"
+        },
+        {
+          "key": "ค",
+          "text": "0.95"
+        },
+        {
+          "key": "ง",
+          "text": "0.85"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "P = (1 − ε) + ε/4 = 0.8 + 0.05 = 0.85 เพราะตอนสุ่มก็มีโอกาส 1/4 ที่จะได้ action ที่ดีที่สุดด้วย ข้อ ก ลืมส่วนของการสุ่ม ข้อ ข คือ ε เอง ข้อ ค คิดผิดเป็น 1 − ε/4"
+    },
+    {
+      "id": 9,
+      "question": "กำหนดให้ ε เริ่มต้น 1.0 และคูณด้วย 0.99 ทุกครั้งที่จบ episode (ε = 1.0 × 0.99ⁿ) หลังจบ 100 episodes ค่า ε มีค่าประมาณเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.366"
+        },
+        {
+          "key": "ข",
+          "text": "0.010"
+        },
+        {
+          "key": "ค",
+          "text": "0.900"
+        },
+        {
+          "key": "ง",
+          "text": "0.634"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "0.99¹⁰⁰ ≈ 0.366 (การลดแบบ exponential ไม่ใช่เชิงเส้น) ข้อ ข เกิดจากคิดว่าลดลง 0.01 ต่อ episode จนเหลือ 0 ข้อ ค เกิดจากคิดว่าลดลงเพียง 0.001 ต่อ episode ข้อ ง คือ 1 − 0.366"
+    },
+    {
+      "id": 10,
+      "question": "นักศึกษาออกแบบ reward ให้เกม Grid World: ถึงเป้าหมาย +1, ตกกับดัก −1 และ +0.2 ทุกก้าวที่เดิน (γ = 0.9) เพื่อ 'ให้กำลังใจ' agent ผลที่น่าจะเกิดขึ้นคือข้อใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "agent จะไปถึงเป้าหมายเร็วกว่าเดิม เพราะได้ reward มากขึ้น"
+        },
+        {
+          "key": "ข",
+          "text": "agent จะเดินวนไม่ยอมไปถึงเป้าหมาย เพราะการเดินต่อไปเรื่อย ๆ ได้ return ประมาณ 0.2/(1 − 0.9) = 2 มากกว่า +1 ของเป้าหมาย"
+        },
+        {
+          "key": "ค",
+          "text": "agent จะรีบกระโดดลงกับดักเพื่อจบเกม"
+        },
+        {
+          "key": "ง",
+          "text": "ไม่มีผลต่อ policy เพราะ reward ต่อก้าวเท่ากันทุกช่อง"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "นี่คือ reward hacking เมื่อ reward ต่อก้าวเป็นบวก การไม่จบเกมให้ return สูงกว่า (ในบทเรียน agent เดินชนขอบจนหมดเวลาได้ reward รวม 10) ข้อ ค เกิดเมื่อ reward ต่อก้าวติดลบมาก ๆ (เช่น −1) ข้อ ง ผิดเพราะ reward ต่อก้าวเปลี่ยนค่าของการจบเกมเทียบกับการเดินต่อ"
+    },
+    {
+      "id": 11,
+      "question": "พิจารณาโค้ดเลือก action ต่อไปนี้ ในช่วงเริ่มฝึก FrozenLake (reward เป็น 0 ทุกก้าว ยกเว้นถึงเป้าหมาย) ที่ Q-table เป็นศูนย์ทั้งหมดและตั้ง epsilon = 0 จะเกิดปัญหาใด",
+      "code": "def choose_action(Q, s, epsilon):\n    if np.random.rand() < epsilon:\n        return np.random.randint(4)\n    return int(np.argmax(Q[s]))",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เกิด error เพราะ np.argmax ใช้กับ array ที่เป็นศูนย์ทั้งหมดไม่ได้"
+        },
+        {
+          "key": "ข",
+          "text": "agent จะสุ่ม action ทุกครั้ง"
+        },
+        {
+          "key": "ค",
+          "text": "np.argmax คืน index แรกเมื่อค่าเสมอกัน agent จึงเลือก action 0 ซ้ำตลอดและอาจไม่เคยเจอ reward เลย"
+        },
+        {
+          "key": "ง",
+          "text": "agent จะเลือก action ที่ดีที่สุดได้ทันทีเพราะ argmax หาค่าสูงสุดเสมอ"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "เมื่อค่า Q เสมอกันทั้งหมด np.argmax คืน 0 เสมอ ร่วมกับ ε = 0 จึงไม่มีการสำรวจ agent ไม่เคยถึงเป้าหมาย ค่า Q จึงไม่เปลี่ยน แก้โดยสุ่มเลือกเมื่อเสมอกันและใช้ ε เริ่มต้นสูง ข้อ ก ผิดเพราะ argmax ทำงานได้ปกติ ข้อ ข ผิดเพราะ ε = 0 ข้อ ง ผิดเพราะยังไม่มีความรู้ใดใน Q"
+    },
+    {
+      "id": 12,
+      "question": "โค้ดอัปเดต Q-Learning ต่อไปนี้มีข้อผิดพลาดเชิงหลักการที่ใด",
+      "code": "s_next, r, terminated, truncated, _ = env.step(a)\ntarget = r + gamma * np.max(Q[s_next])\nQ[s, a] += alpha * (target - Q[s, a])",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ต้องใช้ np.min แทน np.max"
+        },
+        {
+          "key": "ข",
+          "text": "ต้องคูณ alpha กับ target เท่านั้น ไม่ต้องลบ Q[s, a]"
+        },
+        {
+          "key": "ค",
+          "text": "ต้องใช้ Q[s, a] แทน Q[s_next] ในการคำนวณ target"
+        },
+        {
+          "key": "ง",
+          "text": "ไม่ได้ตรวจ terminated เมื่อเกมจบ TD target ควรเป็น r เท่านั้น ไม่ควรบวกค่าของ state ถัดไป"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "เมื่อ terminated = True ไม่มีอนาคต ควรใช้ target = r if terminated else r + gamma * max Q(s_next) ส่วนกรณี truncated (หมดเวลา) ยังบวกค่าอนาคตได้ ข้อ ก ข ค ทำให้สมการ Bellman ผิดทั้งหมด"
+    },
+    {
+      "id": 13,
+      "question": "ข้อใดเป็นการเรียกใช้ Gymnasium (เวอร์ชันปัจจุบัน) ที่ถูกต้อง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "obs = env.reset() ; obs, reward, done, info = env.step(action)"
+        },
+        {
+          "key": "ข",
+          "text": "obs, info = env.reset() ; obs, reward, terminated, truncated, info = env.step(action)"
+        },
+        {
+          "key": "ค",
+          "text": "obs, info = env.reset() ; obs, reward, done = env.step(action)"
+        },
+        {
+          "key": "ง",
+          "text": "obs = env.reset(seed=42)[0] ; reward = env.step(action)"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "Gymnasium ให้ reset() คืน (observation, info) และ step() คืน 5 ค่า โดยแยก terminated (จบตามกฎ) กับ truncated (ถูกตัดเพราะเกินเวลา) ข้อ ก เป็น API เก่าของ OpenAI Gym ข้อ ค และ ง จำนวนค่าที่คืนไม่ถูกต้อง"
+    },
+    {
+      "id": 14,
+      "question": "หลังฝึก Q-Learning บน Grid World ได้ policy (ลูกศร) ดังนี้ ข้อใดตีความได้ถูกต้อง",
+      "code": "step_reward = +0.20 -> เดิน 50 ก้าว, จบที่ state 0, reward รวม = 10.00\n ↑  ←  ←  ←\n ↑  #  ↑  T\n ↑  ←  ↑  ←\n T  ↑  #  G",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "agent hack reward โดยเดินชนขอบอยู่ที่ state เริ่มต้นจนหมดเวลา เพราะ reward ต่อก้าวที่เป็นบวกทำให้การไม่จบเกมคุ้มกว่า"
+        },
+        {
+          "key": "ข",
+          "text": "agent ยังฝึกไม่พอ ถ้าฝึกเพิ่มจะไปถึง G แน่นอน"
+        },
+        {
+          "key": "ค",
+          "text": "environment มีบั๊ก เพราะ agent ควรได้ reward ไม่เกิน 1"
+        },
+        {
+          "key": "ง",
+          "text": "agent กลัวกับดักมากเกินไปเพราะ trap reward มีค่า −1"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "ลูกศรทุกช่องพา agent กลับไปมุมซ้ายบนแล้วเดินชนขอบ (↑ ที่ state 0) ได้ +0.2 ทุกก้าวจนถูกตัดที่ 50 ก้าว (50 × 0.2 = 10) agent ทำตาม reward ถูกต้องแล้ว จึงไม่ใช่ปัญหาการฝึกไม่พอ (ข) หรือบั๊ก (ค) และไม่เกี่ยวกับ trap reward (ง)"
+    },
+    {
+      "id": 15,
+      "question": "จากตารางผลการทดลองต่อไปนี้ แถว 'epsilon = 1 (random)' ซึ่ง agent เดินสุ่มตลอดการฝึก ได้ reward ระหว่างฝึกต่ำมาก แต่เล่นแบบ greedy หลังฝึกถึงเป้าหมายได้ 100% เพราะเหตุใด",
+      "code": "                          reward_last100  V(start)  greedy_steps  success_rate\nbaseline (a=0.1, g=0.9)            0.684     0.270           8.0           1.0\nepsilon = 1 (random)              -2.406     0.250           8.0           1.0",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เพราะ ε = 1 ทำให้ α มีค่ามากขึ้นโดยอัตโนมัติ"
+        },
+        {
+          "key": "ข",
+          "text": "เพราะ greedy policy ไม่ได้ใช้ Q-table"
+        },
+        {
+          "key": "ค",
+          "text": "เป็นความบังเอิญจาก seed เท่านั้น"
+        },
+        {
+          "key": "ง",
+          "text": "เพราะ Q-Learning เป็น off-policy ใช้ max Q(s',·) ในการอัปเดต จึงเรียนค่าของ policy ที่ดีที่สุดได้แม้ behavior policy จะสุ่มล้วน"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "Q-Learning แยก behavior policy (ใช้เก็บประสบการณ์) ออกจาก target policy (greedy ผ่าน max) ตราบใดที่ทุก (s, a) ถูกเยี่ยมบ่อยพอ ค่า Q จะลู่เข้าค่าที่ดีที่สุด V(start) = 0.250 ใกล้ค่าจริง 0.270 ข้อ ก ไม่มีความสัมพันธ์ดังกล่าว ข้อ ข greedy policy คือ argmax ของ Q-table ข้อ ค ผลนี้เป็นค่าเฉลี่ย 5 seeds"
+    },
+    {
+      "id": 16,
+      "question": "เหตุผลหลักที่ Deep Q-Network (DQN) ใช้ Experience Replay คือข้อใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เพื่อลดจำนวนพารามิเตอร์ของ neural network"
+        },
+        {
+          "key": "ข",
+          "text": "เพื่อให้ไม่ต้องใช้ ε-greedy"
+        },
+        {
+          "key": "ค",
+          "text": "เพื่อสุ่ม mini-batch จากประสบการณ์ที่เก็บไว้ ลดความสัมพันธ์ต่อเนื่องของข้อมูลที่เกิดติดกัน และนำประสบการณ์เก่ามาใช้ซ้ำได้"
+        },
+        {
+          "key": "ง",
+          "text": "เพื่อเก็บ Q-table ไว้แทน neural network"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "transition ที่เกิดติดกันมีความสัมพันธ์สูง ทำให้ gradient ลำเอียงและการฝึกไม่เสถียร replay buffer ทำให้ข้อมูลฝึกใกล้ i.i.d. มากขึ้น ข้อ ก ข ง ไม่ใช่หน้าที่ของ experience replay (DQN ยังใช้ ε-greedy และ network เหมือนเดิม)"
+    },
+    {
+      "id": 17,
+      "question": "Target network (θ⁻) ใน DQN มีบทบาทอย่างไร",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ใช้เลือก action ระหว่างเล่นเกมแทน network หลัก"
+        },
+        {
+          "key": "ข",
+          "text": "ใช้คำนวณเป้าหมาย y = r + γ max Q(s',a'; θ⁻) ด้วยน้ำหนักที่ถูกแช่แข็งไว้และ sync เป็นระยะ ทำให้เป้าหมายไม่ขยับตามทุกการอัปเดต"
+        },
+        {
+          "key": "ค",
+          "text": "ใช้เก็บประสบการณ์ (s, a, r, s') แทน replay buffer"
+        },
+        {
+          "key": "ง",
+          "text": "ใช้ลดขนาดภาพจาก 210×160 เป็น 84×84"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "ถ้าใช้ network เดียวทั้งทำนายและคำนวณเป้าหมาย เป้าหมายจะเปลี่ยนทุกครั้งที่อัปเดต (ไล่ตามเป้าที่เคลื่อนที่) target network ที่ sync ทุก N steps (เช่น 10,000) ทำให้การฝึกเสถียร ข้อ ก คือหน้าที่ของ network หลัก ข้อ ค คือ replay buffer ข้อ ง คือ preprocessing"
+    },
+    {
+      "id": 18,
+      "question": "ใน DQN สำหรับเกม Atari Breakout เหตุใดจึงนำภาพ 4 เฟรมล่าสุดมาซ้อนกัน (frame stacking) เป็น state เดียว",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เพราะภาพเดียวบอกไม่ได้ว่าลูกบอลเคลื่อนที่ไปทิศใดและเร็วเท่าใด การซ้อนเฟรมทำให้ state มีข้อมูลการเคลื่อนที่และใกล้เคียง Markov มากขึ้น"
+        },
+        {
+          "key": "ข",
+          "text": "เพื่อเพิ่มความละเอียดของภาพให้คมชัดขึ้น 4 เท่า"
+        },
+        {
+          "key": "ค",
+          "text": "เพื่อให้ agent เลือก action ได้ 4 ตัวพร้อมกัน"
+        },
+        {
+          "key": "ง",
+          "text": "เพื่อลดจำนวน action จาก 18 เหลือ 4"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "ภาพนิ่งภาพเดียวไม่มีข้อมูลความเร็ว จึงไม่เป็น Markov การซ้อน 4 เฟรม (84×84×4) ทำให้ CNN เห็นการเคลื่อนไหว ข้อ ข ความละเอียดไม่เปลี่ยน ข้อ ค และ ง จำนวน action ไม่เกี่ยวกับจำนวนเฟรม"
+    },
+    {
+      "id": 19,
+      "question": "ข้อใดกล่าวถึงประวัติของ AI กับ game playing ได้ถูกต้อง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Deep Blue ชนะ Garry Kasparov ในปี 1997 ด้วย Deep Q-Network ที่เรียนจากภาพกระดาน"
+        },
+        {
+          "key": "ข",
+          "text": "AlphaGo ใช้เพียง minimax กับ alpha-beta pruning โดยไม่มี neural network"
+        },
+        {
+          "key": "ค",
+          "text": "DQN ของ DeepMind เล่นเกม Atari โดยอ่านค่าตำแหน่งวัตถุจากหน่วยความจำของเกมโดยตรงและออกแบบ network แยกสำหรับแต่ละเกม"
+        },
+        {
+          "key": "ง",
+          "text": "AlphaGo (2016) ผสาน neural network ที่ฝึกด้วย supervised learning และ RL จากการเล่นกับตัวเอง เข้ากับ Monte Carlo Tree Search และชนะ Lee Sedol 4–1"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "AlphaGo ใช้ policy/value network ร่วมกับ MCTS ชนะ Lee Sedol 4–1 ในเดือนมีนาคม 2016 ข้อ ก ผิดเพราะ Deep Blue ใช้การค้นหาและฟังก์ชันประเมินที่ผู้เชี่ยวชาญออกแบบ ไม่ใช่ RL ข้อ ข ผิดเพราะ AlphaGo ใช้ deep neural network ข้อ ค ผิดเพราะ DQN เรียนจากพิกเซลและใช้ network กับ hyperparameters ชุดเดียวกันทุกเกม"
+    },
+    {
+      "id": 20,
+      "question": "ต้องการสร้าง agent เล่นวิดีโอเกมที่ state คือภาพหน้าจอ 84×84 พิกเซล และมีปุ่มกดได้ 6 ปุ่ม ควรเลือกแนวทางใดเหมาะสมที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Q-table ที่มีหนึ่งแถวต่อภาพหน้าจอที่เป็นไปได้ทุกภาพ"
+        },
+        {
+          "key": "ข",
+          "text": "Minimax search เพราะเป็นเกมผู้เล่นคนเดียว"
+        },
+        {
+          "key": "ค",
+          "text": "DQN ที่ใช้ CNN รับภาพหลายเฟรมซ้อนกัน ส่งออก Q-value 6 ค่า พร้อม replay buffer และ target network"
+        },
+        {
+          "key": "ง",
+          "text": "Linear regression ทำนายคะแนนจากพิกเซล โดยไม่ต้องมี reward"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "จำนวนภาพที่เป็นไปได้มหาศาล (ประมาณ 256^(84×84) ภาพ) Q-table จึงเป็นไปไม่ได้ (ก) DQN ใช้ CNN ประมาณค่า Q จากพิกเซลได้ ส่วน minimax (ข) ต้องรู้กฎของเกมและเหมาะกับเกมสองฝ่ายผลัดกันเดิน และ linear regression (ง) ไม่ใช่การเรียนรู้การตัดสินใจจาก reward"
+    }
+  ]
+}

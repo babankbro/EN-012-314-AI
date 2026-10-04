@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 09 - Reinforcement Learning และ Game Playing</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🧠 Review Sheet บทที่ 09 — Reinforcement Learning และ Game Playing</div>
+      <div class="sub">EN-012-314 Artificial Intelligence · Machine Learning · Reinforcement Learning &amp; Game Playing</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 13 · CLO4 (LLO4-3)<br>
+      Lab 09: Q-Learning กับเกม Grid World
+    </div>
+  </div>
+
+  <div class="columns">
+    <!-- ===== LEFT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🎮</span> 1. องค์ประกอบของ RL</div>
+        <div class="section-body">
+          <p>เรียนแบบ <span class="accent">ลองผิดลองถูก</span>: agent ทำ action → environment ส่ง <b>reward</b> + <b>state ใหม่</b> กลับมา เป้าหมาย = return ระยะยาวสูงสุด (ไม่ใช่ reward ก้าวเดียว)</p>
+          <div class="formula">sₜ → [Agent π] → aₜ → [Environment] → rₜ₊₁, sₜ₊₁ → …</div>
+          <div class="def-row"><span class="def-key">State s</span><span class="def-val">สถานการณ์ที่ agent เห็น (ตำแหน่งในตาราง, ภาพหน้าจอ)</span></div>
+          <div class="def-row"><span class="def-key">Action a</span><span class="def-val">ทางเลือก (ขึ้น/ขวา/ลง/ซ้าย, ดันซ้าย/ขวา)</span></div>
+          <div class="def-row"><span class="def-key">Reward r</span><span class="def-val">ตัวเลขบอกว่าดีแค่ไหน ไม่บอกว่าควรทำอะไร</span></div>
+          <div class="def-row"><span class="def-key">Policy π</span><span class="def-val">กฎเลือก action จาก state, π* = argmaxₐ Q*(s,a)</span></div>
+          <div class="def-row"><span class="def-key">Episode</span><span class="def-val">เล่น 1 รอบ: <code>terminated</code> = จบตามกฎ, <code>truncated</code> = หมดเวลา</span></div>
+          <table>
+            <tr><th></th><th>Supervised</th><th>RL</th></tr>
+            <tr><td>สัญญาณสอน</td><td>label ที่ถูกต้อง</td><td>reward (มาช้า, credit assignment)</td></tr>
+            <tr><td>ข้อมูล</td><td>i.i.d.</td><td>ต่อเนื่อง, action มีผลต่ออนาคต</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">💰</span> 2. Return · MDP · Bellman</div>
+        <div class="section-body">
+          <div class="formula">Gₜ = rₜ₊₁ + γ rₜ₊₂ + γ² rₜ₊₃ + … = Σₖ γᵏ rₜ₊ₖ₊₁</div>
+          <p>ตัวอย่าง: −0.04 × 5 ก้าว แล้ว +1, γ = 0.9 → G₀ = −0.04(1+0.9+0.81+0.729+0.6561) + 0.9⁵ = <span class="accent">0.4267</span></p>
+          <ul class="mini">
+            <li>γ = 0 สายตาสั้น (สนแค่ r ถัดไป) · γ → 1 มองไกล</li>
+            <li>ขอบเขตมองไกล ≈ 1/(1−γ): γ = 0.99 → 100 (Q ของ CartPole เก่ง ๆ ≈ 90–100)</li>
+          </ul>
+          <p><b>MDP</b> = (S, A, T(s,a,s'), R, γ) · <b>Markov</b>: P(sₜ₊₁ | sₜ, aₜ) ไม่ขึ้นกับอดีต (ภาพเดียวของ Atari ไม่ Markov → ซ้อน 4 เฟรม)</p>
+          <div class="def-row"><span class="def-key">V<sup>π</sup>(s)</span><span class="def-val">E[Gₜ | sₜ = s] — state นี้ดีแค่ไหน</span></div>
+          <div class="def-row"><span class="def-key">Q<sup>π</sup>(s,a)</span><span class="def-val">E[Gₜ | sₜ = s, aₜ = a] — ทำ a ใน s ดีแค่ไหน · V*(s) = maxₐ Q*(s,a)</span></div>
+          <div class="formula">Q*(s,a) = Σₛ' T(s,a,s') [ R(s,a,s') + γ maxₐ' Q*(s',a') ]</div>
+          <p class="note">รู้ T, R → Value Iteration (DP) · ไม่รู้กฎ → เรียนจากประสบการณ์ (Q-Learning, model-free)</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧮</span> 3. Q-Learning Update</div>
+        <div class="section-body">
+          <div class="formula">Q(s,a) ← Q(s,a) + α [ r + γ maxₐ' Q(s',a') − Q(s,a) ]</div>
+          <p>ในวงเล็บ = <b>TD error δ</b> · ถ้า s' เป็น terminal → TD target = <span class="accent">r</span> เท่านั้น</p>
+          <p><b>ตัวอย่าง</b> Q = 0.5, r = −0.04, Q(s',·) = [0.2, 0.8, 0.6, 0.1], α = 0.1, γ = 0.9</p>
+          <ol class="mini">
+            <li>TD target = −0.04 + 0.9 × 0.8 = 0.68</li>
+            <li>δ = 0.68 − 0.5 = 0.18 → Q ใหม่ = 0.5 + 0.1 × 0.18 = <span class="accent">0.518</span></li>
+          </ol>
+          <table>
+            <tr><th>พารามิเตอร์</th><th>บทบาท</th><th>ค่าที่นิยม</th></tr>
+            <tr><td>α learning rate</td><td>ขยับ Q แรงแค่ไหน (มาก=แกว่ง, น้อย=ช้า)</td><td>0.05–0.5</td></tr>
+            <tr><td>γ discount</td><td>ให้น้ำหนักอนาคต</td><td>0.9–0.99</td></tr>
+            <tr><td>ε exploration</td><td>โอกาสสุ่ม action</td><td>1.0 → 0.01–0.1</td></tr>
+          </table>
+          <p class="note">Q-Learning = off-policy (เดินสุ่มก็เรียน policy ดีที่สุดได้) · SARSA = on-policy ใช้ Q(s',a') ของ action ที่ทำจริง</p>
+        </div>
+      </div>
+      <div class="section">
+        <div class="section-header"><span class="icon">🎲</span> 4. Exploration vs Exploitation · ε-greedy</div>
+        <div class="section-body">
+          <div class="code-block"><span class="kw">def</span> <span class="fn">epsilon_greedy</span>(q_row, eps, rng):
+    <span class="kw">if</span> rng.random() &lt; eps:                       <span class="comment"># explore</span>
+        <span class="kw">return</span> int(rng.integers(len(q_row)))
+    best = np.flatnonzero(q_row == q_row.max())  <span class="comment"># exploit</span>
+    <span class="kw">return</span> int(rng.choice(best))                 <span class="comment"># สุ่มเมื่อเสมอ</span>
+eps = max(eps_min, eps * <span class="num">0.995</span>)                <span class="comment"># decay ทุก episode</span></div>
+          <p>P(เลือก action ดีที่สุด) = (1 − ε) + ε/|A| เช่น ε = 0.2, 4 actions → <span class="accent">0.85</span> · 0.99¹⁰⁰ ≈ 0.366</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🗺️</span> 5. Grid World 4×4 และ Training Loop</div>
+        <div class="section-body">
+          <div class="flex-row">
+            <div><p><b>แผนที่</b> (G +1, T −1, ก้าว −0.04)</p><div class="code-block">S  .  .  .
+.  #  .  T
+.  .  .  .
+T  .  #  G</div></div>
+            <div><p><b>Policy ที่เรียนได้</b> (500 episodes)</p><div class="code-block">→  →  ↓  ←
+↓  #  ↓  T
+→  →  →  ↓
+T  ↑  #  G</div></div>
+          </div>
+          <ul class="mini">
+            <li>ทางสั้นสุด 6 ก้าว, reward รวม 0.80 · V(start) = 0.427 = G₀ ที่คำนวณมือ (ข้อ 2)</li>
+            <li>Q(state 6, →) = −0.948 → เรียนรู้ว่าเดินขวาคือตกกับดัก · state ที่ไม่ค่อยถูกเยี่ยม ค่า Q ยังไม่ลู่เข้า</li>
+          </ul>
+          <div class="code-block">s, info = env.reset(); done = <span class="kw">False</span>
+<span class="kw">while not</span> done:
+    a = epsilon_greedy(Q[s], eps, rng)
+    s2, r, terminated, truncated, info = env.step(a)
+    target = r <span class="kw">if</span> terminated <span class="kw">else</span> r + gamma * Q[s2].max()
+    Q[s, a] += alpha * (target - Q[s, a])
+    s, done = s2, terminated <span class="kw">or</span> truncated</div>
+          <p class="note">Gymnasium: <code>reset()</code> คืน (obs, info), <code>step()</code> คืน 5 ค่า · FrozenLake-v1: 0=ซ้าย 1=ลง 2=ขวา 3=ขึ้น, ลื่นไปทิศที่ตั้งใจ 1/3</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🏆</span> 6. Reward Design</div>
+        <div class="section-body">
+          <table>
+            <tr><th>แบบ</th><th>ข้อดี</th><th>ข้อเสีย</th></tr>
+            <tr><td>Sparse (+1 ที่เป้าหมายเท่านั้น)</td><td>นิยามง่าย ไม่ชี้นำผิด</td><td>เรียนช้า อาจไม่เคยเจอ reward</td></tr>
+            <tr><td>Shaped (โบนัสระหว่างทาง)</td><td>เรียนเร็ว</td><td>เสี่ยง reward hacking</td></tr>
+          </table>
+          <ul class="mini">
+            <li>step +0.2 → เดินวนไม่จบ (0.2/(1−0.9) = 2 &gt; +1) · step −1 → รีบตกกับดักให้จบ</li>
+            <li>โบนัส "เข้าใกล้" แต่ไม่หักเมื่อถอย → เดินเข้า-ออกเก็บโบนัส</li>
+            <li>ปลอดภัย: <b>potential-based</b> F = γΦ(s') − Φ(s) ไม่เปลี่ยน optimal policy</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🕹️</span> 7. Deep RL และ Game Playing</div>
+        <div class="section-body">
+          <p><b>CartPole</b> (x, ẋ, θ, θ̇) ต่อเนื่อง → discretize 3×3×8×12 × 2 actions = 1,728 ค่า (เว็บแล็บ <code>cartpole_web</code>)</p>
+          <div class="formula">DQN: L(θ) = E<sub>(s,a,r,s')~D</sub>[ (r + γ maxₐ' Q(s',a'; θ⁻) − Q(s,a; θ))² ]</div>
+          <ul class="mini">
+            <li><b>Replay buffer D</b> สุ่ม mini-batch ลด correlation · <b>Target net θ⁻</b> sync ทุก N steps ให้เป้านิ่ง</li>
+            <li><b>Atari</b>: 84×84×4 (frame stacking) → Conv 32/8/4 → 64/4/2 → 64/3/1 → Dense 512 → Q ต่อ action</li>
+            <li><b>Policy gradient / REINFORCE</b>: ปรับ π<sub>θ</sub> โดยตรง ∇J ≈ Σ Gₜ ∇log π<sub>θ</sub>(aₜ|sₜ)</li>
+          </ul>
+          <table>
+            <tr><th>ปี</th><th>ระบบ</th><th>แนวคิด</th></tr>
+            <tr><td>1992–95</td><td>TD-Gammon</td><td>TD learning + NN เล่นกับตัวเอง (แบ็กแกมมอน)</td></tr>
+            <tr><td>1997</td><td>Deep Blue</td><td>search + evaluation ที่คนออกแบบ (ไม่ใช่ RL)</td></tr>
+            <tr><td>2015</td><td>DQN</td><td>Atari 49 เกมจากพิกเซล network ชุดเดียว</td></tr>
+            <tr><td>2016</td><td>AlphaGo</td><td>SL + RL self-play + MCTS ชนะ Lee Sedol 4–1</td></tr>
+            <tr><td>2017–18</td><td>AlphaZero</td><td>self-play ล้วน หมากรุก/โชงิ/โกะ</td></tr>
+          </table>
+          <p class="note">AIMA: minimax + alpha-beta ต้องรู้กฎและค้นต้นไม้เกม · AlphaZero = MCTS นำทางด้วย network ที่เรียนด้วย RL</p>
+        </div>
+      </div>
+
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อผิดพลาดที่พบบ่อย</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li>ลืมกรณี <code>terminated</code> → บวก γ max Q(s') ทั้งที่เกมจบ</li>
+            <li>ใช้ <code>np.argmax</code> ตอน Q เป็น 0 ทั้งหมด → เลือก action 0 ซ้ำ (FrozenLake ไม่เคยถึง G)</li>
+            <li>ใช้ API เก่า <code>import gym</code>, <code>step()</code> คืน 4 ค่า · Gymnasium 1.x: <code>FrameStack</code> → <code>FrameStackObservation</code></li>
+            <li>ประเมิน policy ด้วย ε &gt; 0 หรือดูแค่ reward ระหว่างฝึก (ยังมีการสุ่มปนอยู่)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧪</span> เชื่อมโยงกับ Lab 09</div>
+        <div class="section-body">
+          <table class="lab-table">
+            <tr><th>ข้อ</th><th>สิ่งที่ทำ</th></tr>
+            <tr><td>1–2</td><td>return &amp; Q-update ด้วยมือ, เขียน ε-greedy</td></tr>
+            <tr><td>3–4</td><td>Q-Learning บน Grid World 5×5, ทดลอง α/γ/ε</td></tr>
+            <tr><td>5–6</td><td>ออกแบบ reward / hacking, FrozenLake-v1</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-012-314 ปัญญาประดิษฐ์ · ผศ.ดร. สรายุทธ กรวิรัตน์ · สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยกาฬสินธุ์ · ปีการศึกษา 2569</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,252 @@
+{
+  "moduleId": "06",
+  "title": "Neural Networks & Deep Learning",
+  "titleTh": "Neural Networks และ Deep Learning",
+  "timeMinutes": 30,
+  "questions": [
+    {
+      "id": 1,
+      "question": "ใน artificial neuron ที่คำนวณ z = wᵀx + b แล้วส่งผ่าน activation function พารามิเตอร์ bias (b) มีบทบาทอย่างไร",
+      "choices": [
+        { "key": "ก", "text": "ทำให้ output อยู่ในช่วง 0 ถึง 1 เสมอ" },
+        { "key": "ข", "text": "เลื่อนจุดตัดสินใจของ neuron ทำให้ output ไม่จำเป็นต้องเป็นศูนย์แม้ input เป็นศูนย์ทั้งหมด" },
+        { "key": "ค", "text": "กำหนดจำนวน neuron ในชั้นถัดไป" },
+        { "key": "ง", "text": "ใส่ความไม่เป็นเชิงเส้น (non-linearity) ให้กับ neuron" }
+      ],
+      "answer": "ข",
+      "explanation": "bias ทำหน้าที่เหมือนจุดตัดแกนของสมการเส้นตรง เลื่อน decision boundary ได้อิสระ ข้อ ก เป็นหน้าที่ของ sigmoid ข้อ ง เป็นหน้าที่ของ activation function ส่วนข้อ ค ไม่เกี่ยวกับ bias"
+    },
+    {
+      "id": 2,
+      "question": "เหตุใด MLP จึงต้องใช้ activation function ที่ไม่เป็นเชิงเส้นใน hidden layer",
+      "choices": [
+        { "key": "ก", "text": "เพื่อลดจำนวนพารามิเตอร์ของโมเดล" },
+        { "key": "ข", "text": "เพื่อให้ output layer รวมความน่าจะเป็นได้เท่ากับ 1" },
+        { "key": "ค", "text": "เพราะถ้าไม่มี การซ้อน Dense layer หลายชั้นจะยุบรวมเป็นการแปลงเชิงเส้นชั้นเดียว ไม่ว่าจะมีกี่ชั้นก็ตาม" },
+        { "key": "ง", "text": "เพื่อป้องกันไม่ให้ weight มีค่าติดลบ" }
+      ],
+      "answer": "ค",
+      "explanation": "(xW₁)W₂ = x(W₁W₂) ดังนั้นหากไม่มี non-linearity เครือข่ายลึกเท่าใดก็มีความสามารถเท่าโมเดลเชิงเส้นชั้นเดียว activation ไม่ได้ลดพารามิเตอร์ (ก) การรวมเป็น 1 เป็นคุณสมบัติของ softmax เฉพาะ output (ข) และ weight ติดลบได้ตามปกติ (ง)"
+    },
+    {
+      "id": 3,
+      "question": "ข้อใดอธิบายได้ถูกต้องว่าทำไม Perceptron ชั้นเดียวจึงเรียนรู้ฟังก์ชัน XOR ไม่ได้",
+      "choices": [
+        { "key": "ก", "text": "เพราะข้อมูล XOR แบ่งแยกด้วยเส้นตรงเส้นเดียวไม่ได้ (not linearly separable) แต่ Perceptron สร้าง decision boundary เป็นเส้นตรงเท่านั้น" },
+        { "key": "ข", "text": "เพราะ XOR มีข้อมูลเพียง 4 ตัวอย่าง น้อยเกินไปสำหรับการฝึก" },
+        { "key": "ค", "text": "เพราะ learning rate ของ Perceptron ต้องมีค่าคงที่" },
+        { "key": "ง", "text": "เพราะ Perceptron ไม่มี bias" }
+      ],
+      "answer": "ก",
+      "explanation": "จุด (0,1),(1,0) กับ (0,0),(1,1) แบ่งด้วยเส้นตรงไม่ได้ จึงต้องมี hidden layer มาแปลงพื้นที่ (เช่น OR และ NAND) ก่อน จำนวนข้อมูลไม่ใช่ประเด็น (ข) learning rate ไม่ใช่สาเหตุ (ค) และ Perceptron มี bias (ง)"
+    },
+    {
+      "id": 4,
+      "question": "neuron หนึ่งใช้ ReLU เป็น activation มี x = [1, 2, 3], w = [0.2, −0.1, 0.4] และ b = −0.5 output ของ neuron มีค่าเท่าใด",
+      "choices": [
+        { "key": "ก", "text": "0" },
+        { "key": "ข", "text": "1.2" },
+        { "key": "ค", "text": "0.668" },
+        { "key": "ง", "text": "0.7" }
+      ],
+      "answer": "ง",
+      "explanation": "z = 0.2(1) − 0.1(2) + 0.4(3) − 0.5 = 0.2 − 0.2 + 1.2 − 0.5 = 0.7 เป็นบวก ReLU จึงให้ 0.7 ข้อ ข ลืมบวก bias ข้อ ค คือ sigmoid(0.7) และข้อ ก จะเกิดเมื่อ z ติดลบเท่านั้น"
+    },
+    {
+      "id": 5,
+      "question": "Dense layer ที่รับ input 784 ค่า และมี 128 neuron มีจำนวนพารามิเตอร์ (weights + biases) เท่าใด",
+      "choices": [
+        { "key": "ก", "text": "100,352" },
+        { "key": "ข", "text": "100,480" },
+        { "key": "ค", "text": "101,264" },
+        { "key": "ง", "text": "912" }
+      ],
+      "answer": "ข",
+      "explanation": "params = n_in × n_out + n_out = 784 × 128 + 128 = 100,352 + 128 = 100,480 ข้อ ก นับเฉพาะ weights ลืม bias ข้อ ค บวก bias ผิดเป็น 784 × 128 + 784 + 128 ส่วนข้อ ง คือ 784 + 128 ซึ่งไม่ใช่การนับแบบ fully connected"
+    },
+    {
+      "id": 6,
+      "question": "output layer ใช้ softmax กับ logits z = [0, 0, ln 2] ความน่าจะเป็นของคลาสที่ 3 มีค่าเท่าใด",
+      "choices": [
+        { "key": "ก", "text": "0.333" },
+        { "key": "ข", "text": "0.667" },
+        { "key": "ค", "text": "0.5" },
+        { "key": "ง", "text": "0.25" }
+      ],
+      "answer": "ค",
+      "explanation": "e⁰ = 1, e⁰ = 1, e^(ln 2) = 2 ผลรวม = 4 ดังนั้น P(คลาส 3) = 2/4 = 0.5 (คลาส 1 และ 2 ได้ 0.25 เท่ากัน) ข้อ ก เป็นกรณี logits เท่ากันทั้งหมด ข้อ ง เป็นความน่าจะเป็นของคลาส 1 หรือ 2"
+    },
+    {
+      "id": 7,
+      "question": "โมเดล binary classification ทำนายความน่าจะเป็นของคลาส 1 เป็น p = 0.8 สำหรับตัวอย่างที่คำตอบจริงคือ y = 1 ค่า binary cross-entropy (ใช้ log ฐาน e) ของตัวอย่างนี้ประมาณเท่าใด",
+      "choices": [
+        { "key": "ก", "text": "0.223" },
+        { "key": "ข", "text": "0.040" },
+        { "key": "ค", "text": "1.609" },
+        { "key": "ง", "text": "0.200" }
+      ],
+      "answer": "ก",
+      "explanation": "BCE = −[y ln p + (1 − y) ln(1 − p)] = −ln(0.8) ≈ 0.223 ข้อ ข คือ squared error (1 − 0.8)² ข้อ ค คือ −ln(0.2) ซึ่งเป็นกรณี y = 0 และข้อ ง คือ absolute error"
+    },
+    {
+      "id": 8,
+      "question": "Perceptron ใช้ step function (ทำนาย 1 เมื่อ z ≥ 0) มี w = [0.5, −0.5], b = 0, learning rate η = 0.1 ได้รับตัวอย่าง x = [1, 2] ที่มี y = 1 หลังใช้ perceptron learning rule 1 ครั้ง ค่า w และ b ใหม่คือข้อใด",
+      "choices": [
+        { "key": "ก", "text": "w = [0.5, −0.5], b = 0 (ไม่เปลี่ยนเพราะทำนายถูก)" },
+        { "key": "ข", "text": "w = [0.4, −0.7], b = −0.1" },
+        { "key": "ค", "text": "w = [0.6, −0.4], b = 0.1" },
+        { "key": "ง", "text": "w = [0.6, −0.3], b = 0.1" }
+      ],
+      "answer": "ง",
+      "explanation": "z = 0.5(1) − 0.5(2) + 0 = −0.5 จึงทำนาย ŷ = 0 (ผิด) อัปเดต wᵢ ← wᵢ + η(y − ŷ)xᵢ = [0.5 + 0.1(1)(1), −0.5 + 0.1(1)(2)] = [0.6, −0.3] และ b ← 0 + 0.1(1) = 0.1 ข้อ ค ลืมคูณด้วย x₂ = 2 ข้อ ข ปรับผิดทิศ"
+    },
+    {
+      "id": 9,
+      "question": "ข้อใดเป็นเหตุผลหลักที่ ReLU เป็นค่าเริ่มต้นยอดนิยมสำหรับ hidden layer ของเครือข่ายลึก",
+      "choices": [
+        { "key": "ก", "text": "ให้ output อยู่ในช่วง (0, 1) จึงตีความเป็นความน่าจะเป็นได้" },
+        { "key": "ข", "text": "คำนวณง่ายและไม่อิ่มตัวฝั่งบวก (อนุพันธ์เป็น 1) จึงช่วยลดปัญหา vanishing gradients" },
+        { "key": "ค", "text": "ไม่มีวันทำให้ neuron หยุดเรียนรู้ (ไม่มีปัญหา dying neuron)" },
+        { "key": "ง", "text": "ทำให้ผลรวมของ output ทุก neuron เท่ากับ 1" }
+      ],
+      "answer": "ข",
+      "explanation": "ReLU = max(0, z) คำนวณเร็วและมีอนุพันธ์ 1 เมื่อ z > 0 จึงไม่ทำให้ gradient หดเหมือน sigmoid/tanh ข้อ ก เป็นคุณสมบัติของ sigmoid ข้อ ค ผิดเพราะ ReLU มีปัญหา dying ReLU (จึงมี Leaky ReLU) ข้อ ง เป็นคุณสมบัติของ softmax"
+    },
+    {
+      "id": 10,
+      "question": "ข้อใดอธิบายสาเหตุและวิธีแก้ปัญหา vanishing gradients ได้ถูกต้อง",
+      "choices": [
+        { "key": "ก", "text": "เกิดจาก learning rate สูงเกินไป แก้โดยเพิ่ม batch size" },
+        { "key": "ข", "text": "เกิดจากข้อมูลฝึกมีน้อย แก้โดยใช้ Dropout" },
+        { "key": "ค", "text": "เกิดจากการคูณอนุพันธ์ที่มีค่าน้อย (เช่นของ sigmoid ซึ่งสูงสุด 0.25) ต่อกันหลายชั้น แก้ด้วย ReLU, He initialization และ Batch Normalization" },
+        { "key": "ง", "text": "เกิดจาก output layer ใช้ softmax แก้โดยเปลี่ยนเป็น sigmoid" }
+      ],
+      "answer": "ค",
+      "explanation": "backpropagation คูณอนุพันธ์ของแต่ละชั้นต่อกัน เช่น 0.25¹⁰ ≈ 9.5×10⁻⁷ ทำให้ชั้นล่างแทบไม่เรียนรู้ วิธีแก้มาตรฐานคือ ReLU family, Glorot/He initialization, BatchNorm ข้อ ก อธิบาย divergence/exploding มากกว่า ข้อ ข เป็นเรื่อง overfitting ข้อ ง ไม่ใช่สาเหตุ"
+    },
+    {
+      "id": 11,
+      "question": "Adam optimizer มีแนวคิดหลักอย่างไร",
+      "choices": [
+        { "key": "ก", "text": "รวม Momentum (ค่าเฉลี่ยเคลื่อนที่ของ gradient) เข้ากับ RMSProp (ค่าเฉลี่ยเคลื่อนที่ของ gradient ยกกำลังสอง) เพื่อปรับขนาดก้าวของแต่ละพารามิเตอร์" },
+        { "key": "ข", "text": "ใช้ learning rate คงที่และไม่สนใจ gradient ในอดีตเลย" },
+        { "key": "ค", "text": "คำนวณ gradient ด้วยข้อมูลฝึกทั้งชุดในทุก step เท่านั้น" },
+        { "key": "ง", "text": "สะสมผลรวมของ gradient² ตั้งแต่เริ่มฝึกโดยไม่มีการลืม จึงมักหยุดเรียนรู้เร็ว" }
+      ],
+      "answer": "ก",
+      "explanation": "Adam = Adaptive Moment Estimation ใช้ moment ที่ 1 (แบบ Momentum) และ moment ที่ 2 (แบบ RMSProp) ข้อ ข คือ SGD ธรรมดา ข้อ ค คือ batch gradient descent ข้อ ง คือ AdaGrad"
+    },
+    {
+      "id": 12,
+      "question": "ลำดับขั้นตอนใน 1 training step ของ backpropagation ข้อใดถูกต้อง",
+      "choices": [
+        { "key": "ก", "text": "ปรับ weight → forward pass → คำนวณ loss → คำนวณ gradient" },
+        { "key": "ข", "text": "คำนวณ gradient → forward pass → ปรับ weight → คำนวณ loss" },
+        { "key": "ค", "text": "forward pass → ปรับ weight → คำนวณ loss → คำนวณ gradient" },
+        { "key": "ง", "text": "forward pass และคำนวณ loss → reverse pass หา gradient ด้วย chain rule → gradient descent step ปรับ weight" }
+      ],
+      "answer": "ง",
+      "explanation": "ต้องรู้ output และ loss ก่อน (forward) จึงย้อนหา ∂L/∂w ทีละชั้นด้วย chain rule (reverse pass) แล้วจึงปรับ w ← w − η∂L/∂w ลำดับอื่นปรับ weight ก่อนมี gradient ซึ่งเป็นไปไม่ได้"
+    },
+    {
+      "id": 13,
+      "question": "ข้อใดอธิบายการทำงานของ keras.layers.Dropout(0.3) ได้ถูกต้อง",
+      "choices": [
+        { "key": "ก", "text": "ลบ neuron 30% ออกจากโมเดลอย่างถาวรหลังฝึกเสร็จ" },
+        { "key": "ข", "text": "สุ่มปิด output ของ neuron ราว 30% ในแต่ละ step ระหว่างฝึกเท่านั้น ตอน evaluate/predict ใช้ neuron ครบทุกตัว" },
+        { "key": "ค", "text": "เพิ่มพารามิเตอร์ให้โมเดลอีก 30%" },
+        { "key": "ง", "text": "สุ่มลบข้อมูลฝึก 30% ทิ้งในแต่ละ epoch" }
+      ],
+      "answer": "ข",
+      "explanation": "Dropout ทำงานเฉพาะตอนฝึก (สุ่มปิดและขยายค่าที่เหลือด้วย 1/(1 − rate)) ทำให้ neuron ไม่พึ่งพากันมากเกินไป ลด overfitting ไม่ได้ลบ neuron ถาวร (ก) ไม่มีพารามิเตอร์ (ค) และไม่ได้ลบข้อมูลฝึก (ง)"
+    },
+    {
+      "id": 14,
+      "question": "จากโค้ดต่อไปนี้ model.summary() จะแสดง Total params เท่าใด",
+      "code": "model = keras.Sequential([\n    keras.Input(shape=(28, 28)),\n    keras.layers.Flatten(),\n    keras.layers.Dense(64, activation=\"relu\"),\n    keras.layers.Dense(10, activation=\"softmax\"),\n])\nmodel.summary()",
+      "choices": [
+        { "key": "ก", "text": "50,816" },
+        { "key": "ข", "text": "50,240" },
+        { "key": "ค", "text": "50,890" },
+        { "key": "ง", "text": "51,674" }
+      ],
+      "answer": "ค",
+      "explanation": "Flatten ไม่มีพารามิเตอร์ Dense(64): 784 × 64 + 64 = 50,240 และ Dense(10): 64 × 10 + 10 = 650 รวม 50,890 ข้อ ข นับเฉพาะชั้นแรก ข้อ ก ลืม bias ทั้งสองชั้น (50,176 + 640) ข้อ ง นับ Flatten เป็น 784 พารามิเตอร์เพิ่ม"
+    },
+    {
+      "id": 15,
+      "question": "โมเดล 784-300-100-10 ใส่ BatchNormalization() หลัง Dense(300) และหลัง Dense(100) model.summary() จะแสดง Non-trainable params เท่าใด",
+      "code": "keras.layers.Dense(300, activation=\"relu\"),\nkeras.layers.BatchNormalization(),\nkeras.layers.Dense(100, activation=\"relu\"),\nkeras.layers.BatchNormalization(),\nkeras.layers.Dense(10, activation=\"softmax\")",
+      "choices": [
+        { "key": "ก", "text": "800" },
+        { "key": "ข", "text": "1,600" },
+        { "key": "ค", "text": "0" },
+        { "key": "ง", "text": "400" }
+      ],
+      "answer": "ก",
+      "explanation": "BatchNormalization มี 4 ค่าต่อ feature: γ, β (trainable) และ moving mean, moving variance (non-trainable) ดังนั้น non-trainable = 2 × 300 + 2 × 100 = 800 ส่วน 1,600 คือพารามิเตอร์ BN ทั้งหมด (ข) และ 400 คือ BN ของชั้น 100 neuron ทั้งหมด (ง)"
+    },
+    {
+      "id": 16,
+      "question": "จาก history ของการฝึก MLP ด้านล่าง ควรสรุปและแก้ไขอย่างไร",
+      "code": "epoch  loss   accuracy  val_loss  val_accuracy\n  5    0.29    0.892     0.33      0.880\n 10    0.21    0.921     0.31      0.889\n 15    0.15    0.944     0.34      0.887\n 20    0.10    0.963     0.39      0.884",
+      "choices": [
+        { "key": "ก", "text": "โมเดล underfit ควรลดจำนวน hidden units" },
+        { "key": "ข", "text": "learning rate ต่ำเกินไป ควรฝึกต่ออีก 100 epoch" },
+        { "key": "ค", "text": "โมเดลดีที่สุดที่ epoch 20 เพราะ train accuracy สูงสุด" },
+        { "key": "ง", "text": "โมเดลเริ่ม overfit หลัง epoch 10 (loss ลดแต่ val_loss เพิ่ม) ควรใช้ EarlyStopping(restore_best_weights=True) และ/หรือเพิ่ม Dropout" }
+      ],
+      "answer": "ง",
+      "explanation": "train loss ลดลงต่อเนื่องแต่ val_loss ต่ำสุดที่ epoch 10 แล้วเพิ่มขึ้น ช่องว่าง accuracy กว้างขึ้น เป็นสัญญาณ overfitting ไม่ใช่ underfitting (ก) การฝึกต่อจะยิ่งแย่ (ข) และต้องเลือกโมเดลจาก validation ไม่ใช่ train accuracy (ค)"
+    },
+    {
+      "id": 17,
+      "question": "y_train ของ Fashion-MNIST เป็นจำนวนเต็ม เช่น [9, 0, 0, 3, 0, ...] และ output layer คือ Dense(10, activation=\"softmax\") ควรเติม loss ในโค้ดด้วยค่าใด",
+      "code": "model.compile(loss=______,\n              optimizer=\"adam\",\n              metrics=[\"accuracy\"])",
+      "choices": [
+        { "key": "ก", "text": "\"binary_crossentropy\"" },
+        { "key": "ข", "text": "\"sparse_categorical_crossentropy\"" },
+        { "key": "ค", "text": "\"categorical_crossentropy\"" },
+        { "key": "ง", "text": "\"mse\"" }
+      ],
+      "answer": "ข",
+      "explanation": "label เป็นเลขคลาสจำนวนเต็มกับ output softmax 10 คลาส ใช้ sparse_categorical_crossentropy ถ้าใช้ categorical_crossentropy (ค) ต้องแปลง label เป็น one-hot ก่อน binary_crossentropy (ก) ใช้กับ 2 คลาส/multilabel และ mse (ง) ใช้กับ regression"
+    },
+    {
+      "id": 18,
+      "question": "X_train มี 60,000 ภาพ เรียก model.fit(X_train, y_train, batch_size=32, validation_split=0.1, epochs=10) แถบความคืบหน้าของแต่ละ epoch จะแสดงจำนวน step เท่าใด",
+      "choices": [
+        { "key": "ก", "text": "1,875" },
+        { "key": "ข", "text": "60,000" },
+        { "key": "ค", "text": "1,688" },
+        { "key": "ง", "text": "188" }
+      ],
+      "answer": "ค",
+      "explanation": "validation_split=0.1 กันข้อมูล 6,000 ภาพไว้ เหลือฝึก 54,000 ภาพ จำนวน step = ⌈54,000 / 32⌉ = ⌈1,687.5⌉ = 1,688 ข้อ ก ลืมหัก validation (60,000/32) ข้อ ข คือจำนวนตัวอย่าง และข้อ ง คือ ⌈6,000 / 32⌉ = 188 ซึ่งเป็นจำนวน batch ของ validation set ไม่ใช่ step ของการฝึก"
+    },
+    {
+      "id": 19,
+      "question": "ต้องการสร้างโมเดลคัดกรองอีเมลว่าเป็น spam หรือไม่ (2 คลาส) ควรออกแบบ output layer และ loss อย่างไร",
+      "choices": [
+        { "key": "ก", "text": "Dense(1, activation=\"sigmoid\") คู่กับ loss=\"binary_crossentropy\"" },
+        { "key": "ข", "text": "Dense(1) ไม่มี activation คู่กับ loss=\"mse\"" },
+        { "key": "ค", "text": "Dense(1, activation=\"relu\") คู่กับ loss=\"sparse_categorical_crossentropy\"" },
+        { "key": "ง", "text": "Dense(2, activation=\"sigmoid\") คู่กับ loss=\"mse\"" }
+      ],
+      "answer": "ก",
+      "explanation": "binary classification ใช้ 1 neuron + sigmoid เพื่อให้ได้ความน่าจะเป็นของคลาส spam แล้ววัดด้วย binary cross-entropy ข้อ ข เป็นการออกแบบสำหรับ regression ข้อ ค ReLU ไม่ให้ค่าความน่าจะเป็น และ loss ไม่เข้ากับ 1 output ข้อ ง ใช้ loss ไม่เหมาะกับการจำแนก"
+    },
+    {
+      "id": 20,
+      "question": "ต้องการทำนายราคาบ้าน (ค่าต่อเนื่อง) จาก 8 feature ด้วย MLP ข้อใดเป็นการออกแบบ output layer และ loss ที่เหมาะสมที่สุด",
+      "choices": [
+        { "key": "ก", "text": "Dense(10, activation=\"softmax\") คู่กับ sparse_categorical_crossentropy" },
+        { "key": "ข", "text": "Dense(1, activation=\"sigmoid\") คู่กับ binary_crossentropy" },
+        { "key": "ค", "text": "Dense(8, activation=\"relu\") คู่กับ categorical_crossentropy" },
+        { "key": "ง", "text": "Dense(1) ไม่มี activation (linear) คู่กับ loss=\"mse\" หรือ \"huber\"" }
+      ],
+      "answer": "ง",
+      "explanation": "regression ต้องการ output ค่าจริงไม่จำกัดช่วง จึงใช้ 1 neuron แบบ linear และวัดด้วย MSE (หรือ Huber/MAE เมื่อมี outlier) softmax/sigmoid (ก, ข) บีบค่าให้อยู่ในช่วง 0–1 สำหรับการจำแนก และข้อ ค จำนวน output ไม่ตรงกับเป้าหมาย 1 ค่า"
+    }
+  ]
+}

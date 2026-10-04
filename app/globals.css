@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #475569;
+}
+
+/* ===== Code Block ===== */
+.code-block-wrapper {
+  @apply my-5 rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+.code-block-header {
+  @apply flex items-center justify-between px-4 py-2 text-xs font-medium;
+  background: #1e293b;
+  border-bottom: 1px solid #334155;
+}
+.dark .code-block-header {
+  background: #0f172a;
+  border-bottom-color: #1e293b;
+}
+.code-block-header .code-lang {
+  @apply text-blue-400 font-semibold tracking-wide uppercase;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.code-block-header .code-copy {
+  @apply text-gray-400 hover:text-white transition-colors inline-flex items-center gap-1;
+  font-size: 11px;
+}
+pre.code-block {
+  @apply m-0 p-4 overflow-x-auto;
+  background: #1e293b;
+  color: #e2e8f0;
+  font-family: var(--font-code), "Source Code Pro", "Fira Code", "Consolas", monospace;
+  font-size: 13px;
+  line-height: 1.7;
+  tab-size: 4;
+}
+.dark pre.code-block {
+  background: #0f172a;
+}
+pre.code-block code {
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  background: transparent;
+  padding: 0;
+}
+
+/* ===== Output Block ===== */
+.output-block-wrapper {
+  @apply my-5 rounded-xl overflow-hidden border border-emerald-200 dark:border-emerald-800;
+}
+.output-block-header {
+  @apply flex items-center px-4 py-2;
+  background: #065f46;
+  border-bottom: 1px solid #047857;
+}
+.dark .output-block-header {
+  background: #022c22;
+  border-bottom-color: #064e3b;
+}
+.output-block-header .output-label {
+  @apply text-emerald-300 font-semibold tracking-wide uppercase;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.output-block-header .output-label::before {
+  content: "▶ ";
+  font-size: 8px;
+  vertical-align: middle;
+}
+pre.output-block {
+  @apply m-0 p-4 overflow-x-auto;
+  background: #f0fdf4;
+  color: #14532d;
+  font-family: var(--font-code), "Source Code Pro", "Consolas", monospace;
+  font-size: 13px;
+  line-height: 1.7;
+}
+.dark pre.output-block {
+  background: #022c22;
+  color: #a7f3d0;
+}
+
+/* ===== Math (KaTeX) ===== */
+.katex-display {
+  @apply my-5 overflow-x-auto overflow-y-hidden py-2;
+}
+.katex {
+  font-size: 1.08em;
+}
+
+/* ===== Callouts (> [!NOTE] style) ===== */
+.callout {
+  @apply my-5 rounded-xl border px-4 py-3 text-sm;
+}
+.callout-title {
+  @apply font-semibold mb-1 flex items-center gap-2;
+}
+.callout-note {
+  @apply border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20 text-blue-900 dark:text-blue-100;
+}
+.callout-tip {
+  @apply border-emerald-200 dark:border-emerald-800 bg-emerald-50 dark:bg-emerald-900/20 text-emerald-900 dark:text-emerald-100;
+}
+.callout-warning {
+  @apply border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 text-amber-900 dark:text-amber-100;
+}
+.callout p:last-child {
+  margin-bottom: 0;
+}
+
+/* Selection */
+::selection {
+  background-color: #3b82f6;
+  color: white;
+}
+
+/* Focus visible */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* ===== Print Styles for Exam Results ===== */
+@media print {
+  body {
+    background: white !important;
+    color: black !important;
+    font-size: 11pt;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  header,
+  aside,
+  footer {
+    display: none !important;
+  }
+  #exam-result {
+    max-width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  #exam-result * {
+    color: black !important;
+    border-color: #d1d5db !important;
+  }
+  #exam-result > div > div {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}

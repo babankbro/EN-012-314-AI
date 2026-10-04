@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 07 - CNN และการจำแนกภาพ</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🧠 Review Sheet บทที่ 07 — CNN และการจำแนกภาพ</div>
+      <div class="sub">EN-012-314 Artificial Intelligence · Machine Learning · Convolutional Neural Networks &amp; Image Classification</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 10 · CLO3 (LLO3-1, LLO3-2)<br>
+      Lab 07: Image Classification ด้วย CNN
+    </div>
+  </div>
+
+  <div class="columns">
+    <!-- ===== LEFT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🖼️</span> 1. ภาพคืออาเรย์ตัวเลข</div>
+        <div class="section-body">
+          <table>
+            <tr><th>ชนิด</th><th>shape</th><th>ค่า</th></tr>
+            <tr><td>Grayscale</td><td><code>(H, W)</code> / <code>(H, W, 1)</code></td><td>0 = ดำ, 255 = ขาว (<code>uint8</code>)</td></tr>
+            <tr><td>RGB</td><td><code>(H, W, 3)</code></td><td>R, G, B ช่องละ 0–255</td></tr>
+            <tr><td>Batch เข้า Keras</td><td><code>(N, H, W, C)</code></td><td>channels_last</td></tr>
+          </table>
+          <p><span class="accent">ทำไมไม่ใช้ Dense กับภาพ:</span> พารามิเตอร์ระเบิด + ทิ้งโครงสร้างเชิงพื้นที่</p>
+          <div class="formula">224×224×3 = 150,528 input → Dense(1000) = 150,529,000 params</div>
+          <ul class="mini">
+            <li><b>Partial connectivity</b> — neuron มองเฉพาะหน้าต่างเล็ก (receptive field) แนวคิดจาก visual cortex (Hubel &amp; Wiesel)</li>
+            <li><b>Weight sharing</b> — filter ชุดเดียวกันกวาดทั้งภาพ → params ไม่ขึ้นกับขนาดภาพ</li>
+            <li>เรียนรู้เป็นลำดับชั้น: ขอบ/เส้น → มุม/ลวดลาย → ชิ้นส่วนวัตถุ → คลาส</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🔍</span> 2. Convolution Layer</div>
+        <div class="section-body">
+          <div class="formula">Z[i,j] = Σ<sub>u</sub> Σ<sub>v</sub> X[i·s+u, j·s+v] · K[u,v] + b</div>
+          <p>วาง filter บนภาพ → คูณทีละตัว → บวกรวม → ได้ 1 ค่าใน <span class="blue">feature map</span> (จริง ๆ คือ cross-correlation)</p>
+          <div class="flex-row">
+            <div class="code-block">patch      kernel (vertical edge)
+3 0 1      1 0 -1
+1 5 8      1 0 -1
+2 7 2      1 0 -1
+(3+1+2) − (1+8+2) = <span class="num">−5</span></div>
+            <div>
+              <div class="def-row"><span class="def-key">filters</span><span class="def-val">จำนวน filter = ความลึก output</span></div>
+              <div class="def-row"><span class="def-key">kernel_size</span><span class="def-val">ขนาดหน้าต่าง เช่น 3</span></div>
+              <div class="def-row"><span class="def-key">strides</span><span class="def-val">ระยะเลื่อนต่อก้าว</span></div>
+              <div class="def-row"><span class="def-key">padding</span><span class="def-val"><code>valid</code> ไม่เติม / <code>same</code> เติม 0 ให้ขนาดเท่าเดิม</span></div>
+            </div>
+          </div>
+          <p class="note">filter มีความลึก = C<sub>in</sub> เสมอ (ก้อน k×k×C<sub>in</sub>) · ค่าใน filter <b>เรียนรู้</b>ด้วย backpropagation · ตามด้วย ReLU</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧮</span> 3. สูตรที่ต้องคำนวณเป็น (ออกสอบ)</div>
+        <div class="section-body">
+          <div class="formula">Output = ⌊(n + 2p − k) / s⌋ + 1</div>
+          <div class="formula">Params<sub>Conv2D</sub> = (k<sub>h</sub> · k<sub>w</sub> · C<sub>in</sub> + 1) · F &nbsp;&nbsp;|&nbsp;&nbsp; Params<sub>Dense</sub> = n<sub>in</sub> · units + units</div>
+          <table>
+            <tr><th>Layer (input)</th><th>Output</th><th>Params</th></tr>
+            <tr><td>Conv2D(32, 3) บน 28×28×1</td><td>26×26×32</td><td>(9·1+1)·32 = 320</td></tr>
+            <tr><td>MaxPool(2) บน 26×26×32</td><td>13×13×32</td><td>0</td></tr>
+            <tr><td>Conv2D(64, 3) บน 13×13×32</td><td>11×11×64</td><td>(9·32+1)·64 = 18,496</td></tr>
+            <tr><td>MaxPool(2) บน 11×11×64</td><td>5×5×64 (ปัดลง)</td><td>0</td></tr>
+            <tr><td>Flatten → Dense(10)</td><td>1600 → 10</td><td>1600·10+10 = 16,010</td></tr>
+            <tr><td>Atari: 84×84×4, 32@8×8 s4</td><td>20×20×32</td><td>(64·4+1)·32 = 8,224</td></tr>
+            <tr><td>Atari: 64@4×4 s2 → 64@3×3 s1</td><td>9×9 → 7×7×64</td><td>32,832 / 36,928</td></tr>
+          </table>
+          <p class="note">Keras <code>padding="same"</code> → output = ⌈n/s⌉ · params ไม่ขึ้นกับ H, W, stride, padding</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🔽</span> 4. Pooling Layer</div>
+        <div class="section-body">
+          <div class="flex-row">
+            <div class="code-block">feature map 4×4   Max 2×2   Avg 2×2
+1 3 | 2 4         6  4      3.75 2.25
+5 6 | 1 2         8  9      4.50 4.00
+7 2 | 9 0
+1 8 | 3 4</div>
+          </div>
+          <ul class="mini">
+            <li>ย่อขนาด (2×2 s2 → H, W ลดครึ่ง) · <b>ไม่มีพารามิเตอร์</b> · ความลึกเท่าเดิม</li>
+            <li>ลดการคำนวณ/overfitting · ให้ <span class="blue">translation invariance</span> เล็กน้อย</li>
+            <li><code>GlobalAveragePooling2D</code> เฉลี่ยทั้งแผ่นเหลือ 1 ค่า/channel ใช้แทน Flatten</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧪</span> เชื่อมโยงกับ Lab 07</div>
+        <div class="section-body">
+          <table class="lab-table">
+            <tr><th>ข้อ</th><th>สิ่งที่ทำ</th></tr>
+            <tr><td>1–2</td><td>conv2d / max_pool2d ด้วย NumPy · ตาราง output &amp; params (CNN A = 121,930)</td></tr>
+            <tr><td>3–5</td><td>reshape ÷255 one-hot → สร้าง/ฝึก CNN → confusion matrix + ภาพที่ทายผิด</td></tr>
+            <tr><td>6–7</td><td>ทำนายลายมือตัวเอง (invert + center) · เทียบ CNN กับ MLP (101,770 params)</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🏗️</span> 5. สถาปัตยกรรม CNN</div>
+        <div class="section-body">
+          <p><b>[Conv → ReLU → Pool] × n → Flatten/GAP → Dense → Softmax</b> · ลึกขึ้น = เล็กลงแต่หนาขึ้น</p>
+          <div class="code-block">model = keras.Sequential([
+    keras.Input(shape=(<span class="num">28</span>, <span class="num">28</span>, <span class="num">1</span>)),
+    layers.Conv2D(<span class="num">32</span>, <span class="num">3</span>, activation=<span class="str">"relu"</span>), layers.MaxPooling2D(<span class="num">2</span>),
+    layers.Conv2D(<span class="num">64</span>, <span class="num">3</span>, activation=<span class="str">"relu"</span>), layers.MaxPooling2D(<span class="num">2</span>),
+    layers.Flatten(), layers.Dropout(<span class="num">0.5</span>),
+    layers.Dense(<span class="num">10</span>, activation=<span class="str">"softmax"</span>)])   <span class="comment"># 34,826 params</span></div>
+          <table>
+            <tr><th>โมเดล</th><th>ปี</th><th>แนวคิดเด่น</th></tr>
+            <tr><td>LeNet-5</td><td>1998</td><td>ต้นแบบ Conv-Pool-Dense อ่านตัวเลข (~60K)</td></tr>
+            <tr><td>AlexNet</td><td>2012</td><td>ReLU, Dropout, augmentation, GPU ชนะ ImageNet</td></tr>
+            <tr><td>VGG</td><td>2014</td><td>ซ้อน Conv 3×3 ลึก 16–19 ชั้น (~138M)</td></tr>
+            <tr><td>GoogLeNet</td><td>2014</td><td>Inception module: filter หลายขนาดพร้อมกัน + Conv 1×1</td></tr>
+            <tr><td>ResNet</td><td>2015</td><td>Skip connection y = F(x) + x ลึก 152 ชั้น</td></tr>
+            <tr><td>MobileNetV2</td><td>2018</td><td>depthwise separable conv เบา เหมาะ transfer learning</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧹</span> 6. อ่านภาพและเตรียมข้อมูล</div>
+        <div class="section-body">
+          <p>อ่านภาพ → แปลงโหมดสี → resize → <b>÷255</b> → reshape <code>(N,H,W,C)</code> → เข้ารหัส label</p>
+          <div class="code-block">img = Image.open(<span class="str">"d.png"</span>).convert(<span class="str">"L"</span>)  <span class="comment"># PIL size = (กว้าง, สูง)</span>
+img = ImageOps.invert(img).resize((<span class="num">28</span>, <span class="num">28</span>))   <span class="comment"># MNIST พื้นดำ ตัวเลขขาว</span>
+x = (np.array(img) / <span class="num">255.0</span>).reshape(<span class="num">1</span>, <span class="num">28</span>, <span class="num">28</span>, <span class="num">1</span>)
+X = X.reshape(<span class="num">-1</span>, <span class="num">28</span>, <span class="num">28</span>, <span class="num">1</span>).astype(<span class="str">"float32"</span>) / <span class="num">255.0</span>
+y_oh = to_categorical(y, <span class="num">10</span>)   <span class="comment"># 5 → [0,0,0,0,0,1,0,0,0,0]</span>
+ds = image_dataset_from_directory(<span class="str">"dir/"</span>, image_size=(<span class="num">160</span>, <span class="num">160</span>))</div>
+          <table>
+            <tr><th>Label</th><th>shape</th><th>loss</th></tr>
+            <tr><td>integer (sparse)</td><td><code>(N,)</code></td><td><code>sparse_categorical_crossentropy</code></td></tr>
+            <tr><td>one-hot</td><td><code>(N, 10)</code></td><td><code>categorical_crossentropy</code></td></tr>
+            <tr><td>0/1 + sigmoid</td><td><code>(N,)</code></td><td><code>binary_crossentropy</code></td></tr>
+          </table>
+          <p class="note">Data augmentation: <code>RandomRotation</code>, <code>RandomTranslation</code>, <code>RandomZoom</code> ทำงานเฉพาะตอน fit</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🚀</span> 7. Train → Predict → Evaluate → Transfer</div>
+        <div class="section-body">
+          <div class="code-block">model.compile(<span class="str">"adam"</span>, <span class="str">"categorical_crossentropy"</span>, metrics=[<span class="str">"acc"</span>])
+h = model.fit(X, y_oh, epochs=<span class="num">10</span>, validation_split=<span class="num">0.1</span>)
+y_pred = model.predict(X_test).argmax(axis=<span class="num">1</span>)  <span class="comment"># (N,10)→คลาส</span>
+confusion_matrix(y_test, y_pred)    <span class="comment"># คู่ที่สับสน: 4↔9, 3↔5, 7↔2</span>
+base = MobileNetV2(include_top=<span class="kw">False</span>, weights=<span class="str">"imagenet"</span>)
+base.trainable = <span class="kw">False</span>   <span class="comment"># + GAP + Dense(k, softmax)</span></div>
+          <p>MNIST test acc: LogReg <b>0.926</b> · KNN <b>0.972</b> · MLP ≈0.97–0.98 · <span class="accent">CNN ≈0.99</span></p>
+          <p class="note">Object Detection = หลายวัตถุ × (bounding box x, y, w, h + class + confidence) เช่น YOLO — สัปดาห์ถัดไป</p>
+        </div>
+      </div>
+
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อผิดพลาดที่พบบ่อย</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li>ลืมแกน channel/batch → ต้องเป็น <code>(N, 28, 28, 1)</code> แม้ทำนายภาพเดียว <code>(1, 28, 28, 1)</code></li>
+            <li>ลืม <b>C<sub>in</sub></b> หรือ <b>+1 (bias)</b> ตอนคำนวณ params · ลืม <b>+1</b> ในสูตรขนาด output</li>
+            <li>one-hot แต่ใช้ <code>sparse_categorical_crossentropy</code> (หรือกลับกัน) → shape error</li>
+            <li>ภาพจริงไม่ผ่าน pipeline เดียวกับตอนฝึก: ไม่ ÷255, ไม่กลับสี, ไม่จัดตัวเลขกลางภาพ</li>
+            <li>ใช้ <code>RandomFlip</code> กับตัวเลข/ตัวอักษร · หาร 255 ก่อน <code>preprocess_input</code> ของ MobileNetV2</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">EN-012-314 ปัญญาประดิษฐ์ · ผศ.ดร. สรายุทธ กรวิรัตน์ · สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยกาฬสินธุ์ · ปีการศึกษา 2569</div>
+</div>
+</body>
+</html>

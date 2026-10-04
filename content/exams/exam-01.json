@@ -1,0 +1,495 @@
+{
+  "moduleId": "01",
+  "title": "The Machine Learning Landscape",
+  "titleTh": "ภาพรวม Machine Learning",
+  "timeMinutes": 30,
+  "questions": [
+    {
+      "id": 1,
+      "question": "ตามนิยามของ Tom Mitchell สำหรับระบบกรองอีเมลขยะ (spam filter) ข้อใดคือ \"ประสบการณ์ E\"",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "การตัดสินว่าอีเมลฉบับใหม่เป็นสแปมหรือไม่"
+        },
+        {
+          "key": "ข",
+          "text": "อีเมลเก่าที่ผู้ใช้ติดป้ายว่าเป็นสแปม/ไม่ใช่สแปมไว้แล้ว"
+        },
+        {
+          "key": "ค",
+          "text": "สัดส่วนอีเมลที่ระบบจัดประเภทได้ถูกต้อง"
+        },
+        {
+          "key": "ง",
+          "text": "อัลกอริทึม Naive Bayes ที่ใช้สร้างโมเดล"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "E คือข้อมูลที่ใช้เรียน (training data) — ข้อ ก คือ Task (T), ข้อ ค คือ Performance measure (P), ข้อ ง เป็นอัลกอริทึม ไม่ใช่องค์ประกอบใน T/P/E"
+    },
+    {
+      "id": 2,
+      "question": "ปัญหาใดต่อไปนี้เป็นงาน Regression",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ทำนายว่าลูกค้าจะยกเลิกบริการหรือไม่"
+        },
+        {
+          "key": "ข",
+          "text": "จำแนกภาพตัวเลขเขียนมือเป็นเลข 0–9"
+        },
+        {
+          "key": "ค",
+          "text": "ทำนายปริมาณน้ำฝนของวันพรุ่งนี้ (มิลลิเมตร)"
+        },
+        {
+          "key": "ง",
+          "text": "แบ่งกลุ่มลูกค้าตามพฤติกรรมการซื้อ"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "ปริมาณน้ำฝนเป็นตัวเลขต่อเนื่องจึงเป็น regression — ข้อ ก และ ข เป็น classification (คำตอบเป็นหมวดหมู่) ข้อ ง เป็น clustering (unsupervised)"
+    },
+    {
+      "id": 3,
+      "question": "การฝึก Large Language Model ให้ทาย \"คำถัดไป\" จากข้อความบนเว็บจำนวนมหาศาลโดยไม่มีคนติด label จัดเป็นการเรียนรู้แบบใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Self-supervised learning"
+        },
+        {
+          "key": "ข",
+          "text": "Reinforcement learning"
+        },
+        {
+          "key": "ค",
+          "text": "Unsupervised clustering"
+        },
+        {
+          "key": "ง",
+          "text": "Rule-based system"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "label (คำถัดไป) ถูกสร้างจากตัวข้อมูลเองโดยอัตโนมัติ จึงเป็น self-supervised — ไม่ใช่ RL เพราะไม่มี agent/reward และไม่ใช่ clustering เพราะมีเป้าหมายการทำนายชัดเจน"
+    },
+    {
+      "id": 4,
+      "question": "ใน Reinforcement Learning สิ่งที่ agent ใช้เป็นสัญญาณในการปรับปรุง policy คือข้อใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "label คำตอบที่ถูกต้องของทุก state ที่ผู้เชี่ยวชาญเตรียมไว้"
+        },
+        {
+          "key": "ข",
+          "text": "จำนวนกลุ่มที่เหมาะสมของข้อมูล"
+        },
+        {
+          "key": "ค",
+          "text": "กฎ IF-THEN ที่มนุษย์เขียนไว้ล่วงหน้า"
+        },
+        {
+          "key": "ง",
+          "text": "reward หรือ penalty ที่ได้รับหลังทำ action"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "RL ไม่มีคำตอบที่ถูกในแต่ละขั้น (ต่างจาก supervised ในข้อ ก) agent เรียนจาก reward/penalty ที่ environment ส่งกลับมาเพื่อให้รางวัลรวมสูงสุด"
+    },
+    {
+      "id": 5,
+      "question": "ข้อใดอธิบาย Instance-based learning ได้ถูกต้อง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "สร้างสมการจากข้อมูลแล้วทิ้งข้อมูลฝึก เก็บไว้เพียงพารามิเตอร์"
+        },
+        {
+          "key": "ข",
+          "text": "จดจำตัวอย่างฝึกไว้ แล้วทำนายข้อมูลใหม่จากความคล้ายกับตัวอย่างที่ใกล้ที่สุด เช่น KNN"
+        },
+        {
+          "key": "ค",
+          "text": "ฝึกโมเดลทีละ mini-batch เมื่อมีข้อมูลใหม่ไหลเข้ามา"
+        },
+        {
+          "key": "ง",
+          "text": "เรียนรู้จากรางวัลที่ได้จากการลองผิดลองถูก"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "Instance-based (เช่น KNN) เก็บตัวอย่างไว้และวัดความคล้าย — ข้อ ก คือ model-based ข้อ ค คือ online learning ข้อ ง คือ reinforcement learning"
+    },
+    {
+      "id": 6,
+      "question": "บริษัทสร้างโมเดลทำนายความพึงพอใจของคนทั้งจังหวัด แต่เก็บแบบสอบถามจากผู้ติดตามเพจ Facebook ของบริษัทเท่านั้น ปัญหานี้เรียกว่าอะไร",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Sampling bias (ข้อมูลไม่เป็นตัวแทน)"
+        },
+        {
+          "key": "ข",
+          "text": "Underfitting"
+        },
+        {
+          "key": "ค",
+          "text": "Data snooping bias"
+        },
+        {
+          "key": "ง",
+          "text": "Irrelevant features"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "วิธีเก็บข้อมูลลำเอียง ทำให้กลุ่มตัวอย่างไม่เป็นตัวแทนของประชากรจริง — ไม่ใช่ underfitting (ปัญหาฝั่งโมเดล) และไม่ใช่ data snooping (การใช้ test set ช่วยเลือกโมเดล)"
+    },
+    {
+      "id": 7,
+      "question": "ข้อใดเป็น hyperparameter",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ค่าสัมประสิทธิ์ θ₁ ที่ LinearRegression หาได้"
+        },
+        {
+          "key": "ข",
+          "text": "ค่า threshold ในแต่ละโหนดที่ Decision Tree เรียนรู้"
+        },
+        {
+          "key": "ค",
+          "text": "ค่า max_depth ของ DecisionTreeClassifier"
+        },
+        {
+          "key": "ง",
+          "text": "ค่า intercept ของ SGDRegressor หลัง partial_fit"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "hyperparameter คือค่าของอัลกอริทึมที่กำหนดก่อนฝึกและไม่เปลี่ยนระหว่างฝึก เช่น max_depth — ส่วนข้อ ก ข ง เป็น parameter ที่โมเดลเรียนรู้เองจากข้อมูล"
+    },
+    {
+      "id": 8,
+      "question": "ในระบบฐานความรู้ (knowledge-based system) องค์ประกอบใดทำหน้าที่นำกฎมาใช้กับข้อเท็จจริงเพื่อหาข้อสรุปใหม่",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Knowledge base"
+        },
+        {
+          "key": "ข",
+          "text": "Working memory"
+        },
+        {
+          "key": "ค",
+          "text": "User interface"
+        },
+        {
+          "key": "ง",
+          "text": "Inference engine"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "Inference engine คือกลไกอนุมาน (เช่น forward/backward chaining) — knowledge base เป็นที่เก็บกฎ ส่วน working memory เก็บข้อเท็จจริงปัจจุบัน"
+    },
+    {
+      "id": 9,
+      "question": "ข้อใดอธิบาย Backward chaining ได้ถูกต้อง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เริ่มจากเป้าหมายที่ต้องการพิสูจน์ แล้วย้อนหาว่าเงื่อนไขใดต้องเป็นจริง (goal-driven)"
+        },
+        {
+          "key": "ข",
+          "text": "เริ่มจากข้อเท็จจริงที่มี แล้วใช้กฎเพิ่มข้อเท็จจริงใหม่จนไม่มีอะไรเพิ่ม (data-driven)"
+        },
+        {
+          "key": "ค",
+          "text": "เรียนรู้กฎใหม่จากข้อมูลตัวอย่างโดยอัตโนมัติ"
+        },
+        {
+          "key": "ง",
+          "text": "สุ่มเลือกกฎมาใช้จนกว่าจะได้คำตอบ"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "backward chaining เป็น goal-driven (หลักการของ Prolog) — ข้อ ข คือ forward chaining ส่วนข้อ ค เป็นแนวคิดของ ML ไม่ใช่การอนุมานด้วยกฎ"
+    },
+    {
+      "id": 10,
+      "question": "มีข้อมูล 1,000 แถว แบ่ง test set 20% ก่อน แล้วนำส่วนที่เหลือมาแบ่งเป็น validation 25% จะได้ training set กี่แถว",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "550"
+        },
+        {
+          "key": "ข",
+          "text": "600"
+        },
+        {
+          "key": "ค",
+          "text": "750"
+        },
+        {
+          "key": "ง",
+          "text": "800"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "test = 1000×0.2 = 200 เหลือ 800 → validation = 800×0.25 = 200 → train = 800 − 200 = 600 (สัดส่วน 60/20/20) — 800 คือยังไม่ได้แบ่ง validation, 750 คือคิด 25% จาก 1000"
+    },
+    {
+      "id": 11,
+      "question": "ผล 5-fold cross-validation ของโมเดลหนึ่งเป็นดังนี้ ค่า CV mean accuracy เท่ากับเท่าใด",
+      "code": "scores = [0.80, 0.85, 0.90, 0.75, 0.85]",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.80"
+        },
+        {
+          "key": "ข",
+          "text": "0.82"
+        },
+        {
+          "key": "ค",
+          "text": "0.83"
+        },
+        {
+          "key": "ง",
+          "text": "0.85"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "(0.80 + 0.85 + 0.90 + 0.75 + 0.85) / 5 = 4.15 / 5 = 0.83 — 0.85 คือฐานนิยม (mode) ไม่ใช่ค่าเฉลี่ย"
+    },
+    {
+      "id": 12,
+      "question": "ชุดข้อมูลเบาหวานมี 768 แถว เป็นคลาส 0 (ไม่เป็น) 500 แถว และคลาส 1 (เป็น) 268 แถว ถ้าโมเดลทำนายว่า \"ไม่เป็นเบาหวาน\" ทุกคน จะได้ accuracy ประมาณเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.349"
+        },
+        {
+          "key": "ข",
+          "text": "0.500"
+        },
+        {
+          "key": "ค",
+          "text": "0.536"
+        },
+        {
+          "key": "ง",
+          "text": "0.651"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "accuracy = 500/768 ≈ 0.651 นี่คือ baseline ที่โมเดลใด ๆ ต้องทำได้ดีกว่า — 0.349 คือ 268/768 (สัดส่วนคลาส 1) ส่วน 0.536 คือ 268/500"
+    },
+    {
+      "id": 13,
+      "question": "ใช้ KNeighborsRegressor(n_neighbors=3) กับข้อมูลพื้นที่บ้าน (ตร.ม.) และราคา (แสนบาท) ด้านล่าง ค่าทำนายของบ้าน 105 ตร.ม. คือเท่าใด",
+      "code": "พื้นที่ (X): [60, 80, 100, 120, 150]\nราคา   (y): [15, 18,  21,  25,  30]",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "21.33"
+        },
+        {
+          "key": "ข",
+          "text": "21.00"
+        },
+        {
+          "key": "ค",
+          "text": "23.00"
+        },
+        {
+          "key": "ง",
+          "text": "21.80"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "เพื่อนบ้าน 3 ตัวที่ใกล้ 105 ที่สุดคือ 100 (ห่าง 5), 120 (ห่าง 15), 80 (ห่าง 25) → (21 + 25 + 18)/3 = 64/3 ≈ 21.33 — 21.00 คือใช้เพื่อนบ้านตัวเดียว (k=1), 23.00 คือเฉลี่ย 100 กับ 120 (k=2), 21.80 คือเฉลี่ยทั้ง 5 ตัว"
+    },
+    {
+      "id": 14,
+      "question": "ใน multi-armed bandit ค่าประมาณ Q ของโฆษณาแบบหนึ่งเท่ากับ 0.5 จากการเลือกมาแล้ว 4 ครั้ง เมื่อเลือกครั้งที่ 5 แล้วผู้ใช้คลิก (r = 1) ค่า Q ใหม่ตามโค้ดด้านล่างเท่ากับเท่าใด",
+      "code": "N[a] += 1\nQ[a] += (r - Q[a]) / N[a]",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.55"
+        },
+        {
+          "key": "ข",
+          "text": "0.60"
+        },
+        {
+          "key": "ค",
+          "text": "0.625"
+        },
+        {
+          "key": "ง",
+          "text": "1.00"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "N = 5 → Q = 0.5 + (1 − 0.5)/5 = 0.5 + 0.1 = 0.6 (เท่ากับค่าเฉลี่ยรางวัล 5 ครั้ง: (2 + 1)/5) — 0.625 เกิดจากหารด้วย N = 4"
+    },
+    {
+      "id": 15,
+      "question": "จากโค้ดต่อไปนี้ ข้อใดกล่าวถูกต้อง",
+      "code": "clf = LogisticRegression(max_iter=1000).fit(X, y)\nkm  = KMeans(n_clusters=3, n_init=10).fit(X)",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ทั้งสองโมเดลเป็น supervised learning เพราะใช้ข้อมูลชุดเดียวกัน"
+        },
+        {
+          "key": "ข",
+          "text": "km.labels_ จะเป็นรหัสชนิดดอกไม้ตรงกับ y ทุกประการ"
+        },
+        {
+          "key": "ค",
+          "text": "clf เป็น supervised learning ส่วน km เป็น unsupervised learning เพราะ km ไม่ได้รับ y"
+        },
+        {
+          "key": "ง",
+          "text": "km เป็น reinforcement learning เพราะปรับกลุ่มซ้ำหลายรอบ"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "clf.fit(X, y) ได้รับ label จึงเป็น supervised ส่วน km.fit(X) ได้แค่ X จึงเป็น unsupervised — หมายเลขกลุ่มของ KMeans ไม่จำเป็นต้องตรงกับรหัสคลาสใน y"
+    },
+    {
+      "id": 16,
+      "question": "จากผลการ fit polynomial regression ด้านล่าง ข้อใดสรุปถูกต้อง",
+      "code": "degree | train MSE | val MSE\n     1 |     0.185 |    0.231\n     3 |     0.018 |    0.026\n    15 |     0.007 |    3.953",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "degree 15 ดีที่สุดเพราะ train MSE ต่ำที่สุด"
+        },
+        {
+          "key": "ข",
+          "text": "degree 1 overfitting และ degree 15 underfitting"
+        },
+        {
+          "key": "ค",
+          "text": "ทั้งสาม degree ให้ผลใกล้เคียงกัน ใช้ degree ใดก็ได้"
+        },
+        {
+          "key": "ง",
+          "text": "degree 1 underfitting, degree 3 พอดี, degree 15 overfitting"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "degree 1 error สูงทั้ง train และ val (underfitting), degree 3 ต่ำทั้งคู่และใกล้กัน (พอดี), degree 15 train ต่ำมากแต่ val สูงมาก (overfitting) — การเลือกจาก train MSE อย่างเดียว (ข้อ ก) ผิด"
+    },
+    {
+      "id": 17,
+      "question": "เมื่อรัน forward chaining กับกฎและข้อเท็จจริงเริ่มต้นด้านล่าง ข้อเท็จจริงสุดท้ายใน facts คือข้อใด",
+      "code": "rules = [({'A','B'}, 'C'),   # R1\n         ({'C'}, 'D'),       # R2\n         ({'A','E'}, 'F'),   # R3\n         ({'F','D'}, 'G')]   # R4\nfacts = {'A', 'E'}",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "{A, E, F, G}"
+        },
+        {
+          "key": "ข",
+          "text": "{A, B, C, D, E, F, G}"
+        },
+        {
+          "key": "ค",
+          "text": "{A, C, D, E}"
+        },
+        {
+          "key": "ง",
+          "text": "{A, E, F}"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "มีแค่ R3 ที่เงื่อนไขครบ (A, E) จึงได้ F — R1 ต้องการ B ซึ่งไม่มี จึงไม่เกิด C และ D และ R4 ที่ต้องการ D ก็ไม่ทำงาน ผลคือ {A, E, F}"
+    },
+    {
+      "id": 18,
+      "question": "โค้ดด้านล่างมีปัญหาเชิงระเบียบวิธีอย่างไร",
+      "code": "best = 0\nfor d in [1, 2, 3, 4, 5, None]:\n    m = DecisionTreeClassifier(max_depth=d).fit(X_train, y_train)\n    acc = m.score(X_test, y_test)\n    if acc > best:\n        best, best_d = acc, d\nprint('รายงานผล test accuracy =', best)",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เกิด data snooping bias เพราะใช้ test set เลือก hyperparameter ทำให้ test accuracy ที่รายงานดีเกินจริง"
+        },
+        {
+          "key": "ข",
+          "text": "เกิด underfitting เพราะลอง max_depth น้อยเกินไป"
+        },
+        {
+          "key": "ค",
+          "text": "ผิดเพราะ DecisionTreeClassifier ใช้กับ max_depth=None ไม่ได้"
+        },
+        {
+          "key": "ง",
+          "text": "ไม่มีปัญหา เพราะ test set ไม่ได้ถูกใช้ตอน fit"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "แม้ test set ไม่ได้ใช้ใน fit แต่ถูกใช้ \"เลือก\" โมเดล ค่าที่ดีที่สุดจึงลำเอียงไปทาง test set นั้น (data snooping) — ควรใช้ validation set หรือ cross_val_score บน training set แทน"
+    },
+    {
+      "id": 19,
+      "question": "มหาวิทยาลัยต้องการระบบคำนวณค่าธรรมเนียมการศึกษาตามระเบียบ (หน่วยกิต × อัตรา + ค่าบำรุง ตามประเภทนักศึกษา) แนวทางใดเหมาะสมที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ฝึก neural network จากใบเสร็จย้อนหลัง 10 ปี"
+        },
+        {
+          "key": "ข",
+          "text": "ใช้ clustering จัดกลุ่มนักศึกษาก่อนคำนวณ"
+        },
+        {
+          "key": "ค",
+          "text": "ระบบกฎ (rule-based) ที่เขียนตามระเบียบโดยตรง"
+        },
+        {
+          "key": "ง",
+          "text": "Reinforcement learning ให้ระบบลองคิดค่าธรรมเนียมแล้วรับ feedback"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "กฎชัดเจน ต้องถูกต้อง 100% และตรวจสอบได้ จึงเหมาะกับระบบกฎ — การใช้ ML (ข้อ ก ข ง) เสี่ยงให้ผลผิดพลาดโดยไม่จำเป็นและอธิบายยาก"
+    },
+    {
+      "id": 20,
+      "question": "ศูนย์วิจัยข้าวมีภาพใบข้าว 50,000 ภาพ แต่ผู้เชี่ยวชาญติด label โรคได้เพียง 500 ภาพ ต้องการจำแนกโรคใบข้าว แนวทางใดเหมาะสมที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ใช้ supervised learning กับภาพ 500 ภาพ แล้วทิ้งภาพที่เหลือ"
+        },
+        {
+          "key": "ข",
+          "text": "ใช้ semi-supervised learning ที่ใช้ทั้งภาพที่มีและไม่มี label"
+        },
+        {
+          "key": "ค",
+          "text": "ใช้ dimensionality reduction อย่างเดียวแล้วอ่านผลจากกราฟ"
+        },
+        {
+          "key": "ง",
+          "text": "เขียนกฎ IF-THEN ตามสีของพิกเซล"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "semi-supervised ใช้ประโยชน์จากภาพที่ไม่มี label จำนวนมากร่วมกับ label ที่มีน้อย (ดังตัวอย่าง LabelSpreading ในบทเรียนที่ได้ accuracy สูงกว่าการใช้เฉพาะข้อมูลที่มี label) — การเขียนกฎจากพิกเซล (ข้อ ง) ทำได้ยากมากสำหรับภาพ"
+    }
+  ]
+}

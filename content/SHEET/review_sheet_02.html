@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 02 - ML Pipeline และการเตรียมข้อมูล</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🧠 Review Sheet บทที่ 02 — ML Pipeline และการเตรียมข้อมูล</div>
+      <div class="sub">EN-012-314 Artificial Intelligence · Machine Learning · ML Pipeline &amp; Data Preparation</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 3 · CLO2 (LLO2-1, LLO2-2)<br>
+      Lab 02: เตรียมข้อมูลและ Train/Test Split (Diabetes)
+    </div>
+  </div>
+
+  <div class="columns">
+    <!-- ===== LEFT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🔁</span> 1. ML Pipeline 6 ขั้น (วนซ้ำได้)</div>
+        <div class="section-body">
+          <ol class="mini">
+            <li><b>นำเข้าข้อมูล</b> — CSV, <code>sklearn.datasets</code>, Kaggle, UCI, SQL/API</li>
+            <li><b>EDA &amp; Preprocessing</b> — สำรวจ ทำความสะอาด เลือก feature encode scale</li>
+            <li><b>Train/Test Split</b> — กัน test ไว้ "สอบ" ห้ามแตะระหว่างพัฒนา</li>
+            <li><b>Model Training</b> — เริ่มจาก baseline ง่าย ๆ ก่อน</li>
+            <li><b>Evaluation</b> — วัดบน test เทียบกับ dummy · ไม่ผ่าน → กลับข้อ 2</li>
+            <li><b>Prediction</b> — ทำนายข้อมูลใหม่ (ช่วยแพทย์ตัดสินใจ ไม่ใช่วินิจฉัยแทน)</li>
+          </ol>
+          <table>
+            <tr><th>งาน</th><th>Target</th><th>ตัวอย่าง / baseline</th></tr>
+            <tr><td><b>Classification</b></td><td>หมวดหมู่</td><td>เป็นเบาหวาน 0/1 · <code>LogisticRegression</code></td></tr>
+            <tr><td><b>Regression</b></td><td>ตัวเลขต่อเนื่อง</td><td>ค่า HbA1c, ราคาบ้าน · <code>LinearRegression</code></td></tr>
+            <tr><td><b>Clustering</b></td><td>ไม่มี (unsupervised)</td><td>แบ่งกลุ่มคนไข้ · <code>KMeans</code></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🔍</span> 2. EDA ด้วย pandas</div>
+        <div class="section-body">
+          <div class="code-block">df = pd.read_csv(<span class="str">"pima_indians_diabetes_real.csv"</span>)
+df.info()                                  <span class="comment"># แถว/คอลัมน์/ชนิด/non-null</span>
+df.describe().T                            <span class="comment"># ดู min = 0 ที่เป็นไปไม่ได้!</span>
+df[<span class="str">"Outcome"</span>].value_counts(normalize=<span class="kw">True</span>)  <span class="comment"># 0.651 / 0.349</span>
+df.isna().sum()                            <span class="comment"># = 0 ไม่ได้แปลว่าสะอาด</span>
+df.hist(bins=<span class="num">20</span>); df.corr()[<span class="str">"Outcome"</span>]</div>
+          <p>Pima: <span class="accent">isna() = 0</span> แต่ Glucose, BloodPressure, SkinThickness, Insulin, BMI มีค่า 0 → <b>ค่าว่างแฝง</b> (Insulin 48.7%, SkinThickness 29.6%) · Pregnancies = 0 เป็นค่าจริง</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧹</span> 3. ทำความสะอาดข้อมูล</div>
+        <div class="section-body">
+          <div class="code-block">df[zero_cols] = df[zero_cols].replace(<span class="num">0</span>, np.nan)  <span class="comment"># 0 → NaN</span>
+df.dropna()                     <span class="comment"># 768 → 392 แถว (เสีย 49%)</span>
+SimpleImputer(strategy=<span class="str">"median"</span>)  <span class="comment"># ทน outlier/ข้อมูลเบ้</span></div>
+          <div class="formula">IQR = Q₃ − Q₁ &nbsp;·&nbsp; outlier ถ้า x &lt; Q₁ − 1.5·IQR หรือ x &gt; Q₃ + 1.5·IQR</div>
+          <p class="note">ตัวอย่าง Age: Q₁=24, Q₃=41 → IQR=17 → ขอบบน 66.5 ปี · outlier ทางการแพทย์อาจเป็นค่าจริง อย่าลบอัตโนมัติ (ใช้ capping/log/tree-based แทนได้)</p>
+          <table>
+            <tr><th>วิธี</th><th>ใช้เมื่อ</th></tr>
+            <tr><td><code>dropna()</code></td><td>ค่าว่างน้อยมาก หายแบบสุ่ม (ระวัง sampling bias)</td></tr>
+            <tr><td>median / mean</td><td>ตัวเลขทั่วไป (median เมื่อเบ้)</td></tr>
+            <tr><td>most_frequent</td><td>ข้อมูลหมวดหมู่</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 4. เลือก Feature &amp; Encoding</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li><b>Domain knowledge</b> — แพทย์ยืนยันปัจจัยเสี่ยง และ feature ต้องเก็บได้จริงตอนใช้งาน</li>
+            <li><b>Correlation</b> กับ target — Glucose สูงสุด (0.515 บน train) · ข้อมูลสกปรกบิดเบือน r (Insulin 0.131 → 0.351 หลังแปลง 0 เป็น NaN)</li>
+            <li><b>SelectKBest(f_classif, k)</b> — fit บน train เท่านั้น</li>
+          </ul>
+          <div class="code-block">OneHotEncoder(sparse_output=<span class="kw">False</span>, handle_unknown=<span class="str">"ignore"</span>)
+<span class="comment"># Region อีสาน/เหนือ/กลาง → 3 คอลัมน์ 0/1 (ไม่สร้างลำดับปลอม)</span></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🚰</span> 5. Data Leakage — fit กับ train เท่านั้น</div>
+        <div class="section-body">
+          <p><b>Data leakage</b> = ข้อมูลจาก test (หรือข้อมูลที่ไม่มีตอนใช้งานจริง) รั่วเข้าสู่การฝึก → ผลประเมินดีเกินจริง</p>
+          <div class="code-block"><span class="comment"># ผิด: เรียน μ, σ จากข้อมูลทั้งหมดก่อนแบ่ง</span>
+X_s = StandardScaler().fit_transform(X); train_test_split(X_s, y)
+<span class="comment"># ถูก: แบ่งก่อน แล้ว fit กับ train</span>
+X_train_s = scaler.fit_transform(X_train)
+X_test_s  = scaler.transform(X_test)   <span class="comment"># ห้าม fit!</span></div>
+          <table>
+            <tr><th>เมธอด</th><th>ใช้กับ</th><th>หน้าที่</th></tr>
+            <tr><td><code>fit</code></td><td>train</td><td>เรียน median, μ, σ, min, max, คะแนน feature</td></tr>
+            <tr><td><code>transform</code></td><td>train, test, ข้อมูลใหม่</td><td>แปลงด้วยค่าที่เรียนไว้</td></tr>
+            <tr><td><code>fit_transform</code></td><td>train</td><td>fit + transform</td></tr>
+          </table>
+          <p class="note">หลัง scale: mean ของ train = 0 พอดี แต่ test ≠ 0 (เช่น 0.04, 0.19) — ถูกต้อง เพราะจำลองข้อมูลใหม่ในโลกจริง · leakage เกิดได้กับ imputer, SelectKBest, encoder และ feature ที่ "รู้ผลล่วงหน้า" ด้วย</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">✂️</span> 6. Train/Test Split</div>
+        <div class="section-body">
+          <div class="code-block">X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=<span class="num">0.2</span>, stratify=y, random_state=<span class="num">42</span>)
+<span class="comment"># 768 → train 614 / test 154 (ceil 153.6) · คลาส 1: 0.349/0.351</span></div>
+          <div class="def-row"><span class="def-key">stratify=y</span><span class="def-val">คงสัดส่วนคลาสเดิมใน train/test (ไม่ได้ทำให้ 50/50)</span></div>
+          <div class="def-row"><span class="def-key">random_state</span><span class="def-val">seed ของการสุ่ม → ผลทำซ้ำได้</span></div>
+          <div class="def-row"><span class="def-key">Validation/CV</span><span class="def-val">ใช้จูน/เทียบโมเดล · ใช้ test จูน = data snooping bias</span></div>
+          <p><span class="accent">split ก่อน แล้วค่อย fit</span> — ทุกขั้นที่เรียนจากข้อมูลต้อง fit กับ train เท่านั้น</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">📏</span> 7. Feature Scaling</div>
+        <div class="section-body">
+          <div class="flex-row">
+            <div class="formula">Standard: z = (x − μ) / σ</div>
+            <div class="formula">MinMax: x′ = (x − min)/(max − min)</div>
+          </div>
+          <p class="note">Glucose ชุดเล็ก: μ=127.07, σ=28.26, min=90, max=180 → x=105: z ≈ −0.781, x′ = 15/90 ≈ 0.167 · StandardScaler ใช้ σ แบบ ddof=0</p>
+          <table>
+            <tr><th></th><th>StandardScaler</th><th>MinMaxScaler</th></tr>
+            <tr><td>ผล</td><td>mean 0, std 1</td><td>ช่วง [0, 1]</td></tr>
+            <tr><td>outlier</td><td>กระทบน้อยกว่า</td><td>outlier ดึง min/max บีบค่าอื่น</td></tr>
+          </table>
+          <div class="def-row"><span class="def-key">ต้อง scale</span><span class="def-val">KNN, K-Means, SVM, Logistic/Linear (regularized, GD), Neural Net, PCA</span></div>
+          <div class="def-row"><span class="def-key">ไม่จำเป็น</span><span class="def-val">Decision Tree, Random Forest, Gradient Boosting</span></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 8. Pipeline + ColumnTransformer + Baseline</div>
+        <div class="section-body">
+          <div class="code-block">prep = ColumnTransformer([
+  (<span class="str">"missing"</span>, Pipeline([(<span class="str">"impute"</span>, SimpleImputer(strategy=<span class="str">"median"</span>)),
+                        (<span class="str">"scale"</span>, StandardScaler())]), zero_cols),
+  (<span class="str">"complete"</span>, StandardScaler(), other_cols)])
+clf = Pipeline([(<span class="str">"prep"</span>, prep),
+                (<span class="str">"model"</span>, LogisticRegression(max_iter=<span class="num">1000</span>))])
+clf.fit(X_train, y_train); clf.predict(new_patient)  <span class="comment"># NaN เติมให้อัตโนมัติ</span></div>
+          <table>
+            <tr><th>โมเดล (test)</th><th>Accuracy</th><th>Recall</th></tr>
+            <tr><td>Dummy (ทาย 0 หมด)</td><td>0.649</td><td>0.000</td></tr>
+            <tr><td>LogisticRegression</td><td>0.708</td><td>0.500</td></tr>
+            <tr><td>+ class_weight="balanced"</td><td>0.734</td><td>0.704</td></tr>
+          </table>
+          <div class="formula">Recall = TP / (TP + FN) = 27 / (27 + 27) = 0.50</div>
+          <p class="note">งานการแพทย์: FN (ป่วยแต่ทายว่าปกติ) อันตรายที่สุด → ดู recall คู่ accuracy เสมอ · metrics เชิงลึกในบทที่ 3</p>
+        </div>
+      </div>
+
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อผิดพลาดที่พบบ่อย</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li><b>Data leakage</b>: <code>fit_transform(X)</code> ทั้งชุดก่อน split · <code>fit</code> กับ test → ใช้ <code>transform</code> เท่านั้น</li>
+            <li>เชื่อ <code>isna()</code> อย่างเดียว ไม่ดู <code>describe()</code> → พลาดค่าว่างแฝง (0, −1, 999)</li>
+            <li>เลือก feature จากข้อมูลดิบ/ทั้งชุด → corr ถูกบิดเบือน และ leak</li>
+            <li>ลืม <code>stratify</code> เมื่อคลาสไม่สมดุล · ลืม <code>random_state</code></li>
+            <li>ดูแค่ accuracy โดยไม่เทียบ dummy baseline · ใช้ test set เลือกโมเดล</li>
+            <li>แทนหมวดหมู่ไม่มีลำดับเป็น 0,1,2 แทน one-hot</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧪</span> เชื่อมโยงกับ Lab 02 (Pima 768 แถว)</div>
+        <div class="section-body">
+          <table class="lab-table">
+            <tr><th>ข้อ</th><th>สิ่งที่ทำ</th></tr>
+            <tr><td>1–2</td><td>สำรวจข้อมูล · หาเลข 0 → NaN</td></tr>
+            <tr><td>3–4</td><td>dropna vs median impute · IQR outlier</td></tr>
+            <tr><td>5–6</td><td>stratified split · corr &amp; SelectKBest บน train</td></tr>
+            <tr><td>7–8</td><td>scale ไม่ leak · Pipeline + LogisticRegression · ทำนายคนไข้ใหม่</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-012-314 ปัญญาประดิษฐ์ · ผศ.ดร. สรายุทธ กรวิรัตน์ · สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยกาฬสินธุ์ · ปีการศึกษา 2569</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 08 - การประมวลผลและทำความเข้าใจภาษาธรรมชาติ</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🧠 Review Sheet บทที่ 08 — การประมวลผลและทำความเข้าใจภาษาธรรมชาติ</div>
+      <div class="sub">EN-012-314 Artificial Intelligence · Machine Learning · Natural Language Processing &amp; Understanding</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 12 · CLO4 (LLO4-1, LLO4-2)<br>
+      Lab 08: Text Classification และ Sentiment Analysis
+    </div>
+  </div>
+
+  <div class="columns">
+    <!-- ===== LEFT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📌</span> 1. NLP · NLU · NLG</div>
+        <div class="section-body">
+          <div class="def-row"><span class="def-key">NLP</span><span class="def-val">คำกว้างสุด: ให้คอมพิวเตอร์ <b>เข้าใจ ตีความ และสร้าง</b> ภาษามนุษย์</span></div>
+          <div class="def-row"><span class="def-key">NLU</span><span class="def-val">"อ่านแล้วเข้าใจ" — intent, entity/slot, sentiment</span></div>
+          <div class="def-row"><span class="def-key">NLG</span><span class="def-val">"เขียนออกมา" — สรุปความ ตอบแชต เขียนรายงาน</span></div>
+          <p><b>งานประยุกต์:</b> chatbot · แปลภาษา · auto-correct · sentiment รีวิว · สรุปความ · กรองสแปม · NER ดึงชื่อ/สถานที่/วันที่</p>
+          <p class="note">Chatbot = NLU (เข้าใจคำถาม) → ตรรกะระบบ → NLG (สร้างคำตอบ) · ความยากหลัก: ความกำกวม เช่น "ตากลม", ประชด "สวยตายแหละ"</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🔗</span> 2. NLP Pipeline (แบบดั้งเดิม)</div>
+        <div class="section-body">
+          <p><span class="blue">รวบรวมข้อมูล+label</span> → <span class="blue">Cleaning</span> → <span class="blue">Tokenization</span> → <span class="blue">Stop words</span> → <span class="blue">Stem/Lemma</span> → <span class="blue">Feature (BoW/TF-IDF)</span> → <span class="blue">Model</span> → Pos/Neg/Neutral</p>
+          <table>
+            <tr><th>ประเด็น</th><th>อังกฤษ</th><th>ไทย</th></tr>
+            <tr><td>ตัดคำ</td><td>ใช้ช่องว่าง <code>split()</code></td><td>ไม่มีช่องว่าง → PyThaiNLP <code>newmm</code></td></tr>
+            <tr><td>ผันรูปคำ</td><td>ต้อง stem/lemma</td><td>คำโดด แทบไม่ต้อง</td></tr>
+            <tr><td>แสลง</td><td>คำย่อ</td><td>ลากเสียง "ม่ายยย", จงใจพิมพ์ผิด "ดีย์"</td></tr>
+          </table>
+          <ul class="mini">
+            <li><b>รวบรวมข้อมูล:</b> label มาจากไหน (ติดเอง / ดาวรีวิว 4–5 = บวก) · สมดุลคลาส · ตรงโดเมนใช้งานจริง · ปิดบังข้อมูลส่วนบุคคล</li>
+            <li>ไม่จำเป็นต้องใช้ทุกขั้น — เลือกตามภาษาและงาน (sentiment ห้ามลบคำปฏิเสธ, ไทยแทบไม่ต้อง stem)</li>
+          </ul>
+          <div class="def-row"><span class="def-key">Stemming</span><span class="def-val">ตัด suffix ตามกฎ เร็ว อาจไม่ใช่คำจริง: studies → <code>studi</code></span></div>
+          <div class="def-row"><span class="def-key">Lemmatize</span><span class="def-val">ใช้พจนานุกรม + ชนิดคำ: ran → <code>run</code> (ต้องระบุ <code>pos='v'</code>)</span></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">✂️</span> 3. Cleaning &amp; Tokenization</div>
+        <div class="section-body">
+          <div class="code-block">text = text.lower()
+text = re.sub(<span class="str">r"&lt;[^&gt;]+&gt;"</span>, <span class="str">" "</span>, text)          <span class="comment"># HTML tag</span>
+text = re.sub(<span class="str">r"http\S+"</span>, <span class="str">" "</span>, text)           <span class="comment"># URL</span>
+text = re.sub(<span class="str">r"(.)\1{2,}"</span>, <span class="str">r"\1"</span>, text)      <span class="comment"># มากกกก → มาก</span>
+<span class="kw">from</span> pythainlp.tokenize <span class="kw">import</span> word_tokenize
+word_tokenize(text, engine=<span class="str">"newmm"</span>, keep_whitespace=<span class="kw">False</span>)
+<span class="comment"># ['สินค้า','นี้','ดีมาก','ๆ','ส่ง','ไว','มาก', ...]</span></div>
+          <p class="note">Colab: <code>!pip install pythainlp</code> · stop words: <code>ENGLISH_STOP_WORDS</code> (318 คำ), <code>thai_stopwords()</code> (1,030 คำ)</p>
+          <table>
+            <tr><th>คำ</th><th>not</th><th>ไม่</th><th>แต่</th><th>มาก</th><th>ส่ง</th><th>ดี</th><th>ชอบ</th></tr>
+            <tr><td>อยู่ในรายการ stop words?</td><td class="accent">ใช่</td><td class="accent">ใช่</td><td class="accent">ใช่</td><td class="accent">ใช่</td><td class="accent">ใช่</td><td>ไม่</td><td>ไม่</td></tr>
+          </table>
+          <p>"สินค้าไม่ค่อยดี" ลบ stop words เต็ม → เหลือ "สินค้า ดี" → <span class="accent">ต้องปรับรายการก่อนใช้</span> · ตัดคำผิดได้: "เลยยยย" → <code>เลย</code>+<code>ยยยย</code> → ยุบอักษรซ้ำก่อน</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🔢</span> 4. Features: BoW · TF-IDF · n-gram · Embedding</div>
+        <div class="section-body">
+          <p><b>BoW</b> = นับจำนวนครั้งของแต่ละคำ ไม่สนลำดับ → sparse matrix · ข้อจำกัด: คำทั่วไปได้ค่าสูง, มิติ = ขนาด vocabulary, ไม่รู้ว่า good ≈ great</p>
+          <div class="formula">tfidf(t,d) = tf(t,d) × idf(t)</div>
+          <div class="formula">sklearn: idf(t) = ln[(1+n) / (1+df(t))] + 1 → แล้ว L2-normalize แต่ละแถว</div>
+          <p class="note">สูตรตำรา: idf = log(n/df) · คำที่อยู่ทุกเอกสารได้ idf = 1 (ต่ำสุด) ใน sklearn</p>
+          <table>
+            <tr><th colspan="4">ตัวอย่าง n = 3: d1 "good phone good price", d2 "bad phone", d3 "good camera"</th></tr>
+            <tr><td>คำ</td><td>df</td><td>idf</td><td>d1: tf×idf → /‖·‖</td></tr>
+            <tr><td>good</td><td>2</td><td>1.2877</td><td>2×1.2877=2.5754 → <b>0.7710</b></td></tr>
+            <tr><td>phone</td><td>2</td><td>1.2877</td><td>1.2877 → <b>0.3855</b></td></tr>
+            <tr><td>price</td><td>1</td><td>1.6931</td><td>1.6931 → <b>0.5069</b> (‖d1‖ = 3.3403)</td></tr>
+          </table>
+          <div class="code-block">TfidfVectorizer(ngram_range=(<span class="num">1</span>, <span class="num">2</span>))          <span class="comment"># unigram + bigram</span>
+TfidfVectorizer(analyzer=<span class="str">"char_wb"</span>,
+                ngram_range=(<span class="num">2</span>, <span class="num">4</span>))          <span class="comment"># ไทย: ไม่ต้องตัดคำ</span>
+TfidfVectorizer(tokenizer=thai_tokenize,
+                token_pattern=<span class="kw">None</span>)          <span class="comment"># ไทย: ตัดคำด้วย newmm</span></div>
+          <ul class="mini">
+            <li><b>n-gram</b>: "not good" เป็น bigram → จับรูปปฏิเสธได้ แต่ฟีเจอร์เพิ่มเร็ว ("the food is not good" → 5 uni + 4 bi = 9)</li>
+            <li><b>Word2Vec</b>: dense vector 1 คำ 1 เวกเตอร์ คำบริบทคล้ายกันอยู่ใกล้กัน · king − man + woman ≈ queen</li>
+            <li><b>Contextual</b> (BERT, WangchanBERTa): เวกเตอร์เปลี่ยนตามประโยค ("ขันน้ำ" vs "ขันดี")</li>
+          </ul>
+          <div class="formula">cos θ = (a · b) / (‖a‖ ‖b‖)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">😊</span> 5. Sentiment / Text Classification</div>
+        <div class="section-body">
+          <div class="code-block">clf = Pipeline([(<span class="str">"vec"</span>, TfidfVectorizer(ngram_range=(<span class="num">1</span>, <span class="num">2</span>))),
+                (<span class="str">"model"</span>, LogisticRegression(C=<span class="num">10</span>, max_iter=<span class="num">1000</span>))])
+clf.fit(X_train, y_train)                <span class="comment"># fit เฉพาะ train → ไม่รั่ว</span>
+<span class="fn">print</span>(classification_report(y_test, clf.predict(X_test)))
+coef = pd.Series(clf[<span class="str">"model"</span>].coef_[<span class="num">0</span>],
+                 index=clf[<span class="str">"vec"</span>].get_feature_names_out())
+coef.sort_values()   <span class="comment"># ลบ → classes_[0], บวก → classes_[1]</span></div>
+          <table>
+            <tr><th>โมเดล</th><th>หลักการ</th><th>จุดเด่น</th></tr>
+            <tr><td>MultinomialNB</td><td>Bayes + คำอิสระต่อกันเมื่อรู้คลาส</td><td>เร็ว baseline ดี ข้อมูลน้อยก็ได้</td></tr>
+            <tr><td>LogisticRegression</td><td>น้ำหนักคำ + sigmoid/softmax</td><td>แม่นกว่าเมื่อข้อมูลมาก อ่าน <code>coef_</code> ได้</td></tr>
+          </table>
+          <p class="note">ข้อมูลน้อย → test set เล็ก ผิด 1 ข้อ accuracy ขยับมาก → ดู cross-validation ประกอบ</p>
+          <p>ผล Lab 3 (รีวิวอาหาร 40 ข้อความ, 5-fold CV): word+NB <b>0.750</b> · word+LR <b>0.800</b> · char_wb+LR <b>0.825</b> · ฟีเจอร์ลบแรงสุด = <code>ไม่</code> (−2.03)</p>
+          <p class="note">"not good, the sound is bad" → pos 0.501: นับคำไม่เข้าใจการปฏิเสธ ถ้าไม่มี bigram "not good" ในข้อมูลฝึก</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🤖</span> 6. NLU: Intent + Fallback + Slot</div>
+        <div class="section-body">
+          <p><span class="blue">ข้อความ</span> → Preprocess → <span class="blue">Intent classifier</span> → ความมั่นใจ ≥ threshold? → ใช่: <span class="blue">ดึง slot</span> → ตอบ · ไม่: <span class="accent">fallback</span> ส่งแอดมิน</p>
+          <div class="code-block"><span class="kw">def</span> <span class="fn">understand</span>(text, threshold=<span class="num">0.5</span>):
+    proba = intent_clf.predict_proba([text])[<span class="num">0</span>]
+    best = <span class="fn">int</span>(np.argmax(proba))
+    <span class="kw">if</span> proba[best] &lt; threshold:
+        <span class="kw">return</span> <span class="str">"ไม่เข้าใจ (ส่งต่อแอดมิน)"</span>, proba[best]
+    <span class="kw">return</span> intent_clf.classes_[best], proba[best]
+re.search(<span class="str">r"(\d+)\s*(ชิ้น|ตัว|กล่อง)"</span>, text)   <span class="comment"># slot จำนวน</span>
+re.search(<span class="str">r"[A-Z]{2}\d{8,12}"</span>, text)           <span class="comment"># เลขพัสดุ</span></div>
+          <p class="note">ผลจริง (threshold 0.5): "ราคาเท่าไหร่คะ" → ถามราคา 0.92 · "วันนี้ฝนตกไหม" → ไม่เข้าใจ 0.44</p>
+          <ul class="mini">
+            <li><b>Intent</b> = ผู้ใช้ต้องการอะไร (ถามราคา / สั่งซื้อ / ติดตามพัสดุ / ร้องเรียน)</li>
+            <li><b>Slot/Entity</b> = รายละเอียด (จำนวน, สี, เลขพัสดุ) — regex หรือ NER · ขาด slot → ถามกลับ</li>
+            <li>threshold สูง → fallback บ่อย · ต่ำ → ตอบผิดเมื่อคำถามนอกขอบเขต — เลือกจาก validation</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">⚖️</span> 7. Pipeline ดั้งเดิม vs (Mini) LLM</div>
+        <div class="section-body">
+          <table>
+            <tr><th>ประเด็น</th><th>TF-IDF + NB/LR</th><th>LLM (zero/few-shot)</th></tr>
+            <tr><td>ข้อมูล label</td><td>หลักร้อย–พัน</td><td>0–5 ตัวอย่างใน prompt</td></tr>
+            <tr><td>ต้นทุน/latency</td><td>ต่ำมาก, ms, CPU</td><td>สูง, 100 ms–วินาที, GPU/API</td></tr>
+            <tr><td>แสลง/ประชด</td><td>อ่อน (นับคำ)</td><td>ดีกว่า (Transformer attention)</td></tr>
+            <tr><td>อธิบายผล</td><td>ดี (<code>coef_</code>)</td><td>ต่ำ คล้ายกล่องดำ</td></tr>
+          </table>
+          <p><b>Zero-shot</b> = สั่งงานไม่มีตัวอย่าง · <b>Few-shot</b> = ใส่ตัวอย่าง+คำตอบใน prompt (ไม่ปรับน้ำหนัก) · บังคับตอบเป็น JSON</p>
+          <div class="formula">VRAM(น้ำหนัก) ≈ #params × bits / 8 ไบต์ · 7B@16-bit ≈ 14 GB · 8B@4-bit ≈ 4 GB (+KV cache)</div>
+          <p class="note">ตัวอย่างโมเดล open-weight: Llama, Qwen, Gemma; ไทย: Typhoon, OpenThaiGPT, SeaLLM, WangchanGLM · ระบบจริงมักผสม: classic คัดกรอง → ข้อความยากส่ง LLM</p>
+        </div>
+      </div>
+
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อผิดพลาดที่พบบ่อย</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li>ลบ stop words มาตรฐานในงาน sentiment → "not", "ไม่", "แต่" หาย <b>ความหมายกลับขั้ว</b></li>
+            <li>ใช้ <code>fit_transform</code> กับ test set → vocabulary ใหม่/รั่ว ต้องใช้ <code>transform</code> หรือ <code>Pipeline</code></li>
+            <li>ลบ emoji/":)"/"555" ทิ้งทั้งที่เป็นสัญญาณอารมณ์ → ควรแปลงเป็นคำแทน</li>
+            <li>ลืม <code>keep_whitespace=False</code> → ช่องว่างกลายเป็น token</li>
+            <li>สับสนสูตร idf: sklearn = ln((1+n)/(1+df)) + 1 และ normalize L2 ไม่ใช่ log(n/df)</li>
+            <li>chatbot ไม่มี fallback → เดา intent ผิดกับคำถามนอกขอบเขต</li>
+            <li>ข้อมูลแชตลูกค้ามีข้อมูลส่วนบุคคล (PDPA) และอคติ (ภาษาถิ่น เพศ) — ปิดบังและตรวจก่อนฝึก</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧪</span> เชื่อมโยงกับ Lab 08</div>
+        <div class="section-body">
+          <table class="lab-table">
+            <tr><th>ข้อ</th><th>สิ่งที่ฝึก</th></tr>
+            <tr><td>1</td><td>clean + tokenize อังกฤษ/ไทย, stem vs lemma, stop words ไทยที่ต้องเก็บ</td></tr>
+            <tr><td>2</td><td>BoW / TF-IDF 3 เอกสารด้วยมือ แล้วตรวจกับ sklearn</td></tr>
+            <tr><td>3</td><td>Sentiment รีวิวอาหารไทย: word (newmm) vs char_wb, NB vs LR, top words</td></tr>
+            <tr><td>4</td><td>Intent chatbot งานทะเบียน + threshold 0.3/0.5/0.7</td></tr>
+            <tr><td>5–6</td><td>ออกแบบ pipeline LINE chatbot · เขียน prompt zero/few-shot เทียบ</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-012-314 ปัญญาประดิษฐ์ · ผศ.ดร. สรายุทธ กรวิรัตน์ · สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยกาฬสินธุ์ · ปีการศึกษา 2569</div>
+</div>
+</body>
+</html>

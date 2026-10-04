@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 05 - Clustering, การลดมิติ และ Anomaly Detection</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🧠 Review Sheet บทที่ 05 — Clustering, การลดมิติ และ Anomaly Detection</div>
+      <div class="sub">EN-012-314 Artificial Intelligence · Machine Learning · Clustering, Dimensionality Reduction &amp; Anomaly Detection</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 6 · CLO2 (LLO2-2, LLO2-3)<br>
+      Lab 05: K-Means, PCA และการเลือกอัลกอริทึม
+    </div>
+  </div>
+
+  <div class="columns">
+    <!-- ===== LEFT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 1. K-Means</div>
+        <div class="section-body">
+          <ol class="mini">
+            <li><b>Scale</b> ข้อมูล → กำหนด <b>k</b> → วาง centroid เริ่มต้น (k-means++)</li>
+            <li><b>Assignment:</b> จัดแต่ละจุดเข้า centroid ที่ใกล้ที่สุด (Euclidean)</li>
+            <li><b>Update:</b> ย้าย centroid ไปที่ <span class="accent">ค่าเฉลี่ย</span> ของสมาชิก</li>
+            <li>วนข้อ 2–3 จน centroid ไม่ขยับ (inertia ลดลงหรือเท่าเดิมทุกรอบ)</li>
+          </ol>
+          <div class="formula">inertia = Σᵢ ‖ x⁽ⁱ⁾ − μ<sub>c(i)</sub> ‖²</div>
+          <div class="code-block"><span class="kw">from</span> sklearn.cluster <span class="kw">import</span> KMeans
+km = KMeans(n_clusters=<span class="num">4</span>, n_init=<span class="num">10</span>, random_state=<span class="num">42</span>)
+labels = km.fit_predict(X_scaled)
+km.cluster_centers_, km.inertia_   <span class="comment"># centroid, inertia</span>
+km.predict(X_new)                  <span class="comment"># จัดกลุ่มข้อมูลใหม่ได้</span></div>
+          <p class="note">ตัวอย่างมือ: A(1,1) B(2,1) C(4,3) D(5,4) E(1,2) F(4,4), init = A, B → รอบ 2 B ย้ายกลุ่ม → ลู่เข้ารอบ 3 μ = (1.33,1.33), (4.33,3.67), inertia = 2.667</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">📏</span> 2. เลือก k: Elbow &amp; Silhouette</div>
+        <div class="section-body">
+          <p><b>Elbow:</b> plot inertia vs k หา "ข้อศอก" — <span class="accent">ห้ามเลือก inertia ต่ำสุด</span> เพราะลดลงเสมอเมื่อ k เพิ่ม</p>
+          <div class="formula">s(i) = (b − a) / max(a, b) &nbsp;∈ [−1, 1]</div>
+          <div class="def-row"><span class="def-key">a</span><span class="def-val">ระยะเฉลี่ยถึงจุดอื่นใน <b>กลุ่มเดียวกัน</b></span></div>
+          <div class="def-row"><span class="def-key">b</span><span class="def-val">ระยะเฉลี่ยถึงจุดใน <b>กลุ่มที่ใกล้ที่สุดถัดไป</b></span></div>
+          <div class="def-row"><span class="def-key">แปลผล</span><span class="def-val">≈ +1 ถูกกลุ่ม · ≈ 0 อยู่ขอบ · &lt; 0 น่าจะผิดกลุ่ม → เลือก k ที่ silhouette เฉลี่ยสูงสุด</span></div>
+          <div class="code-block"><span class="kw">from</span> sklearn.metrics <span class="kw">import</span> silhouette_score
+<span class="kw">for</span> k <span class="kw">in</span> range(<span class="num">2</span>, <span class="num">9</span>):
+    km = KMeans(n_clusters=k, n_init=<span class="num">10</span>).fit(X)
+    print(k, km.inertia_, silhouette_score(X, km.labels_))</div>
+          <p class="note">ตัวอย่าง make_blobs 4 กลุ่ม: inertia 15386 → 3125 → 607 → 548 และ silhouette สูงสุด 0.834 ที่ k = 4</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">⚖️</span> 3. Feature Scaling กับระยะทาง</div>
+        <div class="section-body">
+          <p>feature หน่วยใหญ่ (รายได้ หลักหมื่น) <span class="accent">ครอบงำ</span> ระยะ Euclidean ของ feature หน่วยเล็ก (อายุ) → ต้อง scale ก่อน K-Means / DBSCAN / KNN / PCA</p>
+          <div class="code-block"><span class="kw">from</span> sklearn.pipeline <span class="kw">import</span> make_pipeline
+model = make_pipeline(StandardScaler(), KMeans(<span class="num">3</span>, n_init=<span class="num">10</span>))</div>
+          <p>ลูกค้า 3 กลุ่ม (อายุ, รายได้): ARI ไม่ scale = <b>0.501</b> → scale แล้ว = <b>1.0</b></p>
+          <p class="note">ARI (Adjusted Rand Index): 1 = ตรงเฉลยทั้งหมด, ≈ 0 = เหมือนสุ่ม — ใช้ได้เมื่อมีเฉลยให้ตรวจเท่านั้น</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🌙</span> 4. DBSCAN (density-based)</div>
+        <div class="section-body">
+          <div class="def-row"><span class="def-key">Core</span><span class="def-val">มีเพื่อนบ้านในรัศมี <code>eps</code> ≥ <code>min_samples</code> จุด (นับตัวเอง)</span></div>
+          <div class="def-row"><span class="def-key">Border</span><span class="def-val">ไม่ใช่ core แต่อยู่ในรัศมีของ core → เข้ากลุ่มนั้น</span></div>
+          <div class="def-row"><span class="def-key">Noise</span><span class="def-val">ไม่ใช่ทั้งสองแบบ → label <code>-1</code></span></div>
+          <div class="code-block">db = DBSCAN(eps=<span class="num">0.2</span>, min_samples=<span class="num">5</span>).fit(X)
+db.labels_, db.core_sample_indices_   <span class="comment"># ไม่มี predict()</span></div>
+          <p>make_moons: K-Means ARI <b>0.239</b> vs DBSCAN <b>1.0</b> · eps 0.05 → 7 กลุ่ม + noise 77 · eps 0.5 → รวมเป็น 1 กลุ่ม</p>
+          <p class="note">K-Means เหมาะกับกลุ่มทรงกลมขนาดใกล้กัน (ขอบเขตเป็นเส้นตรง) · DBSCAN ข้อดี: ไม่ต้องกำหนด k, จับรูปร่างแปลกได้, แยก noise · ข้อเสีย: ไวต่อ eps, แย่เมื่อความหนาแน่นต่างกันมาก</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">📉</span> 5. Dimensionality Reduction: PCA &amp; t-SNE</div>
+        <div class="section-body">
+          <p><b>Curse of dimensionality:</b> มิติสูง → ข้อมูลกระจัดกระจาย ระยะใกล้/ไกลพอ ๆ กัน (d = 1000: min/max = 0.85) → overfit ง่าย</p>
+          <p><b>PCA</b> (projection): PC1 = ทิศ variance สูงสุด, PC ถัดไปตั้งฉากกัน · center ให้อัตโนมัติ แต่ไม่ scale ให้</p>
+          <div class="code-block">pca = PCA(n_components=<span class="num">0.95</span>)        <span class="comment"># เก็บ variance 95%</span>
+X_low = pca.fit_transform(X)
+pca.explained_variance_ratio_           <span class="comment"># สัดส่วน variance ต่อ PC</span>
+X_rec = pca.inverse_transform(X_low)    <span class="comment"># reconstruction</span></div>
+          <p>MNIST 10k ภาพ: 784 → <b>151</b> มิติ ได้ 95% · 2D เก็บได้แค่ 17.1% · digits: 64 → 29 มิติ</p>
+          <table>
+            <tr><th></th><th>PCA</th><th>t-SNE</th></tr>
+            <tr><td>แนวคิด</td><td>Linear, รักษา variance</td><td>Non-linear, รักษา local structure</td></tr>
+            <tr><td>ใช้ทำ</td><td>preprocessing, บีบอัด</td><td>visualization เท่านั้น</td></tr>
+            <tr><td><code>transform</code> ข้อมูลใหม่</td><td>✔ (+ inverse)</td><td>✘ มีแค่ fit_transform</td></tr>
+            <tr><td>ความเร็ว / พารามิเตอร์</td><td>เร็วมาก / n_components</td><td>ช้า / perplexity (5–50)</td></tr>
+          </table>
+          <p class="note">กฎเหล็ก: PCA → 30–50D ก่อน (ตัด noise, เร่งความเร็ว) แล้วจึง t-SNE → 2D · Manifold learning อื่น: LLE (คลี่ Swiss roll)</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🔢</span> 6. กรณีศึกษา: MNIST แบบไม่มีผู้สอน (10,000 ภาพ)</div>
+        <div class="section-body">
+          <p>784 พิกเซล → ลดมิติ → K-Means (k = 10) → เทียบกลุ่มกับตัวเลขจริงด้วย ARI</p>
+          <table>
+            <tr><th>Pipeline</th><th>ARI</th><th>หมายเหตุ</th></tr>
+            <tr><td>K-Means บน 784D</td><td>0.353</td><td>ช้าที่สุด</td></tr>
+            <tr><td>PCA 20D → K-Means</td><td>0.349</td><td>ข้อมูลเล็กลง ~39 เท่า คุณภาพแทบเท่าเดิม</td></tr>
+            <tr><td>PCA 50D → t-SNE 2D → K-Means</td><td>0.738</td><td>กลุ่มบริสุทธิ์กว่า แต่ช้าและใช้กับภาพใหม่ไม่ได้</td></tr>
+          </table>
+          <ul class="mini">
+            <li>กลุ่มที่สับสนบ่อย: <b>4–9</b>, <b>3–5–8</b> (รูปเส้นคล้ายกัน) · เลข 0 และ 1 อาจแตกเป็นสองกลุ่มตามความหนา/ความเอียง</li>
+            <li>K-Means จัดตาม "รูปร่างเส้น" ไม่ได้รู้ความหมายของตัวเลข — ตรวจคุณภาพด้วยการเปิดดูภาพในแต่ละกลุ่ม</li>
+            <li>Reconstruction: PCA 100D แทบเหมือนเดิม (MSE 0.0056) · 10D เบลอแต่อ่านออก · 2D ดูไม่ออก (MSE 0.0559)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🚨</span> 7. Anomaly Detection</div>
+        <div class="section-body">
+          <p><b>GMM</b>: ส่วนผสมของ Gaussian (วงรี ขนาด/ทิศต่างกันได้) ฝึกด้วย <b>EM</b> (E: ความน่าจะเป็น, M: ปรับ mean/cov/weight)</p>
+          <div class="code-block">gm = GaussianMixture(n_components=<span class="num">3</span>, n_init=<span class="num">10</span>).fit(X)
+dens = gm.score_samples(X)              <span class="comment"># log-density ต่ำ = แปลก</span>
+anom = dens &lt; np.percentile(dens, <span class="num">4</span>)  <span class="comment"># ตัด 4% ล่างสุด</span>
+iso = IsolationForest(contamination=<span class="num">0.04</span>).fit(X)
+iso.predict(X)                          <span class="comment"># -1 = ผิดปกติ</span></div>
+          <p class="note">Isolation Forest: จุดโดดเดี่ยวถูกแยกได้ด้วยการตัดแบบสุ่มไม่กี่ครั้ง · threshold สูงขึ้น → recall ↑ precision ↓</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧭</span> 8. Unsupervised: เลือกเทคนิคให้เหมาะกับปัญหา</div>
+        <div class="section-body">
+          <p>เรียนรู้จาก <span class="accent">X อย่างเดียว (ไม่มี label)</span> แบ่งเป็น clustering · dimensionality reduction · anomaly detection — ถามก่อนเลือก: มี label ไหม? เป้าหมายคืออะไร? ข้อมูลรูปร่างแบบไหน?</p>
+          <table>
+            <tr><th>โจทย์</th><th>เทคนิค</th></tr>
+            <tr><td>แบ่งกลุ่มลูกค้า รู้คร่าว ๆ ว่ากี่กลุ่ม ต้องจัดลูกค้าใหม่</td><td>Scaler + K-Means</td></tr>
+            <tr><td>จุดเสี่ยงจาก GPS รูปร่างแปลก มี noise</td><td>DBSCAN</td></tr>
+            <tr><td>บีบอัด/ลด noise ก่อนเทรนโมเดล</td><td>PCA (0.95)</td></tr>
+            <tr><td>วาดข้อมูลมิติสูงเป็นภาพ 2D</td><td>PCA 50D → t-SNE</td></tr>
+            <tr><td>fraud / เครื่องจักรผิดปกติ</td><td>Isolation Forest, GMM + threshold</td></tr>
+            <tr><td>ลดจำนวนสีในภาพ (color quantization)</td><td>K-Means (centroid = สีตัวแทน)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อผิดพลาดที่พบบ่อย</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li>ลืม scale ก่อน K-Means/DBSCAN/PCA → feature หน่วยใหญ่ครอบงำ (silhouette ของข้อมูลดิบชี้ k ผิดได้)</li>
+            <li>เลือก k จาก inertia ต่ำสุด · ไม่กำหนด <code>n_init</code>/<code>random_state</code> → ผลไม่คงที่</li>
+            <li>ใช้ K-Means กับกลุ่มรูปโค้ง/ความหนาแน่นต่างกัน · ตีความเลขกลุ่มว่าเป็น "label" จริง</li>
+            <li>ใช้ t-SNE ใน pipeline ทำนาย หรืออ่านระยะ/ขนาดกลุ่มบนกราฟ t-SNE เชิงปริมาณ</li>
+            <li>ลดมิติ PCA เหลือ 2D แล้วหวังให้ reconstruction คมชัด (2D เก็บ variance MNIST แค่ 17%)</li>
+          </ul>
+          <p class="note">Lab 05: ข้อ 1 K-Means มือ · ข้อ 2 Elbow/Silhouette ± scaling · ข้อ 3 DBSCAN vs K-Means · ข้อ 4 PCA digits · ข้อ 5 GMM/iForest · ข้อ 6 กรณีศึกษา</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-012-314 ปัญญาประดิษฐ์ · ผศ.ดร. สรายุทธ กรวิรัตน์ · สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยกาฬสินธุ์ · ปีการศึกษา 2569</div>
+</div>
+</body>
+</html>

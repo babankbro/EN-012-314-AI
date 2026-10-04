@@ -1,0 +1,493 @@
+{
+  "moduleId": "02",
+  "title": "ML Pipeline & Data Preparation",
+  "titleTh": "ML Pipeline และการเตรียมข้อมูล",
+  "timeMinutes": 30,
+  "questions": [
+    {
+      "id": 1,
+      "question": "ลำดับขั้นตอนของ ML Pipeline ข้อใดถูกต้อง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ฝึกโมเดล → นำเข้าข้อมูล → แบ่ง Train/Test → ประเมินผล → ทำนาย"
+        },
+        {
+          "key": "ข",
+          "text": "นำเข้าข้อมูล → EDA & Preprocessing → แบ่ง Train/Test → ฝึกโมเดล → ประเมินผล → ทำนาย"
+        },
+        {
+          "key": "ค",
+          "text": "นำเข้าข้อมูล → ฝึกโมเดล → EDA & Preprocessing → ประเมินผล → แบ่ง Train/Test → ทำนาย"
+        },
+        {
+          "key": "ง",
+          "text": "นำเข้าข้อมูล → แบ่ง Train/Test → ประเมินผล → ฝึกโมเดล → ทำนาย"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "ต้องเข้าใจและเตรียมข้อมูลก่อน แล้วแบ่ง train/test ก่อนฝึก ประเมินบน test set แล้วจึงนำไปทำนายข้อมูลใหม่ ตัวเลือกอื่นสลับลำดับ เช่น ฝึกก่อนมีข้อมูล หรือประเมินก่อนฝึก ซึ่งเป็นไปไม่ได้"
+    },
+    {
+      "id": 2,
+      "question": "ในชุดข้อมูล Pima Indians Diabetes คอลัมน์ Glucose มีค่า 0 อยู่ 5 แถว ค่า 0 นี้ควรตีความว่าอย่างไร",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ผู้ป่วยมีภาวะน้ำตาลในเลือดต่ำรุนแรง ควรเก็บไว้ตามเดิม"
+        },
+        {
+          "key": "ข",
+          "text": "เป็น outlier ที่ต้องลบทิ้งทุกครั้งตามกฎ IQR"
+        },
+        {
+          "key": "ค",
+          "text": "เป็นค่าว่างแฝง (disguised missing value) คือไม่ได้วัดแต่บันทึกเป็น 0"
+        },
+        {
+          "key": "ง",
+          "text": "เป็นคลาสที่สามของ Outcome"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "ระดับน้ำตาล 0 mg/dL เป็นไปไม่ได้ในคนที่มีชีวิต จึงเป็นค่าที่ไม่ได้วัดแต่ถูกบันทึกเป็น 0 ควรแปลงเป็น NaN แล้วจัดการแบบค่าว่าง ไม่ใช่ข้อมูลทางคลินิกจริง (ก) และไม่ควรมองเป็นแค่ outlier (ข) — ค่า 0 อาจหลุดขอบล่างของ IQR ก็จริง แต่สาเหตุที่แท้จริงคือค่าที่ไม่ได้วัด"
+    },
+    {
+      "id": 3,
+      "question": "จากผลลัพธ์ต่อไปนี้ ข้อสรุปใดถูกต้องที่สุด",
+      "code": ">>> df.isna().sum().sum()\n0\n>>> df[\"BMI\"].describe()[[\"count\", \"min\", \"max\"]]\ncount    768.0\nmin        0.0\nmax       67.1",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ข้อมูลมีค่าว่างแฝง เพราะ isna() ไม่พบค่าว่าง แต่ค่าต่ำสุดของ BMI เป็น 0 ซึ่งเป็นไปไม่ได้"
+        },
+        {
+          "key": "ข",
+          "text": "ข้อมูลสะอาดสมบูรณ์ เพราะ isna() ไม่พบค่าว่าง"
+        },
+        {
+          "key": "ค",
+          "text": "ต้องลบคอลัมน์ BMI ทิ้ง เพราะมีค่าต่ำสุดเป็น 0"
+        },
+        {
+          "key": "ง",
+          "text": "BMI มีค่าว่าง 768 ค่า"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "isna() ตรวจพบเฉพาะ NaN แต่ค่า BMI = 0 เป็นไปไม่ได้ จึงเป็นค่าว่างที่ซ่อนอยู่ ต้องดู describe() ประกอบเสมอ ข้อ (ข) เชื่อ isna() อย่างเดียว ข้อ (ค) ลบทั้งคอลัมน์ทั้งที่มีค่า 0 แค่ 11 แถว ข้อ (ง) อ่านผลผิด (768 คือ count)"
+    },
+    {
+      "id": 4,
+      "question": "เหตุใดจึงนิยมเติมค่าว่างของคอลัมน์ Insulin ด้วย median แทน mean",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "median คำนวณได้เร็วกว่า mean"
+        },
+        {
+          "key": "ข",
+          "text": "median ทำให้ข้อมูลมีการแจกแจงปกติ"
+        },
+        {
+          "key": "ค",
+          "text": "SimpleImputer รองรับเฉพาะ strategy=\"median\""
+        },
+        {
+          "key": "ง",
+          "text": "Insulin เบ้ขวาและมี outlier มาก median จึงทนต่อค่าสุดโต่งได้ดีกว่า mean"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "Insulin (เฉพาะค่าที่ไม่ว่าง) มี mean ≈ 155.5 แต่ median = 125 เพราะค่าสูง ๆ ดึง mean ขึ้น median ไม่ถูกดึงโดย outlier จึงเป็นตัวแทนค่ากลางที่ดีกว่า ส่วน SimpleImputer รองรับทั้ง mean, median, most_frequent และ constant และการเติมค่าไม่ได้ทำให้ข้อมูลแจกแจงปกติ"
+    },
+    {
+      "id": 5,
+      "question": "ถ้าคอลัมน์ Glucose ใน train set มี μ = 120 และ σ = 30 ค่า Glucose = 150 หลังผ่าน StandardScaler จะมีค่าเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.25"
+        },
+        {
+          "key": "ข",
+          "text": "1.0"
+        },
+        {
+          "key": "ค",
+          "text": "5.0"
+        },
+        {
+          "key": "ง",
+          "text": "30.0"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "z = (x − μ)/σ = (150 − 120)/30 = 1.0 ตัวลวง 0.25 คือ 30/120 และ 5.0 คือ 150/30 ซึ่งไม่ใช่สูตร standardization"
+    },
+    {
+      "id": 6,
+      "question": "Glucose ในข้อมูลชุดเล็ก 15 แถวมีค่าต่ำสุด 90 และสูงสุด 180 ค่า 105 หลังผ่าน MinMaxScaler จะมีค่าประมาณเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.167"
+        },
+        {
+          "key": "ข",
+          "text": "0.583"
+        },
+        {
+          "key": "ค",
+          "text": "0.500"
+        },
+        {
+          "key": "ง",
+          "text": "1.167"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "x' = (x − min)/(max − min) = (105 − 90)/(180 − 90) = 15/90 ≈ 0.167 ตัวลวง 0.583 คือ 105/180 และ 1.167 คือ 105/90"
+    },
+    {
+      "id": 7,
+      "question": "คอลัมน์ BloodPressure มี Q1 = 62 และ Q3 = 80 ตามกฎ IQR ขอบล่างและขอบบนของ outlier คือข้อใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "44 และ 98"
+        },
+        {
+          "key": "ข",
+          "text": "53 และ 89"
+        },
+        {
+          "key": "ค",
+          "text": "35 และ 107"
+        },
+        {
+          "key": "ง",
+          "text": "18 และ 142"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "IQR = 80 − 62 = 18; ขอบล่าง = 62 − 1.5×18 = 35; ขอบบน = 80 + 1.5×18 = 107 ตัวลวง 44/98 ใช้ 1×IQR และ 53/89 ใช้ 0.5×IQR"
+    },
+    {
+      "id": 8,
+      "question": "ใช้ train_test_split(X, y, test_size=0.2) กับข้อมูล 768 แถว จะได้ train และ test กี่แถวตามลำดับ",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "600 และ 168"
+        },
+        {
+          "key": "ข",
+          "text": "615 และ 153"
+        },
+        {
+          "key": "ค",
+          "text": "620 และ 148"
+        },
+        {
+          "key": "ง",
+          "text": "614 และ 154"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "768 × 0.2 = 153.6 scikit-learn ปัดจำนวน test ขึ้น (ceil) เป็น 154 แถว จึงเหลือ train 768 − 154 = 614 แถว (ตรงกับผลที่รันจริงในบทเรียน)"
+    },
+    {
+      "id": 9,
+      "question": "ข้อมูล Pima มี 768 แถว เป็นคลาส 1 (เบาหวาน) 268 แถว ถ้าแบ่ง test 154 แถวด้วย stratify=y test set จะมีคลาส 1 ประมาณกี่แถว",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "54"
+        },
+        {
+          "key": "ข",
+          "text": "77"
+        },
+        {
+          "key": "ค",
+          "text": "100"
+        },
+        {
+          "key": "ง",
+          "text": "134"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "สัดส่วนคลาส 1 = 268/768 ≈ 0.349 → 0.349 × 154 ≈ 53.7 ≈ 54 แถว (รันจริงได้ 54) ตัวลวง 77 คือครึ่งหนึ่งของ test (เข้าใจผิดว่า stratify ทำให้คลาสเท่ากัน) และ 134 คือครึ่งหนึ่งของ 268"
+    },
+    {
+      "id": 10,
+      "question": "จาก confusion matrix ของโมเดลทำนายเบาหวานบน test set ต่อไปนี้ Recall ของคลาส 1 เท่ากับเท่าใด",
+      "code": "                ทำนาย 0   ทำนาย 1\nค่าจริง 0          82        18\nค่าจริง 1          27        27",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.600"
+        },
+        {
+          "key": "ข",
+          "text": "0.500"
+        },
+        {
+          "key": "ค",
+          "text": "0.708"
+        },
+        {
+          "key": "ง",
+          "text": "0.820"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "Recall = TP/(TP + FN) = 27/(27 + 27) = 0.500 ตัวลวง 0.600 คือ precision = 27/(27+18), 0.708 คือ accuracy = (82+27)/154 และ 0.820 คือ 82/100 (recall ของคลาส 0)"
+    },
+    {
+      "id": 11,
+      "question": "โค้ดต่อไปนี้มีปัญหาสำคัญที่สุดคืออะไร",
+      "code": "scaler = StandardScaler()\nX_scaled = scaler.fit_transform(X)\nX_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2)\nmodel = LogisticRegression().fit(X_train, y_train)",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "StandardScaler ใช้กับข้อมูลที่มีค่าว่างไม่ได้ จึงต้องใช้ MinMaxScaler แทน"
+        },
+        {
+          "key": "ข",
+          "text": "ต้องใช้ test_size=0.3 เสมอ"
+        },
+        {
+          "key": "ค",
+          "text": "เกิด data leakage เพราะ scaler เรียนค่า μ และ σ จากข้อมูลทั้งหมดรวม test set ก่อนแบ่ง"
+        },
+        {
+          "key": "ง",
+          "text": "fit_transform ต้องเรียกหลัง LogisticRegression"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "การ fit scaler กับข้อมูลทั้งหมดก่อนแบ่งทำให้สถิติของ test รั่วเข้าสู่การฝึก ผลประเมินจึงอาจดีเกินจริง ต้องแบ่งก่อนแล้ว fit กับ train เท่านั้น (หรือใช้ Pipeline) ตัวเลือก (ก) ผิดเพราะ MinMaxScaler ก็มีปัญหาเดียวกันและ scaler ทั้งสองข้ามค่า NaN ได้ ส่วน (ข)(ง) ไม่ใช่กฎ"
+    },
+    {
+      "id": 12,
+      "question": "หลังแบ่งข้อมูลแล้ว ข้อใดคือการใช้ scaler กับ test set ที่ถูกต้อง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "X_test_s = StandardScaler().fit_transform(X_test)"
+        },
+        {
+          "key": "ข",
+          "text": "X_test_s = scaler.fit_transform(X_test)"
+        },
+        {
+          "key": "ค",
+          "text": "X_test_s = scaler.fit(X_test).transform(X_train)"
+        },
+        {
+          "key": "ง",
+          "text": "X_test_s = scaler.transform(X_test)  # scaler ถูก fit กับ X_train แล้ว"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "test set ต้องถูกแปลงด้วยค่าที่เรียนจาก train เท่านั้น จึงใช้ transform อย่างเดียว ตัวเลือก (ก)(ข) fit ใหม่กับ test ทำให้ใช้สเกลคนละชุดกับ train และ (ค) fit กับ test แล้วนำไปแปลง train ซึ่งกลับด้าน"
+    },
+    {
+      "id": 13,
+      "question": "โมเดล DummyClassifier(strategy=\"most_frequent\") ได้ผลบน test set ของ Pima ดังนี้ ข้อสรุปใดถูกต้อง",
+      "code": "Dummy  accuracy = 0.649  recall = 0.000",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "โมเดลนี้ดีพอสำหรับคัดกรองเบาหวาน เพราะ accuracy เกิน 60%"
+        },
+        {
+          "key": "ข",
+          "text": "โมเดลทายว่า 'ไม่เป็นเบาหวาน' ทุกคน accuracy สูงเพราะคลาส 0 มีมาก แต่ไม่จับผู้ป่วยได้เลย จึงใช้เป็นเพียง baseline"
+        },
+        {
+          "key": "ค",
+          "text": "recall = 0 แปลว่าโมเดลทายถูกทุกคน"
+        },
+        {
+          "key": "ง",
+          "text": "ต้อง scale ข้อมูลก่อน DummyClassifier จึงจะได้ recall สูงขึ้น"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "Dummy ทายคลาสที่พบบ่อยที่สุด (0) เสมอ จึงได้ accuracy เท่าสัดส่วนคลาส 0 ใน test (≈ 0.649) แต่ TP = 0 ทำให้ recall = 0 ใช้เป็นเส้นฐานเทียบเท่านั้น การ scale ไม่มีผลกับ Dummy เพราะไม่ได้ใช้ feature"
+    },
+    {
+      "id": 14,
+      "question": "พารามิเตอร์ stratify=y ใน train_test_split มีหน้าที่อะไร",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "รักษาสัดส่วนของแต่ละคลาสใน train และ test ให้ใกล้เคียงกับข้อมูลทั้งหมด"
+        },
+        {
+          "key": "ข",
+          "text": "ทำให้จำนวนตัวอย่างของคลาส 0 และ 1 เท่ากันพอดี"
+        },
+        {
+          "key": "ค",
+          "text": "กำหนด seed ให้การสุ่มได้ผลเหมือนเดิมทุกครั้ง"
+        },
+        {
+          "key": "ง",
+          "text": "เรียงข้อมูลตามค่า y ก่อนแบ่ง"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "stratify แบ่งโดยคงสัดส่วนคลาสเดิม (เช่น ~34.9% คลาส 1) ไม่ได้ทำให้คลาสสมดุล 50/50 (ข) — นั่นคือ resampling ส่วนการกำหนด seed (ค) เป็นหน้าที่ของ random_state"
+    },
+    {
+      "id": 15,
+      "question": "อัลกอริทึมใดต่อไปนี้ ไม่จำเป็น ต้องปรับสเกลข้อมูลก่อนฝึก",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "K-Nearest Neighbors"
+        },
+        {
+          "key": "ข",
+          "text": "Support Vector Machine"
+        },
+        {
+          "key": "ค",
+          "text": "Decision Tree"
+        },
+        {
+          "key": "ง",
+          "text": "K-Means"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "Decision Tree แบ่งข้อมูลด้วยเงื่อนไขทีละ feature (เช่น Glucose ≤ 127.5) ผลจึงไม่ขึ้นกับสเกล ส่วน KNN, K-Means และ SVM ใช้ระยะทางหรือ margin ที่ feature ค่าใหญ่จะครอบงำ จึงต้อง scale"
+    },
+    {
+      "id": 16,
+      "question": "คอลัมน์ Region มีค่า 'อีสาน', 'เหนือ', 'กลาง' เหตุใดจึงควรใช้ OneHotEncoder แทนการแทนค่าเป็น 0, 1, 2",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "OneHotEncoder ทำให้จำนวนคอลัมน์ลดลง"
+        },
+        {
+          "key": "ข",
+          "text": "การแทนเป็น 0, 1, 2 ทำให้ข้อมูลหายไปบางส่วน"
+        },
+        {
+          "key": "ค",
+          "text": "โมเดลใน scikit-learn รับค่า 0, 1, 2 ไม่ได้"
+        },
+        {
+          "key": "ง",
+          "text": "การแทนเป็น 0, 1, 2 ทำให้โมเดลเข้าใจผิดว่าหมวดมีลำดับและระยะห่างเท่ากัน ซึ่งไม่จริงสำหรับหมวดที่ไม่มีลำดับ"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "Region เป็นข้อมูล nominal (ไม่มีลำดับ) ถ้าแทนเป็นตัวเลขเรียงลำดับ โมเดลเชิงเส้นจะตีความว่า กลาง > เหนือ > อีสาน One-hot สร้างคอลัมน์ 0/1 แยกต่อหมวดจึงไม่สร้างลำดับปลอม แต่จะ **เพิ่ม** จำนวนคอลัมน์ (ก ผิด)"
+    },
+    {
+      "id": 17,
+      "question": "โจทย์ 'ทำนายค่า HbA1c (ร้อยละน้ำตาลสะสมในเลือด) ของคนไข้จากอายุ BMI และระดับน้ำตาล' เป็นงานประเภทใด และควรเริ่มด้วยโมเดล baseline ใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Regression — LinearRegression"
+        },
+        {
+          "key": "ข",
+          "text": "Binary classification — LogisticRegression"
+        },
+        {
+          "key": "ค",
+          "text": "Clustering — KMeans"
+        },
+        {
+          "key": "ง",
+          "text": "Multiclass classification — DecisionTreeClassifier"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "target (HbA1c) เป็นตัวเลขต่อเนื่อง จึงเป็น regression และ LinearRegression เป็น baseline ที่เรียบง่าย ถ้าโจทย์เปลี่ยนเป็น 'เป็นเบาหวานหรือไม่' จึงจะเป็น binary classification"
+    },
+    {
+      "id": 18,
+      "question": "โรงพยาบาลต้องการแบ่งผู้ป่วยเบาหวานเป็นกลุ่มตามลักษณะ อายุ BMI และระดับน้ำตาล เพื่อออกแบบโปรแกรมดูแล โดยไม่มีป้ายกำกับกลุ่มมาก่อน ควรเลือกแนวทางใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "LogisticRegression โดยใช้ Outcome เป็น target"
+        },
+        {
+          "key": "ข",
+          "text": "Clustering ด้วย KMeans และควร scale ข้อมูลก่อน เพราะ KMeans ใช้ระยะทาง"
+        },
+        {
+          "key": "ค",
+          "text": "LinearRegression ทำนายค่า BMI"
+        },
+        {
+          "key": "ง",
+          "text": "Clustering ด้วย KMeans โดยไม่ต้อง scale เพราะเป็น unsupervised"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "ไม่มี label ของกลุ่ม จึงเป็นงาน clustering (unsupervised) และ KMeans ใช้ระยะ Euclidean ถ้าไม่ scale คอลัมน์ Glucose (หลักร้อย) จะครอบงำ BMI (หลักสิบ) ข้อ (ง) ผิดเพราะ unsupervised ไม่ได้หมายความว่าไม่ต้อง scale"
+    },
+    {
+      "id": 19,
+      "question": "ข้อใดเป็นประโยชน์สำคัญของการรวม SimpleImputer, StandardScaler และโมเดลไว้ใน Pipeline เดียว แล้วใช้กับ cross_val_score",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ทำให้ไม่ต้องแบ่ง test set อีกต่อไป"
+        },
+        {
+          "key": "ข",
+          "text": "ทำให้โมเดลได้ accuracy 100% บน train set"
+        },
+        {
+          "key": "ค",
+          "text": "ในแต่ละ fold ตัวเติมค่าและ scaler จะ fit จากส่วนที่ใช้ฝึกของ fold นั้นเท่านั้น จึงป้องกัน data leakage"
+        },
+        {
+          "key": "ง",
+          "text": "ทำให้ไม่ต้องจัดการค่าว่างแฝง เพราะ Pipeline ตรวจพบเลข 0 อัตโนมัติ"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "Pipeline ทำให้ทุกขั้นที่เรียนจากข้อมูลถูก fit ใหม่ในแต่ละ fold เฉพาะข้อมูลฝึกของ fold นั้น ส่วน validation fold ถูกแค่ transform จึงไม่รั่ว แต่ยังต้องเก็บ test set ไว้ประเมินครั้งสุดท้าย (ก ผิด) และ Pipeline ไม่รู้ว่าเลข 0 คือค่าว่าง ต้องแปลงเป็น NaN เอง (ง ผิด)"
+    },
+    {
+      "id": 20,
+      "question": "จากคะแนน SelectKBest(f_classif) ที่ fit กับ train set ต่อไปนี้ ถ้ากำหนด k=2 จะได้ features ใด",
+      "code": "Glucose                     217.8\nBMI                          74.2\nInsulin                      39.4\nAge                          37.6\nSkinThickness                35.5\nPregnancies                  27.7\nBloodPressure                21.3\nDiabetesPedigreeFunction     17.2",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Insulin และ Age"
+        },
+        {
+          "key": "ข",
+          "text": "BloodPressure และ DiabetesPedigreeFunction"
+        },
+        {
+          "key": "ค",
+          "text": "Glucose และ Insulin"
+        },
+        {
+          "key": "ง",
+          "text": "Glucose และ BMI"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "SelectKBest เลือก k features ที่มีคะแนนสูงสุด คือ Glucose (217.8) และ BMI (74.2) ตัวเลือก (ข) คือสองตัวที่คะแนนต่ำสุด"
+    }
+  ]
+}

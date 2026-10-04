@@ -1,0 +1,36 @@
+{
+  "name": "en-012-314-ai-elearning",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "notebooks": "node scripts/build-notebooks.mjs",
+    "check": "node scripts/check-content.mjs",
+    "prebuild": "node scripts/build-notebooks.mjs",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "katex": "^0.16.11",
+    "lucide-react": "^0.441.0",
+    "mermaid": "^11.4.0",
+    "next": "^14.2.25",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^10.1.0",
+    "rehype-katex": "^7.0.1",
+    "rehype-raw": "^7.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.15",
+    "@types/node": "^20",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "autoprefixer": "^10.0.1",
+    "postcss": "^8",
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
+  }
+}

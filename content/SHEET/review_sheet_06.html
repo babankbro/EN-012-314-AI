@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 06 - Neural Networks และ Deep Learning</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🧠 Review Sheet บทที่ 06 — Neural Networks และ Deep Learning</div>
+      <div class="sub">EN-012-314 Artificial Intelligence · Machine Learning · Neural Networks &amp; Deep Learning</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 9 · CLO3 (LLO3-1)<br>
+      Lab 06: ออกแบบและฝึก MLP ด้วย Keras
+    </div>
+  </div>
+
+  <div class="columns">
+    <!-- ===== LEFT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🔬</span> 1. Artificial Neuron และ Perceptron</div>
+        <div class="section-body">
+          <div class="formula">z = w₁x₁ + w₂x₂ + … + wₙxₙ + b = wᵀx + b &nbsp;→&nbsp; a = φ(z)</div>
+          <div class="def-row"><span class="def-key">weight w</span><span class="def-val">ความสำคัญของ input แต่ละตัว (synapse)</span></div>
+          <div class="def-row"><span class="def-key">bias b</span><span class="def-val">เลื่อนจุดตัดสินใจ (เหมือนจุดตัดแกน)</span></div>
+          <div class="def-row"><span class="def-key">activation φ</span><span class="def-val">ใส่ non-linearity ให้ output</span></div>
+          <p><span class="blue">Perceptron</span> = TLU ใช้ step function · กฎการเรียนรู้ (ปรับเมื่อทำนายผิดเท่านั้น):</p>
+          <div class="formula">wᵢ ← wᵢ + η (y − ŷ) xᵢ &nbsp;&nbsp; b ← b + η (y − ŷ)</div>
+          <p><span class="accent">XOR</span> แบ่งด้วยเส้นตรงไม่ได้ (not linearly separable) → Perceptron ชั้นเดียวแก้ไม่ได้ → ต้องมี <b>hidden layer</b> (MLP)</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🏗️</span> 2. MLP และการนับพารามิเตอร์</div>
+        <div class="section-body">
+          <p>Input layer → Hidden layer(s) (Dense) → Output layer · hidden หลายชั้น = <span class="blue">DNN</span> · ทั้งชั้น: <code>h = φ(xW + b)</code></p>
+          <div class="formula">params ของ Dense = n_in × n_out + n_out = (n_in + 1) × n_out</div>
+          <table>
+            <tr><th>Layer (Fashion-MNIST)</th><th>Output Shape</th><th>การคำนวณ</th><th>Param #</th></tr>
+            <tr><td>Flatten</td><td>(None, 784)</td><td>—</td><td>0</td></tr>
+            <tr><td>Dense 300 ReLU</td><td>(None, 300)</td><td>784×300+300</td><td>235,500</td></tr>
+            <tr><td>Dense 100 ReLU</td><td>(None, 100)</td><td>300×100+100</td><td>30,100</td></tr>
+            <tr><td>Dense 10 softmax</td><td>(None, 10)</td><td>100×10+10</td><td>1,010</td></tr>
+            <tr><td colspan="3"><b>Total</b></td><td><b>266,610</b></td></tr>
+          </table>
+          <ul class="mini">
+            <li>0 พารามิเตอร์: <code>Input</code>, <code>Flatten</code>, <code>Dropout</code></li>
+            <li><code>BatchNormalization</code> = 4 × units (γ, β trainable + moving mean/var non-trainable)</li>
+            <li>forward 2-2-1: x=[1,2] → z₁=[1, −0.5] → h=[1, 0] → z₂=1.5 → σ=0.8176</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">📈</span> 3. Activation Functions</div>
+        <div class="section-body">
+          <table>
+            <tr><th>Function</th><th>สูตร</th><th>ช่วงค่า</th><th>ใช้ที่</th></tr>
+            <tr><td>Sigmoid</td><td>1 / (1 + e⁻ᶻ)</td><td>(0, 1)</td><td>output binary / multilabel</td></tr>
+            <tr><td>Tanh</td><td>(eᶻ − e⁻ᶻ)/(eᶻ + e⁻ᶻ)</td><td>(−1, 1)</td><td>hidden (RNN)</td></tr>
+            <tr><td>ReLU</td><td>max(0, z)</td><td>[0, ∞)</td><td><b>hidden (ค่าเริ่มต้น)</b></td></tr>
+            <tr><td>Leaky ReLU</td><td>max(αz, z)</td><td>(−∞, ∞)</td><td>hidden แก้ dying ReLU</td></tr>
+            <tr><td>Softmax</td><td>e^zₖ / Σ e^zⱼ</td><td>(0,1) รวม=1</td><td>output multiclass</td></tr>
+            <tr><td>Linear</td><td>z</td><td>(−∞, ∞)</td><td>output regression</td></tr>
+          </table>
+          <p class="note">sigmoid′(z) สูงสุด 0.25 · tanh′ สูงสุด 1 · ReLU′ = 1 เมื่อ z &gt; 0 · softmax([2, 1, 0.1]) = [0.659, 0.242, 0.099]</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🎯</span> 4. Loss Functions และ Output Layer</div>
+        <div class="section-body">
+          <div class="formula">MSE = (1/n) Σ (yᵢ − ŷᵢ)² &nbsp;·&nbsp; BCE = −(1/n) Σ [y ln p + (1 − y) ln(1 − p)]</div>
+          <div class="formula">CCE = −(1/n) Σᵢ Σₖ yᵢₖ ln pᵢₖ</div>
+          <table>
+            <tr><th>งาน</th><th>Output</th><th>Loss (Keras)</th></tr>
+            <tr><td>Regression</td><td>Dense(1) linear</td><td><code>"mse"</code> / <code>"huber"</code></td></tr>
+            <tr><td>Binary</td><td>Dense(1, sigmoid)</td><td><code>"binary_crossentropy"</code></td></tr>
+            <tr><td>Multiclass label int</td><td>Dense(K, softmax)</td><td><code>"sparse_categorical_crossentropy"</code></td></tr>
+            <tr><td>Multiclass one-hot</td><td>Dense(K, softmax)</td><td><code>"categorical_crossentropy"</code></td></tr>
+            <tr><td>Multilabel</td><td>Dense(K, sigmoid)</td><td><code>"binary_crossentropy"</code></td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🔁</span> 5. Backpropagation และ Optimizers</div>
+        <div class="section-body">
+          <ol class="mini">
+            <li><b>Forward pass</b> คำนวณ output ทีละชั้น แล้ววัด loss</li>
+            <li><b>Reverse pass</b> หา ∂L/∂w ทุกตัวด้วย <span class="accent">chain rule</span> ย้อนจาก output</li>
+            <li><b>Gradient descent step</b> ปรับ weight</li>
+          </ol>
+          <div class="formula">∂L/∂w = ∂L/∂ŷ · ∂ŷ/∂z · ∂z/∂w &nbsp;&nbsp; w ← w − η ∂L/∂w</div>
+          <p class="note">sigmoid + BCE: ∂L/∂z = ŷ − y → ∂L/∂wᵢ = (ŷ − y)xᵢ · steps/epoch = ⌈N_train / batch_size⌉ (54,000/32 → 1,688)</p>
+          <table>
+            <tr><th>Optimizer</th><th>แนวคิด</th></tr>
+            <tr><td>SGD</td><td>ก้าวคงที่ตาม gradient</td></tr>
+            <tr><td>Momentum / NAG</td><td>จำความเร็วเดิม (ลูกโบว์ลิ่ง) / มองไปข้างหน้า 1 ก้าว</td></tr>
+            <tr><td>AdaGrad</td><td>ลด lr ในแกนชัน แต่มักหยุดเร็วเกินไป</td></tr>
+            <tr><td>RMSProp</td><td>สนเฉพาะ gradient² ช่วงหลัง (moving average)</td></tr>
+            <tr><td><b>Adam</b></td><td>Momentum + RMSProp · เริ่มที่ lr = 1e-3</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🛠️</span> 6. ฝึก Deep Network ให้สำเร็จ</div>
+        <div class="section-body">
+          <p><span class="accent">Vanishing / Exploding gradients</span>: คูณอนุพันธ์หลายชั้น เช่น 0.25¹⁰ ≈ 9.5×10⁻⁷ → ชั้นล่างไม่เรียนรู้</p>
+          <div class="def-row"><span class="def-key">Initialization</span><span class="def-val">Glorot σ² = 2/(fan_in+fan_out) (sigmoid/tanh) · He σ² = 2/fan_in (ReLU)</span></div>
+          <div class="def-row"><span class="def-key">Activation</span><span class="def-val">ReLU, Leaky ReLU, ELU, SELU แทน sigmoid ใน hidden</span></div>
+          <div class="def-row"><span class="def-key">BatchNorm</span><span class="def-val">normalize ต่อ mini-batch แล้ว scale/shift ด้วย γ, β</span></div>
+          <div class="def-row"><span class="def-key">Clipping</span><span class="def-val"><code>Adam(clipnorm=1.0)</code> กัน exploding</span></div>
+          <p><span class="blue">ลด overfitting</span>: EarlyStopping (patience, restore_best_weights) · Dropout (ปิด neuron แบบสุ่ม <b>เฉพาะตอนฝึก</b>) · ℓ1/ℓ2 · max-norm</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">💻</span> 7. Keras Workflow (Colab: Runtime → T4 GPU)</div>
+        <div class="section-body">
+          <div class="code-block"><span class="kw">import</span> keras
+data = keras.datasets.fashion_mnist.load_data()
+(X_tr, y_tr), (X_te, y_te) = data
+X_tr, X_te = X_tr / <span class="num">255.0</span>, X_te / <span class="num">255.0</span>
+model = keras.Sequential([
+    keras.Input(shape=(<span class="num">28</span>, <span class="num">28</span>)),
+    keras.layers.Flatten(),
+    keras.layers.Dense(<span class="num">300</span>, activation=<span class="str">"relu"</span>),
+    keras.layers.Dropout(<span class="num">0.2</span>),               <span class="comment"># ไม่บังคับ</span>
+    keras.layers.Dense(<span class="num">10</span>, activation=<span class="str">"softmax"</span>)])
+model.compile(loss=<span class="str">"sparse_categorical_crossentropy"</span>,
+              optimizer=<span class="str">"adam"</span>, metrics=[<span class="str">"accuracy"</span>])
+es = keras.callbacks.EarlyStopping(patience=<span class="num">5</span>,
+                                   restore_best_weights=<span class="kw">True</span>)
+h = model.fit(X_tr, y_tr, epochs=<span class="num">30</span>,
+              validation_split=<span class="num">0.1</span>, callbacks=[es])
+model.evaluate(X_te, y_te)            <span class="comment"># MLP ≈ 0.87–0.89</span>
+model.predict(X_te[:<span class="num">3</span>]).argmax(axis=<span class="num">1</span>)</div>
+          <p class="note">ไม่มี GPU: <code>sklearn.neural_network.MLPClassifier(hidden_layer_sizes=(300, 100))</code> ได้ test acc ≈ 0.89</p>
+        </div>
+      </div>
+
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อผิดพลาดที่พบบ่อย</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li>ลืม <b>scale</b> pixel (/255.0) → ฝึกช้าและ accuracy ต่ำ</li>
+            <li>ใช้ <code>categorical_crossentropy</code> กับ label จำนวนเต็ม (ต้อง one-hot) หรือกลับกัน</li>
+            <li>ใส่ softmax/sigmoid ที่ output ของ regression → ทำนายได้แค่ 0–1</li>
+            <li>นับพารามิเตอร์ลืม <b>bias</b> หรือไปนับ Flatten/Dropout</li>
+            <li>เลือกโมเดลจาก train accuracy แทน <b>val_loss</b> → overfit</li>
+            <li>learning rate ใหญ่เกิน → loss แกว่ง/กลายเป็น <code>nan</code></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧪</span> เชื่อมโยงกับ Lab 06</div>
+        <div class="section-body">
+          <table class="lab-table">
+            <tr><th>ข้อ</th><th>สิ่งที่ฝึก</th></tr>
+            <tr><td>1–2</td><td>forward pass 2-3-1 (ŷ = 0.5622) · นับพารามิเตอร์ 5 สถาปัตยกรรม</td></tr>
+            <tr><td>3</td><td>กราฟ activation และอนุพันธ์</td></tr>
+            <tr><td>4–5</td><td>build/compile/fit MLP + ตารางทดลอง units / Dropout / optimizer</td></tr>
+            <tr><td>6–7</td><td>MLPClassifier (CPU) · วาดและอธิบายสถาปัตยกรรม</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-012-314 ปัญญาประดิษฐ์ · ผศ.ดร. สรายุทธ กรวิรัตน์ · สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยกาฬสินธุ์ · ปีการศึกษา 2569</div>
+</div>
+</body>
+</html>

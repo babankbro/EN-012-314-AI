@@ -1,0 +1,496 @@
+{
+  "moduleId": "07",
+  "title": "Convolutional Neural Networks & Image Classification",
+  "titleTh": "CNN และการจำแนกภาพ",
+  "timeMinutes": 30,
+  "questions": [
+    {
+      "id": 1,
+      "question": "เหตุผลหลักที่ CNN ใช้พารามิเตอร์น้อยกว่า MLP (Dense layer) มากเมื่อทำงานกับภาพคือข้อใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "CNN ใช้ activation ReLU แทน sigmoid จึงไม่ต้องเก็บ weight มาก"
+        },
+        {
+          "key": "ข",
+          "text": "แต่ละ neuron เชื่อมต่อเฉพาะบริเวณเล็ก ๆ (local connectivity) และใช้ filter ชุดเดียวกันทั่วทั้งภาพ (weight sharing)"
+        },
+        {
+          "key": "ค",
+          "text": "CNN ย่อภาพให้เหลือ 28×28 ก่อนเสมอ จึงมี input น้อยกว่า"
+        },
+        {
+          "key": "ง",
+          "text": "CNN ไม่มี bias จึงลดพารามิเตอร์ได้ครึ่งหนึ่ง"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "Conv layer ใช้ filter ขนาดเล็ก (เช่น 3×3×C_in) ที่เลื่อนไปทั่วภาพโดยใช้ weight ชุดเดิม จำนวนพารามิเตอร์จึงไม่ขึ้นกับขนาดภาพ ส่วน Dense ต้องมี weight ทุกคู่ input–neuron; ReLU ไม่เกี่ยวกับจำนวนพารามิเตอร์, CNN ไม่ได้บังคับย่อภาพ และ Conv2D มี bias ทุก filter"
+    },
+    {
+      "id": 2,
+      "question": "ภาพสี (RGB) ขนาดสูง 64 กว้าง 64 พิกเซล จำนวน 100 ภาพ ต้องจัดเป็น array รูปร่างใดจึงจะส่งเข้า Conv2D ของ Keras (ค่าเริ่มต้น channels_last) ได้",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "(64, 64, 3, 100)"
+        },
+        {
+          "key": "ข",
+          "text": "(100, 3, 64, 64)"
+        },
+        {
+          "key": "ค",
+          "text": "(100, 64, 64, 3)"
+        },
+        {
+          "key": "ง",
+          "text": "(100, 12288)"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "Keras ใช้รูป (N, H, W, C) โดย N = จำนวนภาพอยู่หน้าสุด และ channel อยู่ท้ายสุด; (100, 3, 64, 64) เป็นแบบ channels_first ที่ PyTorch ใช้ ส่วน (100, 12288) คือภาพที่ flatten แล้วสำหรับ Dense"
+    },
+    {
+      "id": 3,
+      "question": "input เป็น feature map ขนาด 13×13×32 ผ่าน layers.Conv2D(64, kernel_size=3) ข้อใดถูกต้อง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "filter แต่ละตัวมีขนาด 3×3×32 และได้ feature map ออกมา 64 แผ่น"
+        },
+        {
+          "key": "ข",
+          "text": "filter แต่ละตัวมีขนาด 3×3×1 และได้ feature map ออกมา 64×32 แผ่น"
+        },
+        {
+          "key": "ค",
+          "text": "filter แต่ละตัวมีขนาด 3×3×64 และได้ feature map ออกมา 32 แผ่น"
+        },
+        {
+          "key": "ง",
+          "text": "filter แต่ละตัวมีขนาด 3×3×32 และได้ feature map ออกมา 32 แผ่น"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "ความลึกของ filter เท่ากับจำนวน channel ขาเข้า (32) เสมอ และ filter 1 ตัวให้ feature map 1 แผ่น เมื่อมี 64 filters จึงได้ output ลึก 64; ตัวลวงสลับบทบาทของ C_in กับ filters"
+    },
+    {
+      "id": 4,
+      "question": "กำหนด patch ของภาพขนาด 3×3 และ kernel (Sobel แนวตั้ง) ดังโค้ด ค่า output ของ convolution (แบบ CNN, bias = 0) ที่ตำแหน่งนี้เท่ากับเท่าใด",
+      "code": "patch  = [[2, 0, 1],\n          [1, 3, 2],\n          [0, 1, 4]]\nkernel = [[1, 0, -1],\n          [2, 0, -2],\n          [1, 0, -1]]",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "13"
+        },
+        {
+          "key": "ข",
+          "text": "5"
+        },
+        {
+          "key": "ค",
+          "text": "-4"
+        },
+        {
+          "key": "ง",
+          "text": "-5"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "คูณทีละตำแหน่งแล้วรวม: 2·1 + 0·0 + 1·(−1) + 1·2 + 3·0 + 2·(−2) + 0·1 + 1·0 + 4·(−1) = 2 − 1 + 2 − 4 − 4 = −5; ตอบ 13 คือลืมเครื่องหมายลบ ส่วน −4 คือคิดว่าทุกแถวของ kernel เป็น [1, 0, −1] (ลืมน้ำหนัก 2 ของแถวกลาง)"
+    },
+    {
+      "id": 5,
+      "question": "ภาพขนาด 32×32 ผ่าน Conv2D ที่ใช้ kernel 5×5, stride 1, padding = 0 (valid) ได้ output กว้าง×สูงเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "27×27"
+        },
+        {
+          "key": "ข",
+          "text": "28×28"
+        },
+        {
+          "key": "ค",
+          "text": "30×30"
+        },
+        {
+          "key": "ง",
+          "text": "32×32"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "O = ⌊(n + 2p − k)/s⌋ + 1 = (32 + 0 − 5)/1 + 1 = 28; 27 คือลืม +1 และ 32×32 คือกรณี padding=\"same\""
+    },
+    {
+      "id": 6,
+      "question": "CNN ของ DeepMind สำหรับเกม Atari รับ input 84×84×4 ชั้นแรกเป็น Conv2D 32 filters ขนาด 8×8 stride 4 แบบ valid ขนาด output กว้าง×สูงของชั้นนี้คือเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "20×20"
+        },
+        {
+          "key": "ข",
+          "text": "19×19"
+        },
+        {
+          "key": "ค",
+          "text": "21×21"
+        },
+        {
+          "key": "ง",
+          "text": "77×77"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "⌊(84 − 8)/4⌋ + 1 = 19 + 1 = 20 (ได้ output 20×20×32); 19 คือลืม +1, 21 คือหาร 84/4 ตรง ๆ และ 77 คือคิดเหมือน stride 1"
+    },
+    {
+      "id": 7,
+      "question": "layers.Conv2D(64, kernel_size=3) รับ input ที่มี 32 channels มีจำนวนพารามิเตอร์ (weight + bias) เท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "640"
+        },
+        {
+          "key": "ข",
+          "text": "18,432"
+        },
+        {
+          "key": "ค",
+          "text": "18,496"
+        },
+        {
+          "key": "ง",
+          "text": "9,248"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "(k_h·k_w·C_in + 1)·F = (3·3·32 + 1)·64 = 289·64 = 18,496; 18,432 คือลืม bias, 640 คือลืม C_in และ 9,248 คือสลับจำนวน filter เป็น 32"
+    },
+    {
+      "id": 8,
+      "question": "ภาพขาวดำ (grayscale) ขนาด 28×28 ผ่าน layers.Conv2D(16, kernel_size=5, padding=\"same\") ชั้นนี้มีพารามิเตอร์กี่ตัว",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "400"
+        },
+        {
+          "key": "ข",
+          "text": "1,216"
+        },
+        {
+          "key": "ค",
+          "text": "401"
+        },
+        {
+          "key": "ง",
+          "text": "416"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "(5·5·1 + 1)·16 = 26·16 = 416 จำนวนพารามิเตอร์ไม่ขึ้นกับ padding หรือขนาดภาพ; 400 คือลืม bias, 401 คือบวก bias เพียงตัวเดียว (ที่จริงมี bias 1 ตัวต่อ filter) และ 1,216 คือคิดว่าเป็นภาพ RGB (C_in = 3)"
+    },
+    {
+      "id": 9,
+      "question": "นำ feature map ในโค้ดไปผ่าน MaxPooling2D ขนาด 2×2 stride 2 ผลลัพธ์คือข้อใด",
+      "code": "[[2, 8, 1, 0],\n [4, 5, 3, 7],\n [6, 1, 0, 2],\n [3, 9, 4, 1]]",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "[[4.75, 2.75], [4.75, 1.75]]"
+        },
+        {
+          "key": "ข",
+          "text": "[[8, 7], [9, 4]]"
+        },
+        {
+          "key": "ค",
+          "text": "[[8, 9], [7, 4]]"
+        },
+        {
+          "key": "ง",
+          "text": "[[2, 0], [1, 0]]"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "แบ่งเป็นบล็อก 2×2 ไม่ซ้อนกัน: ซ้ายบน {2,8,4,5}→8, ขวาบน {1,0,3,7}→7, ซ้ายล่าง {6,1,3,9}→9, ขวาล่าง {0,2,4,1}→4; ตัวลวง ก คือ average pooling, ค สลับตำแหน่งบล็อก และ ง คือค่าต่ำสุด"
+    },
+    {
+      "id": 10,
+      "question": "การกำหนด padding=\"same\" (stride 1) ใน Conv2D มีผลอย่างไร",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เติมค่า 0 รอบขอบภาพ ทำให้ output มีความกว้างและความสูงเท่ากับ input"
+        },
+        {
+          "key": "ข",
+          "text": "ทำให้ทุก filter มีค่า weight เท่ากัน"
+        },
+        {
+          "key": "ค",
+          "text": "ทำให้จำนวน channel ของ output เท่ากับ input"
+        },
+        {
+          "key": "ง",
+          "text": "ตัดขอบภาพทิ้งเพื่อให้ขนาดหารด้วย kernel ลงตัว"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "\"same\" เติม 0 รอบภาพ (kernel 3×3 เติม 1 ชั้น) จึงได้ H×W เท่าเดิมเมื่อ stride 1; จำนวน channel ของ output ขึ้นกับจำนวน filters ไม่ใช่ padding และการไม่เติมขอบคือ \"valid\""
+    },
+    {
+      "id": 11,
+      "question": "ข้อใดอธิบายบทบาทของ Pooling layer (เช่น MaxPooling2D) ได้ถูกต้องที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เพิ่มจำนวนพารามิเตอร์เพื่อให้โมเดลเรียนรู้ feature ได้มากขึ้น"
+        },
+        {
+          "key": "ข",
+          "text": "เพิ่มความลึก (จำนวน channel) ของ feature map เป็นสองเท่า"
+        },
+        {
+          "key": "ค",
+          "text": "แปลงค่าพิกเซลให้อยู่ในช่วง 0–1 แทนการหาร 255"
+        },
+        {
+          "key": "ง",
+          "text": "ย่อขนาด feature map โดยไม่มีพารามิเตอร์ให้เรียนรู้ ลดการคำนวณ และทำให้ทนต่อการเลื่อนตำแหน่งเล็กน้อย"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "Pooling ทำงานแยกทีละ channel ใช้ max/mean ในหน้าต่าง จึงไม่มี weight ไม่เปลี่ยนความลึก และให้ translation invariance เล็กน้อย; การ normalize เป็นขั้น preprocessing ไม่ใช่หน้าที่ของ pooling"
+    },
+    {
+      "id": 12,
+      "question": "จากโค้ดเตรียมข้อมูล MNIST ต่อไปนี้ บรรทัดที่ 2 มีจุดประสงค์หลักอย่างไร",
+      "code": "X_train = X_train_raw                      # shape (60000, 28, 28), uint8\nX_train = X_train.reshape(-1, 28, 28, 1)\nX_train = X_train.astype(\"float32\") / 255.0",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ลดขนาดภาพจาก 784 เหลือ 28 พิกเซลเพื่อให้ฝึกเร็วขึ้น"
+        },
+        {
+          "key": "ข",
+          "text": "สลับแกนสูงและกว้างของภาพให้ตรงกับรูปแบบของ Keras"
+        },
+        {
+          "key": "ค",
+          "text": "เพิ่มแกน channel (=1) ให้ได้รูป (N, 28, 28, 1) ที่ Conv2D ต้องการ โดย -1 ให้ NumPy คำนวณจำนวนภาพเอง"
+        },
+        {
+          "key": "ง",
+          "text": "แปลง label ให้เป็น one-hot encoding"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "Conv2D ต้องการ input 4 มิติ (N, H, W, C) แม้เป็นภาพเทา จึงต้องเพิ่มแกน C = 1; -1 หมายถึงให้ NumPy คำนวณมิตินั้นเองจากจำนวนข้อมูลทั้งหมด reshape ไม่ได้ย่อหรือสลับแกนภาพ และไม่เกี่ยวกับ label"
+    },
+    {
+      "id": 13,
+      "question": "โมเดลด้านล่างรับภาพ 28×28×1 เลเยอร์ max_pooling2d จะแสดง Output Shape ใน model.summary() เป็นข้อใด",
+      "code": "model = keras.Sequential([\n    keras.Input(shape=(28, 28, 1)),\n    layers.Conv2D(32, 3, activation=\"relu\"),\n    layers.MaxPooling2D(2),\n])",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "(None, 13, 13, 32)"
+        },
+        {
+          "key": "ข",
+          "text": "(None, 14, 14, 32)"
+        },
+        {
+          "key": "ค",
+          "text": "(None, 26, 26, 32)"
+        },
+        {
+          "key": "ง",
+          "text": "(None, 13, 13, 1)"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "Conv2D 3×3 แบบ valid: 28 − 3 + 1 = 26 → (26, 26, 32) จากนั้น MaxPool 2×2: 26/2 = 13 → (13, 13, 32) ความลึกยังเป็น 32 เพราะ pooling ไม่เปลี่ยนจำนวน channel; 14 คือคิดว่า Conv ไม่ลดขนาด และ None คือขนาด batch"
+    },
+    {
+      "id": 14,
+      "question": "ถ้าเตรียม label ตามโค้ดต่อไปนี้ ควรเลือก loss ใดใน model.compile()",
+      "code": "from keras.utils import to_categorical\ny_train = to_categorical(y_train, num_classes=10)   # 5 -> [0,0,0,0,0,1,0,0,0,0]\nmodel.compile(optimizer=\"adam\", loss=???, metrics=[\"accuracy\"])",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "\"sparse_categorical_crossentropy\""
+        },
+        {
+          "key": "ข",
+          "text": "\"categorical_crossentropy\""
+        },
+        {
+          "key": "ค",
+          "text": "\"binary_crossentropy\""
+        },
+        {
+          "key": "ง",
+          "text": "\"mean_squared_error\""
+        }
+      ],
+      "answer": "ข",
+      "explanation": "to_categorical แปลง label เป็น one-hot shape (N, 10) จึงคู่กับ categorical_crossentropy; sparse_categorical_crossentropy ใช้กับ label จำนวนเต็ม shape (N,) ส่วน binary_crossentropy ใช้กับ 2 คลาสที่ output เป็น sigmoid และ MSE ไม่เหมาะกับ softmax classification"
+    },
+    {
+      "id": 15,
+      "question": "X_new มี shape (5, 28, 28, 1) และโมเดลมี output layer เป็น Dense(10, activation=\"softmax\") ข้อใดถูกต้องเกี่ยวกับ probs และวิธีหาคลาสที่ทาย",
+      "code": "probs = model.predict(X_new)",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "probs มี shape (5,) และเป็นคลาสที่ทายอยู่แล้ว"
+        },
+        {
+          "key": "ข",
+          "text": "probs มี shape (5, 10) และคลาสที่ทายคือ probs.max(axis=1)"
+        },
+        {
+          "key": "ค",
+          "text": "probs มี shape (10, 5) และคลาสที่ทายคือ np.argmax(probs, axis=0)"
+        },
+        {
+          "key": "ง",
+          "text": "probs มี shape (5, 10) และคลาสที่ทายคือ np.argmax(probs, axis=1)"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "predict คืนความน่าจะเป็น 10 คลาสต่อภาพ → (5, 10) ต้องใช้ argmax ตามแกนคลาส (axis=1) เพื่อได้ดัชนีคลาส; probs.max(axis=1) ให้ค่าความน่าจะเป็นสูงสุด (ความมั่นใจ) ไม่ใช่หมายเลขคลาส"
+    },
+    {
+      "id": 16,
+      "question": "นักศึกษาฝึก CNN บน MNIST ได้ test accuracy 0.99 แล้วนำภาพถ่ายลายมือบนกระดาษขาวมาทำนายด้วยโค้ดด้านล่าง ปรากฏว่าทายผิดเกือบทุกภาพ ขั้นตอนใดที่ขาดไปและสำคัญที่สุด",
+      "code": "img = Image.open(\"my_digit.jpg\").convert(\"L\").resize((28, 28))\nx = np.array(img).astype(\"float32\") / 255.0\nx = x.reshape(1, 28, 28, 1)\nprint(model.predict(x).argmax())",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ต้องหารด้วย 255 สองครั้ง"
+        },
+        {
+          "key": "ข",
+          "text": "ต้องทำ one-hot encoding ให้ภาพก่อนทำนาย"
+        },
+        {
+          "key": "ค",
+          "text": "ต้องกลับสีด้วย ImageOps.invert เพราะ MNIST เป็นพื้นดำตัวเลขขาว แต่ภาพถ่ายเป็นพื้นขาวหมึกดำ"
+        },
+        {
+          "key": "ง",
+          "text": "ต้องเปลี่ยน reshape เป็น (28, 28) โดยไม่มีแกน batch"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "preprocessing ตอนใช้งานต้องเหมือนตอนฝึก ภาพที่ไม่กลับสีจะมีพื้นหลังค่าใกล้ 1 ทั้งภาพ ต่างจากข้อมูลฝึกโดยสิ้นเชิง; one-hot ใช้กับ label ไม่ใช่ภาพ และ predict ต้องมีแกน batch (1, 28, 28, 1)"
+    },
+    {
+      "id": 17,
+      "question": "ผลการฝึก CNN จำแนกภาพใบพืช 5 คลาส (ภาพ train 1,500 ภาพ) เป็นดังตาราง ข้อใดวิเคราะห์และเสนอแนวทางได้เหมาะสมที่สุด",
+      "code": "epoch  train_acc  val_acc  val_loss\n  2      0.81      0.76     0.66\n  4      0.93      0.80     0.58\n  8      0.98      0.79     0.74\n 12      0.99      0.78     0.91",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เกิด overfitting ควรเพิ่ม data augmentation และ/หรือ Dropout และใช้ EarlyStopping ตาม val_loss"
+        },
+        {
+          "key": "ข",
+          "text": "เกิด underfitting ควรเพิ่มจำนวน epoch เป็น 100"
+        },
+        {
+          "key": "ค",
+          "text": "learning rate ต่ำเกินไป ควรเพิ่ม learning rate 10 เท่า"
+        },
+        {
+          "key": "ง",
+          "text": "โมเดลดีแล้ว เพราะ train accuracy สูงถึง 0.99"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "train accuracy สูงขึ้นต่อเนื่องแต่ val_loss เริ่มเพิ่มหลัง epoch ที่ 4 และ val_accuracy ห่างจาก train มาก แปลว่าโมเดลจำข้อมูลฝึก (overfitting) แนวทางคือเพิ่มความหลากหลายของข้อมูล (augmentation) เพิ่ม regularization และหยุดฝึกเร็ว; การเพิ่ม epoch จะยิ่งแย่ลง"
+    },
+    {
+      "id": 18,
+      "question": "สถาปัตยกรรม CNN ใดเป็นที่รู้จักจากการใช้ skip (residual) connection ซึ่งบวก input ของบล็อกเข้ากับ output (y = F(x) + x) ทำให้ฝึกเครือข่ายลึกกว่า 100 ชั้นได้",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "LeNet-5"
+        },
+        {
+          "key": "ข",
+          "text": "ResNet"
+        },
+        {
+          "key": "ค",
+          "text": "AlexNet"
+        },
+        {
+          "key": "ง",
+          "text": "VGGNet"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "ResNet (2015) ใช้ residual connection แก้ปัญหา vanishing gradient จนฝึก ResNet-152 ได้; LeNet-5 เป็นต้นแบบอ่านตัวเลข, AlexNet เด่นเรื่อง ReLU/Dropout/GPU และ VGG เด่นเรื่องซ้อน Conv 3×3"
+    },
+    {
+      "id": 19,
+      "question": "โรงงานต้องการจำแนกภาพชิ้นงาน 4 ประเภท แต่มีภาพเพียงประเภทละประมาณ 120 ภาพ วิธีใดเหมาะสมที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "สร้าง CNN ลึก 50 ชั้นแล้วฝึกตั้งแต่ศูนย์ด้วยภาพทั้งหมด"
+        },
+        {
+          "key": "ข",
+          "text": "flatten ภาพแล้วใช้ MLP ขนาดใหญ่ เพราะข้อมูลน้อยไม่ต้องใช้ CNN"
+        },
+        {
+          "key": "ค",
+          "text": "ใช้ KNN กับค่าพิกเซลดิบ เพราะไม่ต้องฝึกโมเดล"
+        },
+        {
+          "key": "ง",
+          "text": "ใช้ transfer learning เช่น MobileNetV2 (include_top=False) แช่แข็ง base แล้วเพิ่ม GlobalAveragePooling2D + Dense(4, softmax) ร่วมกับ data augmentation"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "ข้อมูลประมาณ 480 ภาพน้อยเกินไปสำหรับฝึก CNN ลึกตั้งแต่ศูนย์ (overfit) การนำ feature ที่เรียนจาก ImageNet มาใช้และฝึกเฉพาะหัว classifier ให้ผลดีและเร็ว; MLP และ KNN บนพิกเซลดิบไม่ทนต่อการเปลี่ยนตำแหน่ง แสง และมุมกล้อง"
+    },
+    {
+      "id": 20,
+      "question": "ข้อใดอธิบายความแตกต่างระหว่าง Image Classification กับ Object Detection ได้ถูกต้อง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Object Detection ให้ label ทุกพิกเซลของภาพ ส่วน Classification ให้ label เดียวต่อภาพ"
+        },
+        {
+          "key": "ข",
+          "text": "Object Detection ใช้ได้เฉพาะภาพขาวดำ ส่วน Classification ใช้ได้กับภาพสี"
+        },
+        {
+          "key": "ค",
+          "text": "Classification ให้ label เดียวต่อภาพ ส่วน Object Detection ระบุวัตถุได้หลายชิ้น แต่ละชิ้นมี bounding box + class label + ค่าความมั่นใจ"
+        },
+        {
+          "key": "ง",
+          "text": "Object Detection ไม่ใช้ CNN แต่ใช้ Dense layer อย่างเดียว"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "Object Detection (เช่น YOLO, Faster R-CNN) ตอบทั้ง \"อะไร\" และ \"อยู่ที่ไหน\" ด้วยกรอบ (x, y, w, h) ต่อวัตถุ และยังใช้ CNN เป็น backbone; การให้ label ทุกพิกเซลคือ Semantic Segmentation"
+    }
+  ]
+}

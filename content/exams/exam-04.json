@@ -1,0 +1,494 @@
+{
+  "moduleId": "04",
+  "title": "Regression & Model Evaluation",
+  "titleTh": "การถดถอยและการประเมินโมเดล",
+  "timeMinutes": 30,
+  "questions": [
+    {
+      "id": 1,
+      "question": "ปัญหาใดต่อไปนี้เป็นงาน Regression",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ตรวจว่าอีเมลเป็นสแปมหรือไม่"
+        },
+        {
+          "key": "ข",
+          "text": "จำแนกภาพตัวเลขลายมือ 0–9"
+        },
+        {
+          "key": "ค",
+          "text": "ทำนายปริมาณการใช้ไฟฟ้า (kWh) ของบ้านในเดือนหน้า"
+        },
+        {
+          "key": "ง",
+          "text": "ทำนายว่าลูกค้าจะยกเลิกบริการหรือไม่"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "Regression ทำนายค่าตัวเลขต่อเนื่อง ปริมาณไฟฟ้า (kWh) เป็นตัวเลขต่อเนื่อง ส่วนตัวเลือกอื่นทำนายหมวดหมู่ (สแปม/ไม่สแปม, เลข 0–9, ยกเลิก/ไม่ยกเลิก) จึงเป็น Classification"
+    },
+    {
+      "id": 2,
+      "question": "ในสมการ Simple Linear Regression y = β₀ + β₁x + ε พารามิเตอร์ β₁ หมายถึงข้อใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ค่า y ที่เปลี่ยนไปเมื่อ x เพิ่มขึ้น 1 หน่วย (ความชัน)"
+        },
+        {
+          "key": "ข",
+          "text": "ค่า y เมื่อ x = 0 (จุดตัดแกน y)"
+        },
+        {
+          "key": "ค",
+          "text": "ความคลาดเคลื่อนที่สมการอธิบายไม่ได้"
+        },
+        {
+          "key": "ง",
+          "text": "สัดส่วนความแปรปรวนของ y ที่โมเดลอธิบายได้"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "β₁ คือ slope บอกว่า y เปลี่ยนเท่าไรเมื่อ x เพิ่ม 1 หน่วย ส่วน β₀ คือ intercept, ε คือ error term และสัดส่วนความแปรปรวนที่อธิบายได้คือ R²"
+    },
+    {
+      "id": 3,
+      "question": "จากค่าจริงและค่าทำนายต่อไปนี้ ค่า MAE เท่ากับเท่าใด",
+      "code": "y_true = [10, 12, 15, 20]\ny_pred = [11, 12, 13, 22]",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "1.00"
+        },
+        {
+          "key": "ข",
+          "text": "1.25"
+        },
+        {
+          "key": "ค",
+          "text": "1.50"
+        },
+        {
+          "key": "ง",
+          "text": "2.25"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "error = y − ŷ = [−1, 0, 2, −2] → |e| = [1, 0, 2, 2] รวม 5 หาร 4 = 1.25 (ตัวเลือก 2.25 คือ MSE และ 1.50 คือ RMSE)"
+    },
+    {
+      "id": 4,
+      "question": "ใช้ข้อมูลเดียวกับข้อก่อนหน้า (y_true = [10, 12, 15, 20], y_pred = [11, 12, 13, 22]) ค่า RMSE เท่ากับเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "1.25"
+        },
+        {
+          "key": "ข",
+          "text": "2.25"
+        },
+        {
+          "key": "ค",
+          "text": "1.00"
+        },
+        {
+          "key": "ง",
+          "text": "1.50"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "e² = [1, 0, 4, 4] รวม 9 → MSE = 9/4 = 2.25 → RMSE = √2.25 = 1.5 ตัวลวง 2.25 คือ MSE ที่ยังไม่ถอดราก และ 1.25 คือ MAE"
+    },
+    {
+      "id": 5,
+      "question": "ค่าจริง y = [2, 4, 6, 8] และค่าทำนาย ŷ = [3, 4, 5, 8] ค่า R² เท่ากับเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.90"
+        },
+        {
+          "key": "ข",
+          "text": "0.80"
+        },
+        {
+          "key": "ค",
+          "text": "0.95"
+        },
+        {
+          "key": "ง",
+          "text": "0.50"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "ȳ = 5 → SS_tot = 9+1+1+9 = 20, SS_res = 1+0+1+0 = 2 → R² = 1 − 2/20 = 0.90"
+    },
+    {
+      "id": 6,
+      "question": "Gradient Descent ขณะหนึ่งมี θ = [1.0, 2.0], gradient ของ MSE = [0.4, −0.6] และ learning rate η = 0.5 ค่า θ หลังปรับ 1 ก้าวคือข้อใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "[1.2, 1.7]"
+        },
+        {
+          "key": "ข",
+          "text": "[1.4, 1.4]"
+        },
+        {
+          "key": "ค",
+          "text": "[0.8, 2.3]"
+        },
+        {
+          "key": "ง",
+          "text": "[0.6, 2.6]"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "θ_next = θ − η·∇ = [1.0 − 0.5(0.4), 2.0 − 0.5(−0.6)] = [0.8, 2.3] ตัวเลือก [1.2, 1.7] เกิดจากบวก gradient แทนการลบ (เดินขึ้นเขา) และ [0.6, 2.6] ลืมคูณ η"
+    },
+    {
+      "id": 7,
+      "question": "feature มีค่า [10, 20, 50] ถ้าทำ Min-Max Normalization ค่า 20 จะถูกแปลงเป็นเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.20"
+        },
+        {
+          "key": "ข",
+          "text": "0.25"
+        },
+        {
+          "key": "ค",
+          "text": "0.40"
+        },
+        {
+          "key": "ง",
+          "text": "0.50"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "x' = (x − min)/(max − min) = (20 − 10)/(50 − 10) = 10/40 = 0.25 ตัวลวง 0.40 เกิดจากหาร 20/50 โดยไม่ลบค่า min"
+    },
+    {
+      "id": 8,
+      "question": "โมเดลหนึ่งมี MAE = 0.33 แต่ RMSE = 0.51 ข้อสรุปใดเหมาะสมที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "โมเดล overfitting อย่างแน่นอน"
+        },
+        {
+          "key": "ข",
+          "text": "R² ของโมเดลต้องติดลบ"
+        },
+        {
+          "key": "ค",
+          "text": "คำนวณผิด เพราะ RMSE ต้องน้อยกว่า MAE เสมอ"
+        },
+        {
+          "key": "ง",
+          "text": "มีบางตัวอย่างที่ทายพลาดมาก เพราะ RMSE ยกกำลังสอง error ก่อนเฉลี่ยจึงไวต่อ error ใหญ่"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "RMSE ≥ MAE เสมอ และถ้า RMSE สูงกว่า MAE มาก แสดงว่า error กระจายไม่สม่ำเสมอ มี error ใหญ่บางตัว ค่าเพียงสองค่านี้ไม่บอกเรื่อง overfitting (ต้องเทียบ train/test) และไม่บอกว่า R² ติดลบ"
+    },
+    {
+      "id": 9,
+      "question": "ข้อใดเป็นสถานการณ์ที่ควรใช้ Gradient Descent แทน Normal Equation",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ข้อมูล 500 แถว feature 3 ตัว"
+        },
+        {
+          "key": "ข",
+          "text": "ต้องการคำตอบที่แม่นยำโดยไม่ต้องเลือก learning rate"
+        },
+        {
+          "key": "ค",
+          "text": "ข้อมูลมี feature หลายแสนตัว หรือใหญ่เกินกว่าจะโหลดเข้าหน่วยความจำได้ทั้งหมด"
+        },
+        {
+          "key": "ง",
+          "text": "feature ทุกตัวมีหน่วยต่างกันมากและไม่ต้องการ scale"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "Normal Equation ต้อง inverse เมทริกซ์ n×n ซึ่งช้ามาก (≈ O(n^2.4)–O(n^3)) เมื่อ feature เยอะ และต้องใช้ข้อมูลทั้งหมดพร้อมกัน ส่วน GD/SGD/mini-batch รองรับได้ ข้อมูลเล็กใช้ Normal Equation ได้ดี และ GD ต้อง scale feature จึงไม่ตรงกับตัวเลือกสุดท้าย"
+    },
+    {
+      "id": 10,
+      "question": "จากผลการรัน Batch GD (feature ถูก standardize แล้ว) สาเหตุที่ eta=1.05 ได้ MSE สูงมากคือข้อใด",
+      "code": "eta=0.01  MSE หลัง 50 epochs = 86.382\neta=0.1   MSE หลัง 50 epochs = 8.630\neta=0.5   MSE หลัง 50 epochs = 8.630\neta=1.05  MSE หลัง 50 epochs = 8,079,333.625",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "learning rate ใหญ่เกินไป ทำให้ก้าวข้ามจุดต่ำสุดและแกว่งขยายออกจน diverge"
+        },
+        {
+          "key": "ข",
+          "text": "learning rate เล็กเกินไปจึงยังไม่ลู่เข้า"
+        },
+        {
+          "key": "ค",
+          "text": "จำนวน epoch น้อยเกินไป ถ้ารันนานขึ้นจะลู่เข้า"
+        },
+        {
+          "key": "ง",
+          "text": "ข้อมูลไม่ได้ standardize"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "η ใหญ่เกินไปทำให้แต่ละก้าวข้ามก้นชามไปอีกฝั่งไกลกว่าเดิม θ จึงแกว่งขยายและ MSE ระเบิด การรันนานขึ้นยิ่งแย่ลง ส่วน η เล็กเกินไป (0.01) แค่ลู่เข้าช้า และโจทย์ระบุว่า standardize แล้ว"
+    },
+    {
+      "id": 11,
+      "question": "Regularization แบบใดมีแนวโน้มทำให้ค่าสัมประสิทธิ์บางตัวเป็นศูนย์พอดี จึงทำหน้าที่เลือก feature อัตโนมัติได้",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Ridge (L2 penalty)"
+        },
+        {
+          "key": "ข",
+          "text": "Lasso (L1 penalty)"
+        },
+        {
+          "key": "ค",
+          "text": "Linear Regression ปกติที่ไม่มี penalty"
+        },
+        {
+          "key": "ง",
+          "text": "StandardScaler"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "L1 penalty (ผลรวม |θ|) ของ Lasso ดันค่าสัมประสิทธิ์ที่สำคัญน้อยให้เป็น 0 พอดี ได้ sparse model ส่วน Ridge (L2) หดค่าเข้าหา 0 แต่ไม่เป็น 0 พอดี และ StandardScaler ไม่ใช่ regularization"
+    },
+    {
+      "id": 12,
+      "question": "จากค่าสัมประสิทธิ์ของโมเดลบน California Housing (feature ผ่าน StandardScaler แล้ว) ข้อสรุปใดถูกต้อง",
+      "code": "            Linear  Ridge(10)  Lasso(0.1)\nMedInc       0.854      0.854       0.711\nAveRooms    -0.294     -0.292      -0.000\nLatitude    -0.897     -0.889      -0.011\nLongitude   -0.870     -0.862      -0.000\ntest RMSE:   0.746      0.745       0.824",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Lasso ทำให้ test RMSE ดีขึ้นเพราะตัด feature ที่ไม่จำเป็นออก"
+        },
+        {
+          "key": "ข",
+          "text": "Ridge(10) ลดค่าสัมประสิทธิ์ทุกตัวลงเหลือครึ่งหนึ่ง"
+        },
+        {
+          "key": "ค",
+          "text": "Latitude และ Longitude ไม่สำคัญต่อราคาบ้านเพราะ Lasso ตัดทิ้ง"
+        },
+        {
+          "key": "ง",
+          "text": "Lasso(0.1) regularize แรงเกินไป ตัด feature สำคัญอย่างพิกัดทิ้งจนโมเดล underfit"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "Lasso(0.1) ดันค่าสัมประสิทธิ์หลายตัว รวมถึง Longitude เป็น 0 และ test RMSE แย่ลงจาก 0.746 เป็น 0.824 แสดงว่า penalty แรงเกินไปจน underfit ไม่ได้แปลว่าพิกัดไม่สำคัญ (Linear ให้ค่าสัมประสิทธิ์พิกัดใหญ่ที่สุด) และ Ridge(10) เปลี่ยนค่าเพียงเล็กน้อย"
+    },
+    {
+      "id": 13,
+      "question": "ใน Support Vector Regression (SVR) ค่า epsilon (ε) มีบทบาทอย่างไร",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "กำหนดจำนวน support vectors สูงสุดที่โมเดลใช้ได้"
+        },
+        {
+          "key": "ข",
+          "text": "เป็น learning rate ของการฝึก SVR"
+        },
+        {
+          "key": "ค",
+          "text": "กำหนดความกว้างของท่อรอบเส้นทำนาย จุดที่อยู่ในท่อจะไม่ถูกลงโทษ"
+        },
+        {
+          "key": "ง",
+          "text": "กำหนดชนิดของ kernel ที่ใช้"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "SVR ใช้ ε-insensitive loss: ถ้า |y − ŷ| ≤ ε จะไม่ถูกลงโทษ จุดที่อยู่นอกท่อจึงกลายเป็น support vectors ส่วนความแรงในการลงโทษกำหนดด้วย C และชนิด kernel กำหนดด้วยพารามิเตอร์ kernel"
+    },
+    {
+      "id": 14,
+      "question": "ถ้าลืมทำ feature scaling กับ California Housing (Population หลักหมื่น, MedInc หลักหน่วย) โมเดลใดได้รับผลกระทบน้อยที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "RandomForestRegressor"
+        },
+        {
+          "key": "ข",
+          "text": "SVR(kernel=\"rbf\")"
+        },
+        {
+          "key": "ค",
+          "text": "SGDRegressor"
+        },
+        {
+          "key": "ง",
+          "text": "Ridge"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "ต้นไม้ตัดสินใจแบ่งข้อมูลด้วย threshold ของ feature ทีละตัว การเปลี่ยนสเกลไม่เปลี่ยนลำดับของค่า จึงไม่กระทบ ส่วน SVR (ใช้ระยะทาง/kernel), SGD (gradient) และ Ridge (penalty ขึ้นกับขนาดของ θ) ไวต่อสเกลทั้งหมด"
+    },
+    {
+      "id": 15,
+      "question": "โค้ดต่อไปนี้มีปัญหาสำคัญอะไร",
+      "code": "X_scaled = StandardScaler().fit_transform(X)\nX_train, X_test, y_train, y_test = train_test_split(X_scaled, y, test_size=0.2)\nmodel = Ridge(alpha=1.0).fit(X_train, y_train)",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ต้องใช้ MinMaxScaler แทน StandardScaler กับ Ridge"
+        },
+        {
+          "key": "ข",
+          "text": "เกิด data leakage เพราะ scaler คำนวณ mean/std จากข้อมูลทั้งหมดรวม test ก่อนแบ่ง"
+        },
+        {
+          "key": "ค",
+          "text": "ต้องเรียก train_test_split หลังจากฝึกโมเดลแล้ว"
+        },
+        {
+          "key": "ง",
+          "text": "Ridge ใช้กับข้อมูลที่ scale แล้วไม่ได้"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "scaler ถูก fit กับข้อมูลทั้งหมดก่อนแบ่ง ข้อมูลสถิติของ test จึงรั่วเข้าสู่ขั้นฝึก ผลประเมินดีเกินจริง ที่ถูกคือแบ่งก่อนแล้วใช้ make_pipeline(StandardScaler(), Ridge()) fit กับ train เท่านั้น ส่วน Ridge ควรใช้กับข้อมูลที่ scale แล้วด้วยซ้ำ"
+    },
+    {
+      "id": 16,
+      "question": "จากตารางผลของ Decision Tree ที่ความลึกต่าง ๆ บน California Housing ข้อใดถูกต้อง",
+      "code": "max_depth=   2  train RMSE=0.856  test RMSE=0.868\nmax_depth=   8  train RMSE=0.566  test RMSE=0.650\nmax_depth=None  train RMSE=0.000  test RMSE=0.703",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "max_depth=2 overfitting เพราะ gap น้อยที่สุด"
+        },
+        {
+          "key": "ข",
+          "text": "max_depth=None ดีที่สุดเพราะ train RMSE = 0"
+        },
+        {
+          "key": "ค",
+          "text": "ทุกความลึก underfitting เพราะ test RMSE > 0.6"
+        },
+        {
+          "key": "ง",
+          "text": "max_depth=None overfitting ชัดเจน เพราะ train RMSE ต่ำมากแต่ test RMSE สูงกว่า max_depth=8"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "ต้นไม้ไม่จำกัดความลึกจำข้อมูล train ได้หมด (RMSE = 0) แต่ test RMSE 0.703 แย่กว่า depth=8 (0.650) = overfitting ส่วน depth=2 error สูงทั้งคู่และใกล้กัน = underfitting ไม่ใช่ overfitting"
+    },
+    {
+      "id": 17,
+      "question": "โมเดล regression ได้ R² บน test set = −0.35 หมายความว่าอย่างไร",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "โมเดลอธิบายความแปรปรวนได้ 35% ในทิศทางตรงกันข้าม"
+        },
+        {
+          "key": "ข",
+          "text": "เกิดข้อผิดพลาดในการคำนวณ เพราะ R² อยู่ระหว่าง 0 ถึง 1 เสมอ"
+        },
+        {
+          "key": "ค",
+          "text": "โมเดลทำนายแย่กว่าการทายค่าเฉลี่ยของ y ทุกครั้ง"
+        },
+        {
+          "key": "ง",
+          "text": "ข้อมูลมีความสัมพันธ์เชิงลบระหว่าง x และ y"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "R² = 1 − SS_res/SS_tot จะติดลบเมื่อ SS_res > SS_tot คือ error ของโมเดลมากกว่าการทาย ȳ ตลอด R² ติดลบได้จริงบน test set และไม่เกี่ยวกับทิศทางความสัมพันธ์ (ความชันติดลบก็ยังได้ R² สูงได้)"
+    },
+    {
+      "id": 18,
+      "question": "Linear Regression บน California Housing ได้ test RMSE = 0.746 ข้อใดตีความได้ถูกต้อง (target มีหน่วย $100,000)",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "โดยทั่วไปโมเดลทายราคาพลาดประมาณ $74,600 ต่อเขต"
+        },
+        {
+          "key": "ข",
+          "text": "โมเดลทายถูก 74.6% ของเขตทั้งหมด"
+        },
+        {
+          "key": "ค",
+          "text": "โมเดลอธิบายความแปรปรวนของราคาได้ 74.6%"
+        },
+        {
+          "key": "ง",
+          "text": "ราคาที่ทายพลาดมากที่สุดคือ $74,600"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "RMSE มีหน่วยเดียวกับ y: 0.746 × $100,000 ≈ $74,600 เป็นขนาดความคลาดเคลื่อนโดยทั่วไป ไม่ใช่ accuracy ไม่ใช่ R² (ซึ่งเท่ากับ 0.576) และไม่ใช่ error สูงสุด"
+    },
+    {
+      "id": 19,
+      "question": "จากผลวิเคราะห์ residual (e = y − ŷ) ของ Linear Regression บน California Housing ข้อสรุปใดถูกต้อง",
+      "code": "mean residual แยกตามช่วงราคาจริง\n(0.0, 1.0]   -0.310\n(2.0, 3.0]    0.044\n(4.0, 4.9]    1.219\n(4.9, 5.1]    1.169",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "โมเดลไม่มี bias เพราะ mean residual รวมใกล้ 0"
+        },
+        {
+          "key": "ข",
+          "text": "โมเดลทำนายบ้านราคาสูงต่ำกว่าความจริงอย่างเป็นระบบ โดยเฉพาะเขตที่ราคาถูก cap ไว้ที่ 5.0"
+        },
+        {
+          "key": "ค",
+          "text": "โมเดลทำนายบ้านราคาสูงแพงเกินจริง"
+        },
+        {
+          "key": "ง",
+          "text": "residual ไม่ขึ้นกับระดับราคา จึงไม่ต้องปรับปรุงโมเดล"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "residual เป็นบวกหมายถึง y > ŷ คือทายต่ำไป ในช่วงราคาสูง residual เฉลี่ย ≈ +1.2 (≈ $120,000) แสดงว่ามีรูปแบบอย่างเป็นระบบ แม้ mean residual รวมจะใกล้ 0 ก็ไม่ได้แปลว่าไม่มี bias ในแต่ละช่วงราคา"
+    },
+    {
+      "id": 20,
+      "question": "ต้องการใช้ Support Vector Regression กับข้อมูล 2 ล้านแถว แต่ SVR(kernel=\"rbf\") ฝึกช้ามาก ทางเลือกใดเหมาะสมที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เพิ่มค่า C ให้มากขึ้นเพื่อให้ฝึกเร็วขึ้น"
+        },
+        {
+          "key": "ข",
+          "text": "ตัด StandardScaler ออกเพื่อลดขั้นตอน"
+        },
+        {
+          "key": "ค",
+          "text": "เปลี่ยนไปใช้ Normal Equation กับ SVR"
+        },
+        {
+          "key": "ง",
+          "text": "ใช้ LinearSVR (หรือ SGDRegressor) ใน Pipeline ร่วมกับ StandardScaler หรือสุ่มข้อมูลบางส่วนมาฝึก SVR แบบ kernel"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "SVR แบบ kernel มีความซับซ้อน O(m²)–O(m³) ตามจำนวนแถว LinearSVR/SGD สเกลได้ดีกับข้อมูลใหญ่ หรือ subsample ข้อมูล การเพิ่ม C มักทำให้ฝึกช้าลง การตัด scaler ทำให้ผลแย่ลง และ Normal Equation ใช้กับ Linear Regression ไม่ใช่ SVR"
+    }
+  ]
+}

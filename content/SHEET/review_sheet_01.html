@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 01 - ภาพรวม Machine Learning</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🧠 Review Sheet บทที่ 01 — ภาพรวม Machine Learning</div>
+      <div class="sub">EN-012-314 Artificial Intelligence · Machine Learning · The Machine Learning Landscape</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 2 · CLO1 (LLO1-1, LLO1-2, LLO1-3)<br>
+      Lab 01: จับคู่ปัญหากับรูปแบบการเรียนรู้
+    </div>
+  </div>
+
+  <div class="columns">
+    <!-- ===== LEFT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🧭</span> 1. ML อยู่ตรงไหน และ "เรียนรู้" คืออะไร</div>
+        <div class="section-body">
+          <p><span class="blue">AI</span> ⊃ <span class="blue">Machine Learning</span> ⊃ <span class="blue">Deep Learning</span> ⊃ <span class="blue">LLM / GenAI</span> — ML = ให้เครื่อง <span class="accent">หากฎเองจากข้อมูล</span> แทนมนุษย์เขียนกฎ</p>
+          <div class="formula">ข้อมูล + คำตอบตัวอย่าง → อัลกอริทึม → <b>โมเดล</b> (กฎที่เรียนได้)</div>
+          <p><b>Mitchell (1997):</b> โปรแกรมเรียนรู้จากประสบการณ์ <b>E</b> สำหรับงาน <b>T</b> ตามตัววัด <b>P</b> ถ้าผลงานใน T (วัดด้วย P) ดีขึ้นเมื่อมี E มากขึ้น</p>
+          <table>
+            <tr><th></th><th>Spam filter</th><th>ทำนายเบาหวาน</th></tr>
+            <tr><td><b>T</b></td><td>แยกอีเมลใหม่ spam/ham</td><td>ทำนาย Outcome 0/1</td></tr>
+            <tr><td><b>P</b></td><td>accuracy</td><td>accuracy, recall</td></tr>
+            <tr><td><b>E</b></td><td>อีเมลเก่าที่ติดป้ายแล้ว</td><td>ประวัติผู้ป่วย 768 ราย</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🗂️</span> 2. ประเภทตามการกำกับดูแล (Supervision)</div>
+        <div class="section-body">
+          <table>
+            <tr><th>ประเภท</th><th>ข้อมูลฝึก</th><th>ตัวอย่างงาน</th></tr>
+            <tr><td><b>Supervised</b></td><td>X + y ครบ</td><td>Classification, Regression</td></tr>
+            <tr><td><b>Unsupervised</b></td><td>X อย่างเดียว</td><td>Clustering, ลดมิติ, Anomaly detection</td></tr>
+            <tr><td><b>Semi-supervised</b></td><td>X มาก + y บางส่วน</td><td>ภาพใบข้าว 50k ภาพ label 500</td></tr>
+            <tr><td><b>Self-supervised</b></td><td>สร้าง y จาก X เอง</td><td>LLM ทายคำถัดไป</td></tr>
+            <tr><td><b>Reinforcement</b></td><td>โต้ตอบกับ environment</td><td>เกม, หุ่นยนต์, รถไร้คนขับ</td></tr>
+          </table>
+          <div class="code-block">clf.fit(X, y)   <span class="comment"># supervised: มี label</span>
+km.fit(X)       <span class="comment"># unsupervised: ไม่มี label → km.labels_</span>
+LabelSpreading().fit(X, y_partial)  <span class="comment"># -1 = ไม่มี label</span></div>
+          <p><b>RL:</b> Agent ดู <b>State</b> → เลือก <b>Action</b> ตาม <b>Policy π</b> → ได้ <b>Reward</b> · สมดุล explore / exploit</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">📈</span> 3. Classification vs Regression</div>
+        <div class="section-body">
+          <table>
+            <tr><th></th><th>Classification</th><th>Regression</th></tr>
+            <tr><td>Output</td><td>หมวดหมู่ ("แบบไหน?")</td><td>ตัวเลขต่อเนื่อง ("เท่าไหร่?")</td></tr>
+            <tr><td>เป้าหมาย</td><td>Decision boundary</td><td>Best-fit line</td></tr>
+            <tr><td>Metric</td><td>Accuracy, Precision, Recall, F1</td><td>MAE, MSE, RMSE, R²</td></tr>
+            <tr><td>ตัวอย่าง</td><td>สแปม, วินิจฉัยโรค, MNIST</td><td>ราคาบ้าน, ปริมาณฝน</td></tr>
+          </table>
+          <p class="note">ดูที่ "ชนิดของคำตอบ" ไม่ใช่ชนิดของ input: อุณหภูมิพรุ่งนี้ = regression · ฝนตกไหม = classification</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">⚙️</span> 4. Batch/Online · Instance/Model-based</div>
+        <div class="section-body">
+          <div class="def-row"><span class="def-key">Batch</span><span class="def-val">ฝึกรวดเดียวด้วยข้อมูลทั้งหมด มีข้อมูลใหม่ต้องฝึกใหม่ (model rot)</span></div>
+          <div class="def-row"><span class="def-key">Online</span><span class="def-val">ฝึกต่อทีละ mini-batch, out-of-core, ระวัง learning rate และข้อมูลขยะ</span></div>
+          <div class="def-row"><span class="def-key">Instance</span><span class="def-val">จำตัวอย่าง วัดความคล้าย (KNN) — extrapolate ไม่ได้</span></div>
+          <div class="def-row"><span class="def-key">Model</span><span class="def-val">หาพารามิเตอร์ที่ทำให้ cost ต่ำสุด แล้วใช้สมการทำนาย</span></div>
+          <div class="code-block">SGDRegressor().partial_fit(X_batch, y_batch)  <span class="comment"># online</span>
+KNeighborsRegressor(n_neighbors=<span class="num">3</span>).fit(X, y)    <span class="comment"># instance</span>
+LinearRegression().fit(X, y)                   <span class="comment"># model</span></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🔢</span> ตัวอย่างคำนวณที่ควรทำได้</div>
+        <div class="section-body">
+          <table>
+            <tr><th>เรื่อง</th><th>วิธีคิด</th></tr>
+            <tr><td>Baseline accuracy</td><td>ทำนายคลาสใหญ่สุดเสมอ: 500 / 768 = <b>0.651</b></td></tr>
+            <tr><td>แบ่ง 60/20/20</td><td>1,000 แถว → test 200 → เหลือ 800 × 0.25 = val 200 → train <b>600</b></td></tr>
+            <tr><td>KNN regression (k=3)</td><td>เฉลี่ย y ของ 3 จุดที่ใกล้ที่สุด เช่น (21 + 25 + 18)/3 = <b>21.33</b></td></tr>
+            <tr><td>Bandit update</td><td>Q ← Q + (r − Q)/N : 0.5 + (1 − 0.5)/5 = <b>0.6</b></td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧑‍💻</span> เชื่อมกับ Lab 01</div>
+        <div class="section-body">
+          <table class="lab-table">
+            <tr><th>ข้อ</th><th>สิ่งที่ฝึก</th></tr>
+            <tr><td>1–2</td><td>จับคู่ 10 ปัญหากับประเภท ML · เพิ่มกฎใน KB + forward chaining</td></tr>
+            <tr><td>3–5</td><td>Pima diabetes: rule-based (IF Glucose &gt; 140 …) vs DecisionTree + <code>export_text</code></td></tr>
+            <tr><td>6–7</td><td>กราฟ max_depth vs accuracy (overfit) · <code>cross_val_score</code> แล้วทดสอบครั้งเดียว</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🧱</span> 5. ความท้าทายหลัก</div>
+        <div class="section-body">
+          <p><b>Bad data:</b> ข้อมูลน้อย · ไม่เป็นตัวแทน (<span class="accent">sampling bias</span>) · คุณภาพต่ำ (noise, outlier, Glucose = 0) · feature ไม่เกี่ยวข้อง → feature engineering</p>
+          <table>
+            <tr><th></th><th>อาการ</th><th>วิธีแก้</th></tr>
+            <tr><td><b>Underfit</b></td><td>error สูงทั้ง train และ val</td><td>โมเดลซับซ้อนขึ้น, feature ดีขึ้น, ลด regularization</td></tr>
+            <tr><td><b>Overfit</b></td><td>train ดีมาก val แย่ (ช่องว่างกว้าง)</td><td>ลดความซับซ้อน, regularization, เพิ่มข้อมูล, ลด noise</td></tr>
+          </table>
+          <div class="code-block">degree | train MSE | val MSE
+     <span class="num">1</span> |     0.185 |   0.231   <span class="comment"># underfit</span>
+     <span class="num">3</span> |     0.018 |   0.026   <span class="comment"># พอดี</span>
+    <span class="num">15</span> |     0.007 |   3.953   <span class="comment"># overfit</span></div>
+          <p class="note">Parameter = โมเดลเรียนเอง (θ) · Hyperparameter = กำหนดก่อนฝึก (degree, max_depth, k)</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧪</span> 6. Train / Validation / Test และ Cross-Validation</div>
+        <div class="section-body">
+          <div class="formula">Train 60% (ฝึก) · Validation 20% (เลือกโมเดล) · Test 20% (วัดครั้งเดียว)</div>
+          <div class="code-block">X_temp, X_test, y_temp, y_test = train_test_split(
+    X, y, test_size=<span class="num">0.2</span>, stratify=y, random_state=<span class="num">42</span>)
+scores = cross_val_score(model, X_temp, y_temp, cv=<span class="num">5</span>)
+print(scores.mean(), scores.std())   <span class="comment"># เฉลี่ย ± ความแกว่ง</span></div>
+          <div class="formula">CV score = (1/k) Σ scoreᵢ</div>
+          <ul class="mini">
+            <li><b>Data snooping bias:</b> ใช้ test set เลือกโมเดล → ผลดีเกินจริง</li>
+            <li><b>Data mismatch:</b> val/test ต้องเป็นตัวแทนข้อมูลใช้งานจริง</li>
+            <li><b>No Free Lunch:</b> ไม่มีโมเดลใดดีที่สุดทุกปัญหา ต้องลองและ validate</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">📜</span> 7. ระบบฐานความรู้และกฎ (Knowledge-based)</div>
+        <div class="section-body">
+          <p><b>Knowledge base</b> (กฎ IF-THEN) + <b>Working memory</b> (ข้อเท็จจริง) + <b>Inference engine</b> + คำอธิบายเหตุผล</p>
+          <div class="formula">Modus Ponens: P ⇒ Q, P ⊢ Q &nbsp;·&nbsp; P ⇒ Q เป็นเท็จเมื่อ P = T, Q = F เท่านั้น</div>
+          <div class="def-row"><span class="def-key">Forward</span><span class="def-val">data-driven: ข้อเท็จจริง → ใช้กฎ → ข้อเท็จจริงใหม่ จนไม่มีอะไรเพิ่ม</span></div>
+          <div class="def-row"><span class="def-key">Backward</span><span class="def-val">goal-driven: เริ่มจากเป้าหมาย ย้อนหาเงื่อนไข (Prolog)</span></div>
+          <div class="code-block"><span class="kw">for</span> conditions, conclusion <span class="kw">in</span> rules:
+    <span class="kw">if</span> conditions &lt;= facts <span class="kw">and</span> conclusion <span class="kw">not in</span> facts:
+        facts.add(conclusion); fired = <span class="kw">True</span></div>
+          <table>
+            <tr><th>ระบบกฎ</th><th>Machine Learning</th></tr>
+            <tr><td>ไม่ต้องใช้ข้อมูลฝึก อธิบายได้ชัด</td><td>ต้องใช้ข้อมูลมาก บางโมเดลเป็น black box</td></tr>
+            <tr><td>แก้กฎด้วยมือ ขยายยาก</td><td>ฝึกใหม่ได้ รับมือ noise ได้ดีกว่า</td></tr>
+            <tr><td>ระเบียบ ภาษี สิทธิ์ (MYCIN)</td><td>ภาพ เสียง ภาษา พฤติกรรม</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อผิดพลาดที่พบบ่อย</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li>ดูชนิด output ผิด: ทำนาย "ความน่าจะเป็น" ด้วย Logistic Regression ยังเป็น <b>classification</b></li>
+            <li>คิดว่า train accuracy สูง = โมเดลดี — ต้องดู validation/CV เสมอ</li>
+            <li>จูน hyperparameter บน test set (data snooping) หรือแตะ test set หลายครั้ง</li>
+            <li>ลืม <code>stratify=y</code> เมื่อคลาสไม่สมดุล · ลืมเทียบกับ baseline (ทำนายคลาสใหญ่สุด)</li>
+            <li>ตีความหมายเลขกลุ่มของ KMeans ว่าเป็นชื่อคลาส</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">EN-012-314 ปัญญาประดิษฐ์ · ผศ.ดร. สรายุทธ กรวิรัตน์ · สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยกาฬสินธุ์ · ปีการศึกษา 2569</div>
+</div>
+</body>
+</html>

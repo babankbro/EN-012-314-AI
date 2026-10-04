@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 03 - การจำแนกประเภทและการประเมินผล</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🧠 Review Sheet บทที่ 03 — การจำแนกประเภทและการประเมินผล</div>
+      <div class="sub">EN-012-314 Artificial Intelligence · Machine Learning · Classification &amp; Model Evaluation</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 4 · CLO2 (LLO2-2, LLO2-3)<br>
+      Lab 03: Classification และการคำนวณ Metrics
+    </div>
+  </div>
+
+  <div class="columns">
+    <!-- ===== LEFT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🏷️</span> 1. Classification คืออะไร</div>
+        <div class="section-body">
+          <p>ทำนายคำตอบที่เป็น <span class="accent">หมวดหมู่</span> ("แบบไหน?") ต่างจาก Regression ที่ทำนายค่าต่อเนื่อง ("เท่าไหร่?") โมเดลลาก <b>decision boundary</b> แยกคลาส</p>
+          <div class="def-row"><span class="def-key">Binary</span><span class="def-val">2 คลาส (positive = 1 คือ "สิ่งที่ตามหา" เช่น ป่วย, spam)</span></div>
+          <div class="def-row"><span class="def-key">Multiclass</span><span class="def-val">&gt; 2 คลาส อยู่ได้คลาสเดียว (MNIST 0–9) · กลยุทธ์ OvR / OvO (SVC ใช้ OvO)</span></div>
+          <div class="def-row"><span class="def-key">Multilabel</span><span class="def-val">1 ตัวอย่างมีหลาย label พร้อมกัน</span></div>
+          <p class="note">API เดียวกันทุกตัว: <code>fit</code> · <code>predict</code> · <code>predict_proba</code> · <code>decision_function</code> · <code>score</code> (= accuracy)</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">📈</span> 2. Logistic Regression</div>
+        <div class="section-body">
+          <div class="formula">z = θᵀx &nbsp;→&nbsp; p̂ = σ(z) = 1 / (1 + e<sup>−z</sup>) &nbsp;·&nbsp; σ(0) = 0.5</div>
+          <p>ทาย 1 เมื่อ p̂ ≥ <span class="accent">threshold</span> (ค่าเริ่มต้น 0.5 ⇔ z ≥ 0) → เส้นแบ่งเป็นเส้นตรง · ฝึกด้วย log loss</p>
+          <div class="formula">Softmax: p̂ₖ = e<sup>sₖ</sup> / Σⱼ e<sup>sⱼ</sup> &nbsp;(รวมทุกคลาส = 1)</div>
+          <div class="code-block"><span class="kw">from</span> sklearn.linear_model <span class="kw">import</span> LogisticRegression
+clf = LogisticRegression(C=<span class="num">1.0</span>, max_iter=<span class="num">1000</span>).fit(X_train, y_train)
+proba = clf.predict_proba(X_test)[:, <span class="num">1</span>]   <span class="comment"># P(คลาส 1)</span></div>
+          <p class="note">หลายคลาสใช้ softmax อัตโนมัติ — ห้ามใช้ multi_class=... (ถูกถอดแล้ว) · C เล็ก = regularize มาก</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 3. KNN · SVM · Decision Tree</div>
+        <div class="section-body">
+          <table>
+            <tr><th>โมเดล</th><th>แนวคิด / พารามิเตอร์</th><th>Scale?</th></tr>
+            <tr><td><b>KNN</b></td><td>โหวตจาก k เพื่อนบ้านใกล้สุด (Euclidean) · k น้อย→overfit · <code>weights="distance"</code> · predict ช้า</td><td class="accent">ต้อง</td></tr>
+            <tr><td><b>SVM</b></td><td>ถนนกว้างสุด, จุดบนขอบ = support vectors · C มาก→ถนนแคบ→overfit · kernel trick (rbf, poly)</td><td class="accent">ต้อง</td></tr>
+            <tr><td><b>Tree</b></td><td>CART แบ่ง 2 ทางให้บริสุทธิ์สุด · white-box · overfit ง่าย → <code>max_depth</code>, <code>min_samples_leaf</code></td><td>ไม่ต้อง</td></tr>
+          </table>
+          <div class="formula">Gini = 1 − Σ pₖ² &nbsp;&nbsp;|&nbsp;&nbsp; Entropy = −Σ pₖ log₂ pₖ</div>
+          <p class="note">ตัวอย่าง node [0, 49, 5]: Gini = 1 − (49/54)² − (5/54)² = 0.168 · node คลาสเดียว Gini = 0 · 3 คลาสเท่ากัน Gini = 0.667</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🌲</span> 4. Ensemble Learning</div>
+        <div class="section-body">
+          <table>
+            <tr><th>เทคนิค</th><th>หลักการ</th></tr>
+            <tr><td>Voting</td><td>โมเดล<i>ต่างชนิด</i>โหวต · hard = นับเสียง · soft = เฉลี่ย predict_proba</td></tr>
+            <tr><td>Bagging / Pasting</td><td>โมเดลชนิดเดียว ข้อมูลสุ่ม <b>ใส่คืน</b> / ไม่ใส่คืน → ลด variance</td></tr>
+            <tr><td>Random Forest</td><td>Bagging ของ Tree + สุ่มฟีเจอร์ทุก split · <code>feature_importances_</code></td></tr>
+            <tr><td>Boosting</td><td>ฝึก<i>ต่อกันเป็นลำดับ</i> แก้ผิดตัวก่อน · AdaBoost (เพิ่มน้ำหนักตัวที่ผิด) · Gradient Boosting (fit residual)</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧭</span> 5. เลือกอัลกอริทึม</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li><b>Baseline:</b> <code>DummyClassifier</code> + Logistic Regression เสมอ</li>
+            <li><b>ข้อมูลตาราง:</b> Random Forest / Gradient Boosting · <b>ต้องอธิบายกฎ:</b> Decision Tree</li>
+            <li><b>ข้อมูลเล็ก มิติสูง:</b> SVM · <b>ภาพ:</b> CNN (บทที่ 7)</li>
+            <li>MNIST ชุดย่อย 10k/2k: LogReg 0.888 · KNN 0.929 (predict ช้าสุด) · RF 0.935 · สับสน 4↔9, 3/5/8, 7→1</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">💻</span> โค้ดประเมินผลที่ใช้บ่อย</div>
+        <div class="section-body">
+          <div class="code-block"><span class="kw">from</span> sklearn.pipeline <span class="kw">import</span> make_pipeline
+<span class="kw">from</span> sklearn.preprocessing <span class="kw">import</span> StandardScaler
+<span class="kw">from</span> sklearn.svm <span class="kw">import</span> SVC
+<span class="kw">from</span> sklearn.metrics <span class="kw">import</span> (confusion_matrix, classification_report,
+    ConfusionMatrixDisplay, roc_auc_score)
+
+model = make_pipeline(StandardScaler(), SVC(C=<span class="num">1</span>))  <span class="comment"># scale ใน pipeline</span>
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+
+print(confusion_matrix(y_test, y_pred))
+print(classification_report(y_test, y_pred, digits=<span class="num">3</span>))
+ConfusionMatrixDisplay.from_predictions(y_test, y_pred,
+    normalize=<span class="str">"true"</span>)            <span class="comment"># แถว = recall ของแต่ละคลาส</span>
+roc_auc_score(y_test, proba)            <span class="comment"># ใช้ความน่าจะเป็น ไม่ใช่ y_pred</span></div>
+          <div class="code-block"><span class="comment"># เลือก threshold จาก CV บน train set (ไม่ใช่ test set)</span>
+proba_cv = cross_val_predict(model_lr, X_train, y_train, cv=<span class="num">5</span>,
+                             method=<span class="str">"predict_proba"</span>)[:, <span class="num">1</span>]</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🔲</span> 6. Confusion Matrix (แบบ scikit-learn)</div>
+        <div class="section-body">
+          <table>
+            <tr><th></th><th>ทาย 0 (Neg)</th><th>ทาย 1 (Pos)</th></tr>
+            <tr><td><b>จริง 0</b></td><td>TN</td><td>FP (Type I)</td></tr>
+            <tr><td><b>จริง 1</b></td><td>FN (Type II)</td><td>TP</td></tr>
+          </table>
+          <p><b>แถว = จริง, คอลัมน์ = ทาย</b> · คำแรก = ทายถูก/ผิด · คำหลัง = สิ่งที่โมเดลทาย</p>
+          <div class="code-block">tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()</div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧮</span> 7. สูตร Metrics + ตัวอย่างคำนวณ</div>
+        <div class="section-body">
+          <div class="formula">Accuracy = (TP + TN) / ทั้งหมด</div>
+          <div class="flex-row">
+            <div class="formula">Precision = TP / (TP + FP)</div>
+            <div class="formula">Recall = TP / (TP + FN)</div>
+          </div>
+          <div class="flex-row">
+            <div class="formula">Specificity = TN / (TN + FP)</div>
+            <div class="formula">F1 = 2PR / (P + R) = 2TP / (2TP + FP + FN)</div>
+          </div>
+          <p><b>ตัวอย่าง</b> TN = 135, FP = 15, FN = 10, TP = 40 (n = 200)</p>
+          <ul class="mini">
+            <li>Accuracy = 175/200 = <b>0.875</b> · Precision = 40/55 = <b>0.727</b></li>
+            <li>Recall = 40/50 = <b>0.800</b> · Specificity = 135/150 = <b>0.900</b> · F1 = 80/105 = <b>0.762</b></li>
+          </ul>
+          <p class="note">Precision = "ทายว่า positive แล้วถูกกี่ %" · Recall = "positive จริงหาเจอกี่ %" · F1 ใช้ค่าเฉลี่ยฮาร์มอนิก ลงโทษค่าที่ต่ำ</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">⚖️</span> 8. Imbalanced · Threshold · ROC</div>
+        <div class="section-body">
+          <p><span class="accent">Accuracy หลอกได้!</span> "ไม่ใช่เลข 5" ทุกภาพ → accuracy 0.910 แต่ recall = 0</p>
+          <div class="code-block">proba = clf.predict_proba(X)[:, <span class="num">1</span>]
+y_pred = (proba &gt;= <span class="num">0.3</span>).astype(int)  <span class="comment"># ลด threshold</span></div>
+          <table>
+            <tr><th>ลด threshold</th><th>เพิ่ม threshold</th></tr>
+            <tr><td>Recall ↑ Precision ↓ (FN ลด FP เพิ่ม)</td><td>Precision ↑ Recall ↓</td></tr>
+            <tr><td>คัดกรองโรค, จับการโกง (FN แพง)</td><td>กรอง spam (FP แพง)</td></tr>
+          </table>
+          <ul class="mini">
+            <li><b>ROC</b>: TPR (recall) vs FPR = FP/(FP+TN) · <b>AUC</b> 1.0 = สมบูรณ์, 0.5 = เดาสุ่ม · ไม่ขึ้นกับ threshold</li>
+            <li><b>macro avg</b> = เฉลี่ยทุกคลาสเท่ากัน · <b>weighted avg</b> = ถ่วงด้วย support (ใกล้ accuracy) → macro ≪ weighted = คลาสส่วนน้อยแย่</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อผิดพลาดที่พบบ่อย</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li>ดูแค่ accuracy กับข้อมูลไม่สมดุล — ต้องดู confusion matrix, recall, F1 และเทียบ Dummy</li>
+            <li>สลับ FP/FN หรืออ่าน confusion matrix ผิดแกน (บางตำรา positive อยู่ก่อน)</li>
+            <li>ลืม scale ข้อมูลก่อน KNN/SVM · fit scaler กับข้อมูลทั้งหมด (leakage) → ใช้ <code>Pipeline</code></li>
+            <li>เลือก threshold / k / C จาก test set → ต้องใช้ validation หรือ cross-validation</li>
+            <li>ใช้โค้ดเก่า <code>np.int</code>, <code>multi_class=</code> → เปลี่ยนเป็น <code>int</code> และไม่ต้องระบุ</li>
+            <li>สรุปว่าโมเดลใดดีกว่าจากความต่าง 0.01 บน test set เล็ก ๆ (114 ตัวอย่าง ≈ 1 ตัว)</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧪</span> เชื่อมโยง Lab 03</div>
+        <div class="section-body">
+          <table class="lab-table">
+            <tr><th>ข้อ</th><th>สิ่งที่ฝึก</th></tr>
+            <tr><td>1</td><td>คำนวณ metrics ด้วยมือจาก TN=88, FP=12, FN=18, TP=32 แล้วตรวจด้วย sklearn</td></tr>
+            <tr><td>2–4</td><td>Pima diabetes: เปรียบเทียบ LogReg/KNN/SVM/Tree/RF · confusion matrix · classification_report</td></tr>
+            <tr><td>5</td><td>เลือก threshold ด้วย cross_val_predict ให้ recall ≥ 0.80</td></tr>
+            <tr><td>6</td><td>load_digits 10 คลาส: หาคู่ตัวเลขที่สับสนจาก confusion matrix 10×10</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">✍️</span> ฝึกคำนวณ (เฉลยท้ายกล่อง)</div>
+        <div class="section-body">
+          <ol class="mini">
+            <li>TN = 940, FP = 20, FN = 15, TP = 25 → accuracy, precision, recall, F1 = ?</li>
+            <li>P = 0.5, R = 0.8 → F1 = ?</li>
+            <li>Gini ของ node [6, 2, 2] = ?</li>
+            <li>LogReg θ₀ = −3, θ₁ = 1.5, x = 1 → p̂ = ? ทายคลาสใด</li>
+          </ol>
+          <p class="note">เฉลย: (1) 0.965, 0.556, 0.625, 0.588 · (2) 0.615 · (3) 0.56 · (4) z = −1.5, σ(−1.5) = 0.182 → คลาส 0</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-012-314 ปัญญาประดิษฐ์ · ผศ.ดร. สรายุทธ กรวิรัตน์ · สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยกาฬสินธุ์ · ปีการศึกษา 2569</div>
+</div>
+</body>
+</html>
