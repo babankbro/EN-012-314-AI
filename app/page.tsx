@@ -9,6 +9,7 @@ import {
   PenSquare,
   Target,
   Library,
+  Calculator,
 } from "lucide-react";
 import { modules, colorMap } from "@/lib/modules-data";
 import { course } from "@/lib/course";
@@ -89,6 +90,22 @@ export default function HomePage() {
           </p>
         </div>
         <ArrowRight className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+      </Link>
+
+      <Link
+        href="/calc-examples"
+        className="flex items-center gap-4 p-5 -mt-8 mb-12 rounded-2xl border border-sky-200 dark:border-sky-800 bg-sky-50 dark:bg-sky-900/20 hover:shadow-md transition-all"
+      >
+        <div className="w-12 h-12 rounded-xl bg-sky-600 text-white flex items-center justify-center flex-shrink-0">
+          <Calculator className="w-6 h-6" />
+        </div>
+        <div className="flex-1">
+          <p className="font-bold text-gray-900 dark:text-white">ตัวอย่างโจทย์คำนวณพร้อมวิธีทำ</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            โจทย์แนวข้อสอบกลางภาคข้อ 6–14 แบบ (ก) และ (ข) พร้อม infographic และสรุปคำตอบ
+          </p>
+        </div>
+        <ArrowRight className="w-5 h-5 text-sky-600 dark:text-sky-400" />
       </Link>
 
       {/* Module List */}

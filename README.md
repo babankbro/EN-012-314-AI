@@ -43,6 +43,7 @@ e-learning/
 │   ├── lab/[id]/page.tsx       ← หน้าใบงาน + ปุ่มดาวน์โหลด .ipynb
 │   ├── exam/[id]/page.tsx      ← แบบทดสอบออนไลน์ (จับเวลา ตรวจ พิมพ์ผล)
 │   ├── exam-prep/page.tsx      ← แนวทางเตรียมสอบและแนวข้อสอบอัตนัย (content/exam-prep.md)
+│   ├── calc-examples/page.tsx  ← ตัวอย่างโจทย์คำนวณข้อ 6–14 พร้อม infographic (content/calc-examples.md)
 │   └── api/content/[...path]/  ← ให้บริการไฟล์ใน content/ (Review Sheet, CSV, notebook)
 ├── components/                 ← Header, Sidebar, MarkdownContent, Mermaid, ExamClient ฯลฯ
 ├── lib/
@@ -58,6 +59,7 @@ e-learning/
 │   └── datasets/               ← ไฟล์ CSV สำหรับใบงาน
 ├── public/images/mXX/          ← รูปประกอบจาก vault
 ├── scripts/build-notebooks.mjs ← แปลงใบงาน .md → .ipynb
+├── scripts/make_calc_figures.py ← สร้าง infographic public/images/calc/*.svg (python, ต้องมีฟอนต์ Prompt)
 └── CONTENT_GUIDE.md            ← คู่มือเขียน/แก้ไขเนื้อหา
 ```
 
@@ -68,6 +70,7 @@ e-learning/
 - **ใบงาน → Notebook** — โค้ดในใบงานกลายเป็น code cell พร้อมเปิดใน Google Colab
 - **แบบทดสอบออนไลน์** — จับเวลา ตรวจอัตโนมัติ แสดงเฉลยพร้อมคำอธิบาย และพิมพ์ผลได้ (เกณฑ์ผ่าน 50% ตามเกณฑ์ CLO ใน มคอ.3)
 - **Review Sheet** — สรุป 1 หน้า A4 พิมพ์หรือบันทึกเป็น PDF ได้
+- **ตัวอย่างโจทย์คำนวณ** — โจทย์แนวข้อสอบกลางภาคข้อ 6–14 แบบ (ก)/(ข) พร้อม infographic 15 ภาพ วิธีทำ และสรุปคำตอบ
 - **แนวทางเตรียมสอบ** — สูตรที่ต้องจำ วิธีทำโน้ต 6 แผ่น และแนวข้อสอบอัตนัย 20 ข้อพร้อมเฉลย และทุกบทมีหัวข้อ "ตัวอย่างโจทย์และวิธีทำ"
 - **Dark / Light Mode**, **ค้นหา (Ctrl+K)**, **Responsive**
 
