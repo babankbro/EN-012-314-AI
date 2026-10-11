@@ -52,3 +52,7 @@ export async function getExam(id: string): Promise<ExamData | undefined> {
     return undefined;
   }
 }
+
+export function getExamPrepContent() {
+  return readMarkdown("", "exam-prep.md", "# ยังไม่มีแนวทางเตรียมสอบ");
+}

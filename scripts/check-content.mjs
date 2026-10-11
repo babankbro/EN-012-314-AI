@@ -5,7 +5,7 @@ import { fileURLToPath } from "url";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CONTENT = path.join(ROOT, "content");
-const IDS = ["01", "02", "03", "04", "05", "06", "07", "08", "09"];
+const IDS = ["00", "01", "02", "03", "04", "05", "06", "07", "08", "09"];
 const KEYS = ["ก", "ข", "ค", "ง"];
 
 const problems = [];

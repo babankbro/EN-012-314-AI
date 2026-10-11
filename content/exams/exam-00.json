@@ -1,0 +1,493 @@
+{
+  "moduleId": "00",
+  "title": "The AI Hierarchy",
+  "titleTh": "ลำดับชั้นของปัญญาประดิษฐ์",
+  "timeMinutes": 30,
+  "questions": [
+    {
+      "id": 1,
+      "question": "ข้อใดเรียงลำดับชั้นของปัญญาประดิษฐ์ (The AI Hierarchy) จากกว้างที่สุดไปเฉพาะเจาะจงที่สุดได้ถูกต้อง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "AI ⊃ Deep Learning ⊃ Machine Learning ⊃ Neural Network ⊃ Generative AI"
+        },
+        {
+          "key": "ข",
+          "text": "AI ⊃ Machine Learning ⊃ Neural Network ⊃ Deep Learning ⊃ Generative AI"
+        },
+        {
+          "key": "ค",
+          "text": "Machine Learning ⊃ AI ⊃ Neural Network ⊃ Deep Learning ⊃ Generative AI"
+        },
+        {
+          "key": "ง",
+          "text": "AI ⊃ Neural Network ⊃ Machine Learning ⊃ Generative AI ⊃ Deep Learning"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "AI เป็นร่มใหญ่สุด → ML (เรียนจากข้อมูล) → Neural Network (ML ตระกูลหนึ่ง) → Deep Learning (NN หลายชั้น) → Generative AI (DL ที่สร้างเนื้อหาใหม่ ซึ่งมี LLM อยู่ข้างใน) ตัวเลือกอื่นสลับตำแหน่ง เช่น วาง DL ครอบ ML หรือวาง ML ครอบ AI ซึ่งผิด"
+    },
+    {
+      "id": 2,
+      "question": "ระบบผู้เชี่ยวชาญวินิจฉัยโรคข้าวที่นักวิชาการเกษตรเขียนกฎ IF-THEN ไว้ 200 ข้อ และไม่มีการเรียนรู้จากข้อมูล จัดอยู่ในระดับใดของ AI Hierarchy",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "AI แต่ไม่ใช่ Machine Learning"
+        },
+        {
+          "key": "ข",
+          "text": "Machine Learning แบบ supervised"
+        },
+        {
+          "key": "ค",
+          "text": "Deep Learning"
+        },
+        {
+          "key": "ง",
+          "text": "Generative AI"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "ความรู้ถูกเขียนเป็นกฎโดยมนุษย์ (symbolic AI / knowledge-based) จึงเป็น AI แต่ไม่ใช่ ML เพราะไม่ได้เรียนรู้รูปแบบจากข้อมูล ข ผิดเพราะ supervised learning ต้องเรียนจากข้อมูลที่มี label ค และ ง ต้องใช้ neural network หลายชั้น"
+    },
+    {
+      "id": 3,
+      "question": "ข้อใดคือความแตกต่างที่สำคัญที่สุดระหว่าง Deep Learning กับ Machine Learning แบบดั้งเดิม",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Deep Learning ไม่ต้องใช้ข้อมูลในการฝึก"
+        },
+        {
+          "key": "ข",
+          "text": "Deep Learning ใช้กฎ IF-THEN ที่ผู้เชี่ยวชาญเขียน"
+        },
+        {
+          "key": "ค",
+          "text": "Deep Learning เรียนรู้ feature เองจากข้อมูลดิบผ่านชั้นซ่อนจำนวนมาก"
+        },
+        {
+          "key": "ง",
+          "text": "Deep Learning ใช้ได้เฉพาะกับข้อมูลตาราง"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "Deep Learning ใช้ neural network หลายชั้นเรียน feature เป็นลำดับขั้นจากข้อมูลดิบ (representation learning) ขณะที่ ML ดั้งเดิมมักต้องให้มนุษย์ออกแบบ feature ก ผิดเพราะ DL ต้องการข้อมูลมาก ข เป็นลักษณะของระบบฐานกฎ ง ผิดเพราะ DL เด่นกับภาพ เสียง และข้อความ"
+    },
+    {
+      "id": 4,
+      "question": "สาขาย่อยของ AI ใดมีองค์ประกอบย่อยเป็น Theorem Proving, Logic Programming และ Deductive & Inductive Reasoning",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Knowledge Representation"
+        },
+        {
+          "key": "ข",
+          "text": "Cognitive Computing"
+        },
+        {
+          "key": "ค",
+          "text": "Planning & Scheduling"
+        },
+        {
+          "key": "ง",
+          "text": "Automated Reasoning"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "Automated Reasoning (การให้เหตุผลอัตโนมัติ) ใช้ตรรกศาสตร์พิสูจน์หรือหาข้อสรุป ส่วน Knowledge Representation เน้นวิธีเก็บความรู้ (ontology, semantic network, frame, rule) Cognitive Computing จำลองการคิดเพื่อช่วยตัดสินใจ และ Planning & Scheduling ใช้ state space search และ resource allocation"
+    },
+    {
+      "id": 5,
+      "question": "แพทย์เห็นผู้ป่วยมีไข้สูงและผื่นแดง จึงสรุปว่า \"น่าจะเป็นไข้เลือดออก\" เป็นการให้เหตุผลแบบใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "นิรนัย (Deduction) และข้อสรุปแน่นอนเสมอ"
+        },
+        {
+          "key": "ข",
+          "text": "จารนัย (Abduction) หาคำอธิบายที่น่าจะเป็นที่สุดของสิ่งที่สังเกตได้"
+        },
+        {
+          "key": "ค",
+          "text": "อุปนัย (Induction) สรุปกฎทั่วไปจากตัวอย่างจำนวนมาก"
+        },
+        {
+          "key": "ง",
+          "text": "Modus Ponens จากกฎ ไข้เลือดออก ⇒ มีไข้"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "เริ่มจากผลที่สังเกตได้ (อาการ) แล้วย้อนหาสาเหตุที่น่าจะเป็น คือจารนัย ซึ่งไม่แน่นอนเพราะอาการเดียวกันอาจเกิดจากโรคอื่น ก ผิดเพราะนิรนัยไปจากกฎสู่ข้อสรุปที่แน่นอน ค ผิดเพราะไม่ได้สร้างกฎทั่วไปจากหลายตัวอย่าง ง ผิดเพราะ Modus Ponens กับกฎ ไข้เลือดออก ⇒ มีไข้ ต้องรู้ว่าเป็นไข้เลือดออกก่อนจึงสรุปว่ามีไข้ การย้อนจากผลไปหาเหตุไม่ใช่ Modus Ponens"
+    },
+    {
+      "id": 6,
+      "question": "ใน Generative Adversarial Network (GAN) ระหว่างขั้นตอนฝึก Generator เป้าหมายของ Generator คือข้อใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "แยกภาพจริงออกจากภาพปลอมให้ถูกต้องที่สุด"
+        },
+        {
+          "key": "ข",
+          "text": "บีบอัดภาพจริงให้เป็นรหัสสั้นแล้วสร้างคืน"
+        },
+        {
+          "key": "ค",
+          "text": "สร้างข้อมูลที่ทำให้ Discriminator ทายว่าเป็นของจริง"
+        },
+        {
+          "key": "ง",
+          "text": "ทำนายคำถัดไปจากคำก่อนหน้าทั้งหมด"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "Generator รับเวกเตอร์สุ่มจาก latent space แล้วสร้างข้อมูลปลอมให้ Discriminator เชื่อว่าเป็นของจริง (หลอกให้ได้) โดยใช้ gradient ที่ไหลผ่าน Discriminator ย้อนกลับมา ก เป็นเป้าหมายของ Discriminator ข เป็นหลักการของ Autoencoder ง เป็นหลักการของ language model แบบ GPT"
+    },
+    {
+      "id": 7,
+      "question": "เมื่อฝึก GAN จนถึงจุดสมดุลในทางทฤษฎี (Generator สร้างข้อมูลที่การกระจายเหมือนข้อมูลจริงทุกประการ) Discriminator จะให้ค่าความน่าจะเป็นว่า \"เป็นของจริง\" ประมาณเท่าใดสำหรับทุกตัวอย่าง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.5"
+        },
+        {
+          "key": "ข",
+          "text": "0"
+        },
+        {
+          "key": "ค",
+          "text": "1"
+        },
+        {
+          "key": "ง",
+          "text": "0.25"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "เมื่อข้อมูลปลอมแยกไม่ออกจากข้อมูลจริง Discriminator ทำได้ดีที่สุดเพียงเดาสุ่ม จึงให้ค่า 0.5 ค่า 0 หรือ 1 หมายถึงยังแยกได้ชัดเจน แสดงว่ายังไม่ถึงสมดุล ค่า 0.25 ไม่มีเหตุผลรองรับ"
+    },
+    {
+      "id": 8,
+      "question": "ใน Transformer องค์ประกอบใดทำให้โมเดลแยกประโยค \"หมากัดคน\" กับ \"คนกัดหมา\" ออกจากกันได้",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Softmax ในชั้นสุดท้าย"
+        },
+        {
+          "key": "ข",
+          "text": "Feed-Forward Network"
+        },
+        {
+          "key": "ค",
+          "text": "Discriminator"
+        },
+        {
+          "key": "ง",
+          "text": "Positional Encoding"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "Self-attention ประมวลผลทุก token พร้อมกันและไม่รู้ลำดับในตัวเอง จึงต้องบวก Positional Encoding เข้ากับ embedding เพื่อบอกตำแหน่งของคำ Softmax และ Feed-Forward ไม่ได้ใส่ข้อมูลลำดับ ส่วน Discriminator เป็นส่วนของ GAN ไม่ใช่ Transformer"
+    },
+    {
+      "id": 9,
+      "question": "ข้อใดกล่าวถึง GPT และ BERT ได้ถูกต้อง",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "GPT ใช้ส่วน Encoder ฝึกโดยทายคำที่ถูกปิด ส่วน BERT ใช้ส่วน Decoder ทายคำถัดไป"
+        },
+        {
+          "key": "ข",
+          "text": "GPT ใช้ส่วน Decoder ทายคำถัดไป เหมาะกับการสร้างข้อความ ส่วน BERT ใช้ส่วน Encoder มองบริบทสองทิศทาง เหมาะกับการเข้าใจข้อความ"
+        },
+        {
+          "key": "ค",
+          "text": "ทั้งสองเป็น GAN ที่ใช้ Generator และ Discriminator"
+        },
+        {
+          "key": "ง",
+          "text": "ทั้งสองเป็น RNN ที่อ่านข้อความทีละคำตามลำดับ"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "GPT (Generative Pre-trained Transformer) เป็น decoder-only ฝึกด้วย next-token prediction จึงเหมาะกับการสร้างข้อความ BERT เป็น encoder-only ฝึกด้วย masked language modeling มองบริบทซ้ายและขวา เหมาะกับการจำแนกข้อความ ค้นหา และ NER ข้อ ก สลับกัน ข้อ ค และ ง ผิดเพราะทั้งคู่เป็น Transformer"
+    },
+    {
+      "id": 10,
+      "question": "ขั้นตอนใดทำให้ base model ที่เพียง \"เขียนข้อความต่อ\" กลายเป็นผู้ช่วยแบบ ChatGPT ที่ทำตามคำสั่งได้ตรงเจตนาและปลอดภัยขึ้น",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "เพิ่ม Positional Encoding"
+        },
+        {
+          "key": "ข",
+          "text": "Pre-training ด้วยการทายคำถัดไปเพียงอย่างเดียว"
+        },
+        {
+          "key": "ค",
+          "text": "Supervised fine-tuning ด้วยคู่คำสั่ง–คำตอบ แล้วตามด้วย RLHF"
+        },
+        {
+          "key": "ง",
+          "text": "เปลี่ยนสถาปัตยกรรมเป็น CNN"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "หลัง pre-training จะได้ base model ที่มีความรู้กว้างแต่ยังไม่ทำตามคำสั่ง ต้อง fine-tune ด้วยตัวอย่างคำสั่ง–คำตอบ และ RLHF (มนุษย์จัดอันดับคำตอบ → reward model → ปรับด้วย reinforcement learning) ข เป็นเพียงขั้นแรก ก และ ง ไม่เกี่ยวกับการทำตามคำสั่ง"
+    },
+    {
+      "id": 11,
+      "question": "ข้อใดอธิบายปัญหา hallucination ของ Generative AI ได้ถูกต้องที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "โมเดลสร้างข้อความที่ฟังน่าเชื่อถือแต่ไม่ถูกต้อง เพราะสร้างจากความน่าจะเป็นของ token ไม่ใช่จากการตรวจข้อเท็จจริง"
+        },
+        {
+          "key": "ข",
+          "text": "โมเดลทำงานช้าเมื่อ prompt ยาวเกินไป"
+        },
+        {
+          "key": "ค",
+          "text": "โมเดลจำข้อมูลฝึกได้ทั้งหมดจึงตอบซ้ำ"
+        },
+        {
+          "key": "ง",
+          "text": "โมเดลปฏิเสธไม่ตอบคำถามทุกข้อ"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "Hallucination คือการสร้างเนื้อหาที่ฟังดูถูกต้องแต่ผิดหรือแต่งขึ้น เช่น อ้างงานวิจัยที่ไม่มีจริง สาเหตุคือโมเดลเลือก token ที่ \"น่าจะเป็น\" ไม่ใช่ \"จริง\" ลดได้ด้วย RAG การอ้างแหล่งที่มา และให้มนุษย์ตรวจสอบ ข เป็นเรื่องประสิทธิภาพ ค เป็นเรื่อง memorization ง เป็นเรื่องการปฏิเสธ ไม่ใช่ hallucination"
+    },
+    {
+      "id": 12,
+      "question": "นิวรอนหนึ่งตัวมี input x = [2, 1, 3], weights w = [0.4, −1.0, 0.2], bias b = −0.1 และใช้ activation แบบ ReLU ผลลัพธ์ของนิวรอนมีค่าเท่าใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.4"
+        },
+        {
+          "key": "ข",
+          "text": "0"
+        },
+        {
+          "key": "ค",
+          "text": "−0.3"
+        },
+        {
+          "key": "ง",
+          "text": "0.3"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "z = (2)(0.4) + (1)(−1.0) + (3)(0.2) + (−0.1) = 0.8 − 1.0 + 0.6 − 0.1 = 0.3 แล้ว ReLU(0.3) = max(0, 0.3) = 0.3 ค่า 0.4 เกิดจากลืมบวก bias ค่า −0.3 เกิดจากคิดเครื่องหมายผิด และจะได้ 0 ก็ต่อเมื่อ z ติดลบ"
+    },
+    {
+      "id": 13,
+      "question": "ใน self-attention ถ้า token หนึ่งมีคะแนน (score) ต่อ token ทั้ง 3 ตัวเป็น [2, 0, 0] หลังผ่าน softmax น้ำหนัก attention ที่ให้กับ token แรกมีค่าประมาณเท่าใด (กำหนด e² ≈ 7.39 และ e⁰ = 1)",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0.88"
+        },
+        {
+          "key": "ข",
+          "text": "0.79"
+        },
+        {
+          "key": "ค",
+          "text": "1.00"
+        },
+        {
+          "key": "ง",
+          "text": "0.33"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "softmax = e² / (e² + e⁰ + e⁰) = 7.39 / (7.39 + 1 + 1) = 7.39 / 9.39 ≈ 0.79 และน้ำหนักทั้ง 3 ตัวรวมกันได้ 1 ค่า 0.88 = 7.39/8.39 เกิดจากลืมรวม token ตัวที่สาม ค่า 1.00 คือการเลือกค่าสูงสุดแบบ argmax ไม่ใช่ softmax ค่า 0.33 คือการแบ่งเท่ากันโดยไม่สนคะแนน"
+    },
+    {
+      "id": 14,
+      "question": "bigram language model ฝึกจากประโยค 4 ประโยคในกรอบ ความน่าจะเป็นของประโยค \"<s> กาฬสินธุ์ อยู่ ใน ภาคเหนือ </s>\" ตามโมเดลนี้มีค่าเท่าใด",
+      "code": "<s> ขอนแก่น อยู่ ใน ภาคอีสาน </s>\n<s> กาฬสินธุ์ อยู่ ใน ภาคอีสาน </s>\n<s> มหาสารคาม อยู่ ใน ภาคอีสาน </s>\n<s> เชียงใหม่ อยู่ ใน ภาคเหนือ </s>",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "0 เพราะไม่เคยเห็นประโยคนี้ในข้อมูลฝึก"
+        },
+        {
+          "key": "ข",
+          "text": "0.25"
+        },
+        {
+          "key": "ค",
+          "text": "0.0625"
+        },
+        {
+          "key": "ง",
+          "text": "0.75"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "P = P(กาฬสินธุ์|<s>) × P(อยู่|กาฬสินธุ์) × P(ใน|อยู่) × P(ภาคเหนือ|ใน) × P(</s>|ภาคเหนือ) = 1/4 × 1 × 1 × 1/4 × 1 = 0.0625 ประโยคนี้ไม่เคยปรากฏและผิดข้อเท็จจริง แต่โมเดลยังให้ความน่าจะเป็นมากกว่า 0 จึงอาจสร้างออกมาได้ ซึ่งเป็นรากของ hallucination ค่า 0.25 เกิดจากลืมคูณ P(กาฬสินธุ์|<s>) ค่า 0.75 คือ P(ภาคอีสาน|ใน)"
+    },
+    {
+      "id": 15,
+      "question": "จากกราฟที่มีระยะทางกำกับในกรอบ (เดินได้ทั้งสองทิศทาง) Uniform-Cost Search จากโหนด A ไปโหนด D จะได้เส้นทางและต้นทุนรวมเท่าใด",
+      "code": "A —4— B\nA —1— C\nC —2— B\nB —1— D\nC —6— D",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "A → B → D ต้นทุน 5"
+        },
+        {
+          "key": "ข",
+          "text": "A → C → D ต้นทุน 7"
+        },
+        {
+          "key": "ค",
+          "text": "A → C → B → D ต้นทุน 5"
+        },
+        {
+          "key": "ง",
+          "text": "A → C → B → D ต้นทุน 4"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "Uniform-Cost Search ขยายโหนดที่ต้นทุนสะสมต่ำสุดก่อน: A→C (1), A→C→B (1+2 = 3) ถูกกว่า A→B (4), แล้ว A→C→B→D (3+1 = 4) ถูกกว่า A→B→D (5) และ A→C→D (7) ก คือเส้นทางที่มีจำนวนช่วงน้อยที่สุด (แบบที่ BFS อาจได้) แต่ต้นทุนสูงกว่า ข ต้นทุนสูงกว่า ค คำนวณต้นทุนผิด"
+    },
+    {
+      "id": 16,
+      "question": "จากโค้ด agent ดูดฝุ่นในกรอบ เมื่อ percept คือ (\"B\", \"สะอาด\") agent จะทำอะไร และเป็น agent ประเภทใด",
+      "code": "def reflex_vacuum_agent(percept):\n    loc, status = percept\n    if status == \"สกปรก\":\n        return \"ดูดฝุ่น\"\n    return \"ไปขวา\" if loc == \"A\" else \"ไปซ้าย\"",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "ดูดฝุ่น — Model-based reflex agent"
+        },
+        {
+          "key": "ข",
+          "text": "ไปขวา — Goal-based agent"
+        },
+        {
+          "key": "ค",
+          "text": "ไปซ้าย — Simple reflex agent"
+        },
+        {
+          "key": "ง",
+          "text": "หยุดทำงาน — Utility-based agent"
+        }
+      ],
+      "answer": "ค",
+      "explanation": "status เป็น \"สะอาด\" จึงไม่ดูดฝุ่น และ loc ไม่ใช่ \"A\" จึงคืน \"ไปซ้าย\" agent ตัดสินใจจาก percept ปัจจุบันด้วยกฎ condition–action โดยไม่มีความจำหรือเป้าหมาย จึงเป็น simple reflex agent (และจะเดินไปมาไม่หยุดแม้ห้องสะอาดหมดแล้ว)"
+    },
+    {
+      "id": 17,
+      "question": "จากโค้ดในกรอบ (patience = 2) แอร์ถูกสั่งปิด (คืนค่า False) ครั้งแรกในรอบที่เท่าใด",
+      "code": "class ModelBasedAgent:\n    def __init__(self, patience=2):\n        self.patience = patience\n        self.empty_count = 0\n        self.ac = False\n\n    def act(self, people, temp):\n        self.empty_count = self.empty_count + 1 if people == 0 else 0\n        if people > 0:\n            self.ac = temp >= 26\n        elif self.empty_count >= self.patience:\n            self.ac = False\n        return self.ac\n\nagent = ModelBasedAgent(patience=2)\nreadings = [(30, 28), (0, 28), (25, 27), (0, 27), (0, 27), (0, 27)]\nfor i, (people, temp) in enumerate(readings, start=1):\n    print(i, agent.act(people, temp))",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "รอบที่ 2"
+        },
+        {
+          "key": "ข",
+          "text": "รอบที่ 4"
+        },
+        {
+          "key": "ค",
+          "text": "รอบที่ 6"
+        },
+        {
+          "key": "ง",
+          "text": "รอบที่ 5"
+        }
+      ],
+      "answer": "ง",
+      "explanation": "empty_count นับว่าห้องว่างติดต่อกันกี่รอบ: รอบ 2 ว่าง (1) ยังไม่ถึง patience แอร์คงเดิม (True), รอบ 3 มีคน รีเซ็ตเป็น 0, รอบ 4 ว่าง (1) ยังเปิด, รอบ 5 ว่าง (2) ถึง patience จึงปิด รอบที่ 2 เป็นคำตอบของ simple reflex agent ที่ไม่มีความจำ นี่คือข้อดีของ model-based agent ที่ไม่ปิด-เปิดแอร์ตอนพักเบรกสั้น ๆ"
+    },
+    {
+      "id": 18,
+      "question": "จากโค้ด knowledge graph ในกรอบ ผลลัพธ์ที่พิมพ์ออกมาคือข้อใด",
+      "code": "triples = [(\"เพนกวิน\", \"is-a\", \"นก\"), (\"นก\", \"สามารถ\", \"บิน\"),\n           (\"นก\", \"is-a\", \"สัตว์\"), (\"สัตว์\", \"is-a\", \"สิ่งมีชีวิต\")]\n\ndef all_types(x):\n    found, frontier = [], [x]\n    while frontier:\n        node = frontier.pop()\n        for s, r, o in triples:\n            if s == node and r == \"is-a\" and o not in found:\n                found.append(o)\n                frontier.append(o)\n    return found\n\nprint(all_types(\"เพนกวิน\"))",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "['นก']"
+        },
+        {
+          "key": "ข",
+          "text": "['นก', 'สัตว์', 'สิ่งมีชีวิต']"
+        },
+        {
+          "key": "ค",
+          "text": "['นก', 'บิน', 'สัตว์', 'สิ่งมีชีวิต']"
+        },
+        {
+          "key": "ง",
+          "text": "[]"
+        }
+      ],
+      "answer": "ข",
+      "explanation": "ฟังก์ชันเดินตามความสัมพันธ์ is-a ต่อกันไปเรื่อย ๆ (inheritance): เพนกวิน → นก → สัตว์ → สิ่งมีชีวิต ส่วน (นก, สามารถ, บิน) ไม่ถูกนับเพราะ relation ไม่ใช่ is-a ข้อ ก หยุดแค่ช่วงเดียว ข้อ ค รวม relation อื่นเข้ามา (สังเกตว่าถ้าสืบทอดคุณสมบัติ \"บินได้\" ให้เพนกวินจะผิด ระบบ KR จึงต้องรองรับข้อยกเว้น)"
+    },
+    {
+      "id": 19,
+      "question": "โรงพยาบาลต้องการสร้างภาพใบหน้าสังเคราะห์ที่ไม่ใช่ของบุคคลจริง เพื่อนำไปฝึกระบบจดจำใบหน้าโดยไม่ละเมิดความเป็นส่วนตัวของผู้ป่วย ควรเลือกเทคนิคใดมากที่สุด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Generative Adversarial Network (GAN) เช่น StyleGAN"
+        },
+        {
+          "key": "ข",
+          "text": "ระบบผู้เชี่ยวชาญแบบกฎ IF-THEN"
+        },
+        {
+          "key": "ค",
+          "text": "BERT แบบ encoder-only"
+        },
+        {
+          "key": "ง",
+          "text": "Breadth-First Search"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "GAN ถูกออกแบบมาเพื่อสร้างข้อมูลใหม่ที่สมจริง เช่น ใบหน้าที่ไม่มีตัวตนจริง (synthetic data) ใช้แทนข้อมูลผู้ป่วยจริงได้ (diffusion model ก็ใช้ได้) ระบบกฎสร้างภาพไม่ได้ BERT เหมาะกับการเข้าใจข้อความ ไม่ได้สร้างภาพ และ BFS เป็นอัลกอริทึมค้นหาเส้นทาง"
+    },
+    {
+      "id": 20,
+      "question": "ระบบกล้องลานจอดรถของมหาวิทยาลัยต้องบอกว่ามีรถกี่คันและแต่ละคันจอดอยู่ตรงไหน (ต้องได้ตำแหน่งของรถทุกคันในภาพ) ควรใช้งาน Computer Vision ประเภทใด",
+      "choices": [
+        {
+          "key": "ก",
+          "text": "Object Detection (กรอบตำแหน่ง + ป้ายชื่อของวัตถุหลายชิ้น)"
+        },
+        {
+          "key": "ข",
+          "text": "Image Classification (ป้ายชื่อ 1 ป้ายต่อภาพ)"
+        },
+        {
+          "key": "ค",
+          "text": "Facial Recognition"
+        },
+        {
+          "key": "ง",
+          "text": "Text Summarization"
+        }
+      ],
+      "answer": "ก",
+      "explanation": "Object Detection ให้ bounding box และป้ายชื่อของวัตถุหลายชิ้นในภาพเดียว จึงนับและระบุตำแหน่งรถได้ Image Classification ให้แค่ป้ายเดียวต่อภาพ ไม่บอกตำแหน่ง Facial Recognition ใช้ระบุตัวบุคคล และ Text Summarization เป็นงาน NLP"
+    }
+  ]
+}

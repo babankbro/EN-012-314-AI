@@ -13,8 +13,23 @@ export interface ModuleData {
   color: string;
 }
 
-// 9 บทเรียน จับคู่กับแผนการสอนรายสัปดาห์ใน มคอ.3 (สัปดาห์ 2–13)
+// 10 บทเรียน จับคู่กับแผนการสอนรายสัปดาห์ใน มคอ.3 (สัปดาห์ 1–13)
 export const modules: ModuleData[] = [
+  {
+    id: "00",
+    week: "1",
+    titleTh: "ลำดับชั้นของปัญญาประดิษฐ์",
+    titleEn: "The AI Hierarchy",
+    description:
+      "AI, Machine Learning, Neural Network, Deep Learning, Generative AI และ LLM พร้อมสาขาย่อยของ AI เช่น Planning, Automated Reasoning, Knowledge Representation, Computer Vision และ AI Agent",
+    clo: "CLO1",
+    llos: ["LLO1-1", "LLO1-3"],
+    topics: ["AI / ML / NN / DL / GenAI / LLM", "สาขาย่อยของ AI", "Planning & Scheduling", "Automated Reasoning", "Computer Vision", "AI Agent", "GAN", "Transformer"],
+    labTitle: "จำแนกระดับและสาขาของงาน AI",
+    reviewSheet: "review_sheet_00.html",
+    icon: "Network",
+    color: "slate",
+  },
   {
     id: "01",
     week: "2",
@@ -157,6 +172,7 @@ export function getModuleById(id: string): ModuleData | undefined {
 }
 
 export const colorMap: Record<string, { bg: string; text: string; border: string; accent: string }> = {
+  slate: { bg: "bg-slate-100 dark:bg-slate-800/40", text: "text-slate-700 dark:text-slate-300", border: "border-slate-200 dark:border-slate-700", accent: "from-slate-500 to-gray-500" },
   blue: { bg: "bg-blue-50 dark:bg-blue-900/20", text: "text-blue-700 dark:text-blue-300", border: "border-blue-200 dark:border-blue-800", accent: "from-blue-500 to-cyan-500" },
   green: { bg: "bg-green-50 dark:bg-green-900/20", text: "text-green-700 dark:text-green-300", border: "border-green-200 dark:border-green-800", accent: "from-green-500 to-emerald-500" },
   yellow: { bg: "bg-yellow-50 dark:bg-yellow-900/20", text: "text-yellow-700 dark:text-yellow-300", border: "border-yellow-200 dark:border-yellow-800", accent: "from-yellow-500 to-orange-500" },

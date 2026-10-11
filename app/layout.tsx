@@ -20,7 +20,7 @@ const sourceCodePro = Source_Code_Pro({
 export const metadata: Metadata = {
   title: `${course.titleTh} — ${course.part} | ${course.code}`,
   description:
-    "สื่อการสอนออนไลน์รายวิชาปัญญาประดิษฐ์ ภาค Machine Learning 9 บทเรียน พร้อมใบงาน แบบทบทวน และแบบทดสอบ",
+    "สื่อการสอนออนไลน์รายวิชาปัญญาประดิษฐ์ 10 บทเรียน (AI Hierarchy และ Machine Learning) พร้อมใบงาน แบบทบทวน และแบบทดสอบ",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Sheet 00 - ลำดับชั้นของปัญญาประดิษฐ์</title>
+<link rel="stylesheet" href="sheet.css">
+</head>
+<body>
+<div class="toolbar"><button onclick="window.print()">🖨️ พิมพ์ / บันทึก PDF</button></div>
+<div class="page">
+
+  <div class="sheet-header">
+    <div>
+      <div class="title">🧠 Review Sheet บทที่ 00 — ลำดับชั้นของปัญญาประดิษฐ์</div>
+      <div class="sub">EN-012-314 Artificial Intelligence · Machine Learning · The AI Hierarchy</div>
+    </div>
+    <div class="meta">
+      สัปดาห์ที่ 1 · CLO1 (LLO1-1, LLO1-3)<br>
+      Lab 00: จำแนกระดับและสาขาของงาน AI
+    </div>
+  </div>
+
+  <div class="columns">
+    <!-- ===== LEFT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🪆</span> 1. The AI Hierarchy (วงซ้อน)</div>
+        <div class="section-body">
+          <div class="formula">AI ⊃ ML ⊃ Neural Network ⊃ Deep Learning ⊃ Generative AI ⊃ LLM</div>
+          <table>
+            <tr><th>ระดับ</th><th>นิยาม / ต่างจากชั้นนอก</th><th>ตัวอย่าง</th></tr>
+            <tr><td><b>AI</b></td><td>พฤติกรรมฉลาดทุกแบบ รวมกฎที่มนุษย์เขียน, search, logic</td><td>ระบบผู้เชี่ยวชาญ, GPS, Deep Blue</td></tr>
+            <tr><td><b>ML</b></td><td><span class="accent">เรียนรูปแบบจากข้อมูล</span> แทนเขียนกฎเอง</td><td>กรองสแปม, ทำนายราคา</td></tr>
+            <tr><td><b>NN</b></td><td>นิวรอนเทียมเป็นชั้น z = w·x + b → f(z) ฝึกด้วย backprop</td><td>MLP อ่านลายมือ</td></tr>
+            <tr><td><b>DL</b></td><td>ชั้นซ่อน<span class="accent">หลายชั้น</span> เรียน feature เองจากข้อมูลดิบ ต้องใช้ข้อมูล + GPU มาก</td><td>Face ID, แปลภาษา</td></tr>
+            <tr><td><b>GenAI</b></td><td><span class="accent">สร้าง</span>เนื้อหาใหม่ (ข้อความ ภาพ เสียง โค้ด)</td><td>Stable Diffusion</td></tr>
+            <tr><td><b>LLM</b></td><td>GenAI ด้านภาษา บน Transformer ขนาดใหญ่</td><td>ChatGPT, Claude</td></tr>
+          </table>
+          <p class="note">ปีสำคัญ: 1956 Dartmouth · 2012 AlexNet · 2014 GAN · 2017 Transformer · พ.ย. 2022 ChatGPT</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧩</span> 2. สาขาย่อยของ AI 9 สาขา</div>
+        <div class="section-body">
+          <table>
+            <tr><th>สาขา</th><th>องค์ประกอบย่อย</th><th>ตัวอย่าง</th></tr>
+            <tr><td><b>Planning &amp; Scheduling</b></td><td>State space search, heuristic, temporal, resource allocation</td><td>ตารางบิน, ห้องผ่าตัด</td></tr>
+            <tr><td><b>NLP</b></td><td>Syntax, semantic, speech recognition, NLG</td><td>แชทบอท, แปลภาษา</td></tr>
+            <tr><td><b>Automated Reasoning</b></td><td>Theorem proving, logic programming, deduction/induction</td><td>ตรวจซอฟต์แวร์</td></tr>
+            <tr><td><b>Cognitive Computing</b></td><td>จำลองการคิด, ML, HCI, data mining</td><td>Robo-advisor, Watson</td></tr>
+            <tr><td><b>AI Ethics</b></td><td>Explainability, privacy, bias, accountability</td><td>XAI สินเชื่อ</td></tr>
+            <tr><td><b>Robotics</b></td><td>Sensors, kinematics, control, HRI</td><td>Da Vinci, โดรน</td></tr>
+            <tr><td><b>Knowledge Repr.</b></td><td>Ontology, semantic net, frame, rule</td><td>Knowledge Graph</td></tr>
+            <tr><td><b>Computer Vision</b></td><td>Recognition, detection, segmentation, face</td><td>X-ray, QC</td></tr>
+            <tr><td><b>AI Agent</b></td><td>Perception, planning, memory, tool use, multi-agent</td><td>Coding agent</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🔎</span> 3. KR · Reasoning · Planning</div>
+        <div class="section-body">
+          <div class="def-row"><span class="def-key">Deduction</span><span class="def-val">กฎ + ข้อเท็จจริง → ข้อสรุป <b>แน่นอน</b> (Modus Ponens: P ⇒ Q, P ⊢ Q)</span></div>
+          <div class="def-row"><span class="def-key">Induction</span><span class="def-val">หลายตัวอย่าง → กฎทั่วไป ไม่แน่นอน (= หลักของ ML)</span></div>
+          <div class="def-row"><span class="def-key">Abduction</span><span class="def-val">ผลที่เห็น → คำอธิบายที่น่าจะเป็น (= การวินิจฉัย)</span></div>
+          <p><b>KB ⊨ α</b> ⟺ ทุกโลกที่ KB จริง α ต้องจริง · model checking ตรวจ 2ⁿ โลก · KG = triple (s, r, o) อนุมาน is-a / multi-hop</p>
+          <p><b>Planning</b> = initial state, actions, transition, goal test, path cost · <b>BFS</b> ช่วงน้อยสุด · <b>UCS</b> ต้นทุนน้อยสุด · <b>A*</b> f = g + h · <b>Scheduling</b> = CSP + backtracking (ห้อง/อาจารย์/กลุ่มห้ามชน)</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧠</span> 4. ML และ Neural Network (ระดับ 2–3)</div>
+        <div class="section-body">
+          <p><b>ML:</b> ข้อมูล + คำตอบตัวอย่าง → อัลกอริทึม → <b>โมเดล</b> · Classification/Clustering, Decision Tree, SVM, Regression, Unsupervised, Dimensionality Reduction, Semi-supervised, RL</p>
+          <div class="formula">นิวรอน: z = w₁x₁ + … + wₙxₙ + b &nbsp;→&nbsp; a = f(z)</div>
+          <table>
+            <tr><th>Activation</th><th>ช่วงค่า</th><th>ใช้ที่</th></tr>
+            <tr><td>Sigmoid</td><td>0 ถึง 1</td><td>output แบบ binary</td></tr>
+            <tr><td>Tanh</td><td>−1 ถึง 1</td><td>สถานะใน LSTM</td></tr>
+            <tr><td>ReLU</td><td>max(0, z)</td><td>ชั้นซ่อน (deep CNN)</td></tr>
+            <tr><td>Softmax</td><td>รวมกัน = 1</td><td>output หลายคลาส</td></tr>
+            <tr><td>Linear</td><td>ไม่จำกัด</td><td>output ของ regression</td></tr>
+          </table>
+          <p><b>Backprop:</b> forward pass → loss → backward pass (gradient) → optimizer (SGD, Adam) ปรับ w · MLP มีชั้นซ่อนจึงแก้ XOR ได้ · CNN, LSTM, SOM ก็เป็น NN</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧑‍💻</span> เชื่อมกับ Lab 00</div>
+        <div class="section-body">
+          <table class="lab-table">
+            <tr><th>ข้อ</th><th>สิ่งที่ฝึก</th></tr>
+            <tr><td>1–2</td><td>จำแนก 12 ระบบตามระดับ + สาขา · ออกแบบ AI 3 ปัญหาในกาฬสินธุ์</td></tr>
+            <tr><td>3–4</td><td>Knowledge graph (is-a, multi-hop) · deduction/induction/abduction · BFS บนแผนผังอาคาร</td></tr>
+            <tr><td>5</td><td>PEAS Smart Classroom · reflex vs model-based agent (<code>empty_count</code>)</td></tr>
+            <tr><td>6–7</td><td>GAN vs Transformer · bigram ทายคำถัดไป + hallucination</td></tr>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== RIGHT COLUMN ===== -->
+    <div class="col">
+      <div class="section">
+        <div class="section-header"><span class="icon">🤖</span> 5. AI Agent</div>
+        <div class="section-body">
+          <div class="formula">Sensors → percept → Reasoning/Planning (+Memory) → Actuators/Tools → action</div>
+          <p><b>PEAS:</b> Performance · Environment · Actuators · Sensors — สภาพแวดล้อม: fully/partially observable, deterministic/stochastic, episodic/sequential, static/dynamic, single/multi-agent</p>
+          <p><b>ประเภท:</b> Simple reflex (percept ปัจจุบัน) → Model-based (จำสถานะ) → Goal-based → Utility-based → Learning agent · Multi-agent</p>
+          <p><b>LLM agent:</b> คิด → เรียก tool (function calling) → ดูผล วนจนเสร็จ (ReAct) — จำกัดสิทธิ์ + ให้คนยืนยันการกระทำที่ย้อนไม่ได้</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🧬</span> 6. สถาปัตยกรรม Deep Learning</div>
+        <div class="section-body">
+          <table>
+            <tr><th>โมเดล</th><th>แนวคิด</th><th>ใช้กับ</th></tr>
+            <tr><td><b>CNN</b></td><td>filter + pooling สกัด feature ภาพ</td><td>จำแนกภาพ</td></tr>
+            <tr><td><b>RNN/LSTM</b></td><td>hidden state + gate จำลำดับ</td><td>อนุกรมเวลา</td></tr>
+            <tr><td><b>Autoencoder</b></td><td>บีบเป็นรหัสสั้น แล้วสร้างคืน</td><td>ลดมิติ, denoise</td></tr>
+            <tr><td><b>Transfer</b></td><td>pre-trained → fine-tune งานใหม่</td><td>ข้อมูลน้อย</td></tr>
+          </table>
+          <p><b>GAN</b> (Goodfellow 2014): <span class="blue">Generator</span> z (latent) → ภาพปลอม พยายามหลอก · <span class="blue">Discriminator</span> แยกจริง/ปลอม · ฝึกสลับกัน → สมดุล D ≈ 0.5 · ใช้แค่ G สร้าง · ปัญหา: ฝึกไม่เสถียร, mode collapse</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">⚡</span> 7. Transformer (2017) → LLM → ChatGPT</div>
+        <div class="section-body">
+          <div class="formula">Attention(Q, K, V) = softmax(QKᵀ / √dₖ) · V</div>
+          <p><b>Self-Attention</b> มองทุก token พร้อมกัน หาบริบท (แต่ละแถว softmax รวม = 1) · <b>Positional Encoding</b> บอกลำดับคำ · <b>Encoder</b> เข้าใจ input · <b>Decoder</b> สร้างทีละ token (masked)</p>
+          <table>
+            <tr><th>Encoder-only</th><th>Decoder-only</th><th>Enc–Dec</th></tr>
+            <tr><td>BERT: เข้าใจ/จำแนก</td><td>GPT, Llama: สร้างข้อความ</td><td>T5: แปล สรุป</td></tr>
+          </table>
+          <p><b>LLM:</b> Pre-training (ทายคำถัดไป) → SFT → <b>RLHF</b> → Chat model · token, prompt, temperature, context window</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">✨</span> 8. Generative AI และ Responsible AI</div>
+        <div class="section-body">
+          <table>
+            <tr><th></th><th>Discriminative</th><th>Generative</th></tr>
+            <tr><td>เรียน</td><td>P(y | x) ขอบเขตแยกคลาส</td><td>P(x) การกระจายของข้อมูล</td></tr>
+            <tr><td>ตัวอย่าง</td><td>"ภาพนี้คือแมวไหม"</td><td>"สร้างภาพแมว" (ข้อความ ภาพ เสียง โค้ด)</td></tr>
+          </table>
+          <p><b>Hallucination</b> = ฟังน่าเชื่อแต่ผิด เพราะเลือก token ที่ <i>น่าจะเป็น</i> ไม่ใช่ <i>จริง</i> → ลดด้วย RAG, อ้างแหล่งที่มา, ใช้ tool, คนตรวจ</p>
+          <p><b>Responsible AI:</b> bias (ตรวจผลแยกกลุ่ม) · privacy (ไม่ป้อนข้อมูลส่วนบุคคล, PDPA) · deepfake/ลิขสิทธิ์ · accountability (human-in-the-loop)</p>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-header"><span class="icon">🔢</span> คำนวณที่ควรทำได้</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li>นิวรอน: z = 1.2(0.5) − 0.7(0.8) + 0.1 = <b>0.14</b> → sigmoid ≈ 0.535</li>
+            <li>softmax [2, 0, 0] → 7.39 / 9.39 ≈ <b>0.79</b></li>
+            <li>bigram: P(ภาคเหนือ | ใน) = 1/4 · P(ประโยค) = ผลคูณทุกคู่คำ</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="section warn">
+        <div class="section-header"><span class="icon">⚠️</span> ข้อผิดพลาดที่พบบ่อย</div>
+        <div class="section-body">
+          <ul class="mini">
+            <li>คิดว่า AI ทุกระบบต้องเรียนรู้ — ระบบกฎ/search ก็เป็น AI (แต่ไม่ใช่ ML)</li>
+            <li>สลับ GPT (Decoder) กับ BERT (Encoder) · ลืมว่า GenAI ภาพ (diffusion) ไม่ใช่ LLM</li>
+            <li>สลับบทบาท G กับ D ใน GAN · คิดว่าจารนัยให้ข้อสรุปแน่นอน</li>
+            <li>เชื่อคำตอบ LLM โดยไม่ตรวจ (hallucination) · ป้อนข้อมูลส่วนบุคคลลงบริการ AI</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">EN-012-314 ปัญญาประดิษฐ์ · ผศ.ดร. สรายุทธ กรวิรัตน์ · สาขาวิชาวิศวกรรมคอมพิวเตอร์ มหาวิทยาลัยกาฬสินธุ์ · ปีการศึกษา 2569</div>
+</div>
+</body>
+</html>

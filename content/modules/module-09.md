@@ -710,6 +710,21 @@ model.summary()
 # ฝึกทุก 4 frames ด้วย Huber loss และ model_target.set_weights(model.get_weights()) ทุก 10,000 frames
 ```
 
+**ε-greedy เมื่อใช้ neural network แทน Q-table** — หลักการเหมือนหัวข้อ 4.2 ทุกอย่าง ต่างแค่ค่า Q มาจาก `model.predict` แทนการเปิดตาราง
+
+```python
+import numpy as np
+
+def act(state, epsilon):
+    if np.random.rand() <= epsilon:              # โอกาส ε: สำรวจ (exploration)
+        return env.action_space.sample()         #   สุ่ม action ใดก็ได้จาก action space
+    q_values = model.predict(state, verbose=0)   # โอกาส 1−ε: ใช้ประโยชน์ (exploitation)
+    return int(np.argmax(q_values[0]))           #   เลือก action ที่ network ทำนาย Q สูงสุด
+```
+
+- `state` ต้องมีมิติ batch นำหน้า (เช่น shape `(1, 4)` สำหรับ CartPole) เพราะ `model.predict` รับข้อมูลเป็น batch จึงต้องอ่านผลด้วย `q_values[0]`
+- ช่วงต้นการฝึกตั้ง ε สูง (เช่น 1.0) ให้สำรวจมาก แล้วค่อยลด (decay) ลงจนเหลือ 0.01–0.1 เมื่อ network เริ่มรู้ว่า action ไหนดี
+
 > [!NOTE]
 > การฝึก Breakout ให้เก่งใช้ประมาณ 10 ล้าน frames (หลายชั่วโมงถึงข้ามวัน) ในชั้นเรียนจึงดูเฉพาะ **กลไก** ผ่านหน้า `/atari` ของเว็บแล็บ ส่วน 50,000 frames แรกเป็นการเล่นแบบสุ่มล้วนเพื่อเติม replay buffer
 
@@ -769,6 +784,100 @@ action 3 ก้าวแรกได้ค่าบวก (นำไปสู่
 | 2019 | AlphaStar / OpenAI Five | StarCraft II / Dota 2 | RL ขนาดใหญ่กับเกมเรียลไทม์ที่เห็นข้อมูลไม่ครบ (partial observability) และมีหลาย agent |
 
 **เทียบกับ Adversarial Search ใน AIMA** ในส่วน AI ดั้งเดิม (Russell & Norvig บท Adversarial Search) เกมสองผู้เล่นอย่างหมากรุกหรือ OX แก้ด้วย **minimax** ซึ่งสมมติว่าคู่แข่งเล่นดีที่สุด แล้วค้นหาในต้นไม้เกม (game tree) ตัดกิ่งด้วย **alpha-beta pruning** และใช้ **evaluation function** ที่มนุษย์ออกแบบเมื่อค้นไม่ถึงจุดจบเกม วิธีนี้ต้องรู้กฎของเกมครบ (มี model) และไม่ได้ "เรียนรู้" จากประสบการณ์ ส่วน RL เรียนค่า $V$ หรือ $Q$ จากการเล่นจริงโดยไม่ต้องมีคนออกแบบฟังก์ชันประเมิน ระบบอย่าง AlphaZero **รวมสองโลกเข้าด้วยกัน** ใช้การค้นหา (MCTS) ที่นำทางด้วย policy network และ value network ซึ่งเรียนรู้ด้วย RL
+
+## 9. ตัวอย่างโจทย์และวิธีทำ (แนวข้อสอบ)
+
+สมการที่ใช้ในหัวข้อนี้
+
+$$ Q(s,a) \leftarrow Q(s,a) + \alpha\big[\underbrace{r + \gamma \max_{a'} Q(s',a')}_{\text{TD target}} - Q(s,a)\big] $$
+
+โดย $\text{TD error} = \text{TD target} - Q(s,a)$
+
+### โจทย์ 1: ปรับค่า Q หนึ่งครั้ง
+
+กำหนด $Q(s,a) = 3$, $\alpha = 0.2$, $r = 2$, $\gamma = 0.8$ และ $\max_{a'} Q(s',a') = 6$ จงคำนวณ TD target, TD error และ $Q(s,a)$ ใหม่
+
+**วิธีทำ**
+
+ขั้นที่ 1 — TD target (รางวัลทันที + มูลค่าอนาคตที่คิดส่วนลด)
+
+$$ \text{TD target} = r + \gamma \max_{a'} Q(s',a') = 2 + 0.8 \times 6 = 2 + 4.8 = 6.8 $$
+
+ขั้นที่ 2 — TD error (เป้าหมายห่างจากค่าเดิมเท่าใด)
+
+$$ \text{TD error} = 6.8 - 3 = 3.8 $$
+
+ขั้นที่ 3 — ขยับค่าเดิมเข้าหาเป้าหมายเพียงสัดส่วน $\alpha$
+
+$$ Q_{\text{ใหม่}}(s,a) = 3 + 0.2 \times 3.8 = 3 + 0.76 = 3.76 $$
+
+### โจทย์ 2: ปรับค่า Q เมื่อถึงสถานะสุดท้าย
+
+เอเจนต์ทำ action แล้วถึงเป้าหมายซึ่งเป็นสถานะสุดท้าย (จบตอน) ได้รางวัล $r = 10$ โดย $Q(s,a) = 4$, $\alpha = 0.5$, $\gamma = 0.9$ จงคำนวณ TD target, TD error และ $Q(s,a)$ ใหม่ พร้อมอธิบายว่าเหตุใดจึงไม่ต้องบวกพจน์ $\gamma \max_{a'} Q(s',a')$
+
+**วิธีทำ**
+
+ขั้นที่ 1 — เมื่อจบตอนแล้วไม่มี state ถัดไป ผลตอบแทนในอนาคตจึงเป็น 0
+
+$$ \text{TD target} = r = 10 $$
+
+ขั้นที่ 2 — $\text{TD error} = 10 - 4 = 6$
+
+ขั้นที่ 3 — $Q_{\text{ใหม่}}(s,a) = 4 + 0.5 \times 6 = 7$
+
+**เหตุผล:** พจน์ $\gamma \max_{a'} Q(s',a')$ คือมูลค่าของสิ่งที่จะได้ "หลังจากนี้" แต่สถานะสุดท้ายไม่มีอนาคต ถ้าบวกเข้าไปจะทำให้ค่า Q สูงเกินจริง ในโค้ดจึงเขียนว่า `target = r if done else r + gamma * Q[s_next].max()` (ค่า $\gamma = 0.9$ ที่โจทย์ให้มาจึงไม่ได้ใช้)
+
+### โจทย์ 3: ค่า Q เมื่อได้รางวัลทุกก้าว
+
+ถ้าได้รางวัล +1 ทุกก้าวไปเรื่อย ๆ ค่า Q จะเข้าใกล้ $\dfrac{1}{1 - \gamma}$ จงคำนวณเมื่อ $\gamma = 0.95$
+
+**วิธีทำ**
+
+ผลตอบแทนสะสม $= 1 + \gamma + \gamma^2 + \cdots$ เป็นอนุกรมเรขาคณิตอนันต์ที่มีผลรวม $\dfrac{1}{1-\gamma}$ เมื่อ $0 \le \gamma < 1$
+
+$$ \frac{1}{1 - 0.95} = \frac{1}{0.05} = 20 $$
+
+ตีความได้ว่า $\gamma = 0.95$ ทำให้เอเจนต์ "มองไกล" ประมาณ 20 ก้าว (ถ้า $\gamma = 0.99$ จะได้ 100)
+
+### โจทย์ 4: Discounted Return ของลำดับรางวัล
+
+เอเจนต์ได้รางวัลตามลำดับ $0, 0, 0, 10$ (ได้ 10 ในก้าวที่ 4) จงคำนวณ $G_0$ เมื่อ $\gamma = 0.9$
+
+**วิธีทำ**
+
+$$ G_0 = r_0 + \gamma r_1 + \gamma^2 r_2 + \gamma^3 r_3 = 0 + 0.9(0) + 0.81(0) + 0.729(10) = 7.29 $$
+
+รางวัล 10 ที่อยู่ห่างไป 3 ก้าวถูกลดค่าเหลือ 7.29 — ยิ่งรางวัลอยู่ไกล ยิ่งมีน้ำหนักน้อย นี่คือเหตุผลที่ RL ชอบเส้นทางที่ไปถึงเป้าหมาย**เร็วกว่า**
+
+### ตรวจคำตอบด้วย Python
+
+```python
+def q_update(q, alpha, r, gamma, max_q_next, terminal=False):
+    target = r if terminal else r + gamma * max_q_next   # TD target
+    error = target - q                                    # TD error
+    return target, error, q + alpha * error
+
+for name, args in [("โจทย์ 1", dict(q=3, alpha=0.2, r=2, gamma=0.8, max_q_next=6)),
+                   ("โจทย์ 2", dict(q=4, alpha=0.5, r=10, gamma=0.9, max_q_next=None, terminal=True))]:
+    target, error, new_q = q_update(**args)
+    print(f"{name}: TD target = {target:.2f}, TD error = {error:.2f}, Q ใหม่ = {new_q:.2f}")
+
+gamma = 0.95
+print(f"1/(1-γ) เมื่อ γ={gamma}: {1 / (1 - gamma):.1f}")
+print(f"ตรวจด้วยผลรวม 2,000 ก้าว: {sum(gamma**t for t in range(2000)):.4f}")
+
+rewards, gamma = [0, 0, 0, 10], 0.9
+G0 = sum(gamma**t * r for t, r in enumerate(rewards))
+print(f"G0 ของรางวัล {rewards} = {G0:.2f}")
+```
+
+```output
+โจทย์ 1: TD target = 6.80, TD error = 3.80, Q ใหม่ = 3.76
+โจทย์ 2: TD target = 10.00, TD error = 6.00, Q ใหม่ = 7.00
+1/(1-γ) เมื่อ γ=0.95: 20.0
+ตรวจด้วยผลรวม 2,000 ก้าว: 20.0000
+G0 ของรางวัล [0, 0, 0, 10] = 7.29
+```
 
 ## สรุป
 

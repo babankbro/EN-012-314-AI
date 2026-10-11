@@ -102,6 +102,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       >
         <nav className="p-3 pb-20">
           <SidebarLink href="/" label="ภาพรวมรายวิชา" isActive={pathname === "/"} onClick={onClose} />
+          <SidebarLink href="/exam-prep" label="🎯 แนวทางเตรียมสอบ" isActive={pathname === "/exam-prep"} onClick={onClose} />
 
           <div className="h-px bg-gray-200 dark:bg-gray-800 my-2" />
 

@@ -15,10 +15,10 @@ import { course } from "@/lib/course";
 import ModuleIcon from "@/components/ModuleIcon";
 
 const stats = [
-  { icon: BookOpen, label: "9 บทเรียน", sub: "Modules", color: "text-blue-600 dark:text-blue-400" },
-  { icon: FileEdit, label: "9 ใบงาน", sub: "Labs + Notebooks", color: "text-green-600 dark:text-green-400" },
-  { icon: ClipboardCheck, label: "9 แบบทบทวน", sub: "Review Sheets", color: "text-orange-600 dark:text-orange-400" },
-  { icon: PenSquare, label: "9 แบบทดสอบ", sub: "Exams", color: "text-purple-600 dark:text-purple-400" },
+  { icon: BookOpen, label: `${modules.length} บทเรียน`, sub: "Modules", color: "text-blue-600 dark:text-blue-400" },
+  { icon: FileEdit, label: `${modules.length} ใบงาน`, sub: "Labs + Notebooks", color: "text-green-600 dark:text-green-400" },
+  { icon: ClipboardCheck, label: `${modules.length} แบบทบทวน`, sub: "Review Sheets", color: "text-orange-600 dark:text-orange-400" },
+  { icon: PenSquare, label: `${modules.length} แบบทดสอบ`, sub: "Exams", color: "text-purple-600 dark:text-purple-400" },
 ];
 
 const clos = [
@@ -73,6 +73,23 @@ export default function HomePage() {
           </div>
         ))}
       </div>
+
+      {/* Exam prep */}
+      <Link
+        href="/exam-prep"
+        className="flex items-center gap-4 p-5 mb-12 rounded-2xl border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 hover:shadow-md transition-all"
+      >
+        <div className="w-12 h-12 rounded-xl bg-amber-500 text-white flex items-center justify-center flex-shrink-0">
+          <Target className="w-6 h-6" />
+        </div>
+        <div className="flex-1">
+          <p className="font-bold text-gray-900 dark:text-white">แนวทางเตรียมสอบและแนวข้อสอบ</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">
+            หัวข้อที่ออกสอบ สูตรที่ต้องจำ วิธีทำโน้ต 6 แผ่น และแนวข้อสอบอัตนัย 20 ข้อพร้อมเฉลย
+          </p>
+        </div>
+        <ArrowRight className="w-5 h-5 text-amber-600 dark:text-amber-400" />
+      </Link>
 
       {/* Module List */}
       <h2 className="text-xl font-bold text-gray-900 dark:text-white mb-5 flex items-center gap-2">
